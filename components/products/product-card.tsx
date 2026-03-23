@@ -3,6 +3,9 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { Heart, ShoppingCart, Plus, Eye } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 interface ProductCardProps {
   product: {
@@ -18,6 +21,8 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter()
+  const [isFavorite, setIsFavorite] = useState(false)
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
 
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -25,6 +30,28 @@ export function ProductCard({ product }: ProductCardProps) {
     if (product.category) {
       router.push(`/products?category=${encodeURIComponent(product.category.toLowerCase())}`)
     }
+  }
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsFavorite(!isFavorite)
+    // TODO: Backend integration - save to user's wishlist
+  }
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsAddingToCart(true)
+    // TODO: Backend integration - add to cart
+    setTimeout(() => setIsAddingToCart(false), 1000)
+  }
+
+  const handleQuickView = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    // TODO: Open quick view modal
+    router.push(`/products/${product.slug}`)
   }
 
   return (
@@ -42,11 +69,46 @@ export function ProductCard({ product }: ProductCardProps) {
             New
           </span>
         )}
-        {/* Quick view overlay */}
-        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors flex items-end justify-center opacity-0 group-hover:opacity-100 pb-4">
-          <span className="bg-card px-4 py-2 rounded body-md text-foreground shadow-lg">
-            Quick View
-          </span>
+        
+        {/* Action buttons overlay */}
+        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div className="flex items-center justify-center gap-2">
+            {/* Favorite button - Left */}
+            <button
+              onClick={handleFavoriteClick}
+              className={cn(
+                "flex items-center justify-center w-10 h-10 rounded-full bg-card shadow-lg transition-all hover:scale-110",
+                isFavorite ? "text-primary" : "text-foreground"
+              )}
+              aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+            >
+              <Heart className={cn("h-5 w-5", isFavorite && "fill-current")} />
+            </button>
+            
+            {/* Quick View button - Center */}
+            <button
+              onClick={handleQuickView}
+              className="flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-lg text-foreground body-md transition-all hover:scale-105"
+              aria-label="Quick view"
+            >
+              <Eye className="h-4 w-4" />
+              <span>Quick View</span>
+            </button>
+            
+            {/* Add to Cart button - Right */}
+            <button
+              onClick={handleAddToCart}
+              disabled={isAddingToCart}
+              className={cn(
+                "flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110 disabled:opacity-70",
+                isAddingToCart && "animate-pulse"
+              )}
+              aria-label="Add to cart"
+            >
+              <Plus className="h-4 w-4 absolute" />
+              <ShoppingCart className="h-5 w-5" />
+            </button>
+          </div>
         </div>
       </div>
       <div className="mt-4">

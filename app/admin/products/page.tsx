@@ -1,16 +1,9 @@
-"use client"
-
 import Link from "next/link"
 import Image from "next/image"
-import { Plus, Search, MoreVertical, Edit, Trash2, Eye } from "lucide-react"
+import { Plus, Search } from "lucide-react"
 import { AdminHeader } from "@/components/admin/admin-header"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { ProductActionsDropdown } from "@/components/admin/product-actions-dropdown"
 
 // Mock data - will be replaced with database queries
 const products = [
@@ -158,31 +151,10 @@ export default function AdminProductsPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem asChild>
-                            <Link href={`/products/${product.slug}`} className="flex items-center gap-2">
-                              <Eye className="h-4 w-4" />
-                              View
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link href={`/admin/products/${product.id}/edit`} className="flex items-center gap-2">
-                              <Edit className="h-4 w-4" />
-                              Edit
-                            </Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="flex items-center gap-2 text-destructive">
-                            <Trash2 className="h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <ProductActionsDropdown 
+                        productId={product.id} 
+                        productSlug={product.slug} 
+                      />
                     </td>
                   </tr>
                 ))}
