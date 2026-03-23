@@ -37,10 +37,10 @@ export function AddToCartButton({ disabled, productName }: AddToCartButtonProps)
       {/* Quantity selector */}
       <div className="flex items-center gap-4">
         <span className="label-md text-foreground">Quantity</span>
-        <div className="flex items-center border border-border">
+        <div className="flex items-center border border-border rounded-md">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="p-3 transition-colors hover:bg-surface-container-low disabled:opacity-50"
+            className="p-3 transition-colors hover:bg-secondary disabled:opacity-50 rounded-l-md"
             disabled={quantity <= 1}
             aria-label="Decrease quantity"
           >
@@ -49,7 +49,7 @@ export function AddToCartButton({ disabled, productName }: AddToCartButtonProps)
           <span className="w-12 text-center body-lg">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="p-3 transition-colors hover:bg-surface-container-low"
+            className="p-3 transition-colors hover:bg-secondary rounded-r-md"
             aria-label="Increase quantity"
           >
             <Plus className="h-4 w-4" />
@@ -86,15 +86,6 @@ export function AddToCartButton({ disabled, productName }: AddToCartButtonProps)
         )}
       </Button>
 
-      {/* Additional info */}
-      <div className="space-y-2 pt-4 border-t border-border">
-        <p className="body-md text-muted-foreground">
-          Free shipping on orders over Rs. 5,000
-        </p>
-        <p className="body-md text-muted-foreground">
-          Easy 30-day returns
-        </p>
-      </div>
     </div>
   )
 }

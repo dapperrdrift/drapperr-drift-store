@@ -1,10 +1,11 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, ChevronDown, Truck, RotateCcw, Shield } from "lucide-react"
 import { ProductGallery } from "@/components/products/product-gallery"
 import { VariantSelector } from "@/components/products/variant-selector"
 import { AddToCartButton } from "@/components/products/add-to-cart-button"
 import { ProductGrid } from "@/components/products/product-grid"
+import { ProductAccordion } from "@/components/products/product-accordion"
 
 // Mock product data - will be replaced with database queries
 const mockProducts: Record<string, {
@@ -16,6 +17,7 @@ const mockProducts: Record<string, {
   images: string[]
   category: string
   details: string[]
+  care: string[]
   variants: Array<{
     size: string
     color: string
@@ -36,8 +38,12 @@ const mockProducts: Record<string, {
       "100% Grade-A Mongolian Cashmere",
       "Relaxed fit",
       "Ribbed cuffs and hem",
-      "Dry clean only",
       "Made in Italy",
+    ],
+    care: [
+      "Dry clean recommended",
+      "Store folded to maintain shape",
+      "Avoid direct sunlight",
     ],
     variants: [
       { size: "XS", color: "Cream", colorHex: "#F5F0E6", stock: 5, sku: "CKS-CR-XS" },
@@ -123,79 +129,79 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <nav className="mx-auto max-w-7xl px-4 py-4 lg:px-8">
         <ol className="flex items-center gap-2 body-md text-muted-foreground">
           <li>
-            <Link href="/" className="hover:text-foreground transition-colors">
+            <Link href="/" className="hover:text-primary transition-colors">
               Home
             </Link>
           </li>
           <ChevronRight className="h-4 w-4" />
           <li>
-            <Link href="/products" className="hover:text-foreground transition-colors">
+            <Link href="/products" className="hover:text-primary transition-colors">
               Shop
             </Link>
           </li>
           <ChevronRight className="h-4 w-4" />
           <li>
-            <Link href={`/products?category=${displayProduct.category.toLowerCase()}`} className="hover:text-foreground transition-colors">
+            <Link href={`/products?category=${displayProduct.category.toLowerCase()}`} className="hover:text-primary transition-colors">
               {displayProduct.category}
             </Link>
           </li>
           <ChevronRight className="h-4 w-4" />
-          <li className="text-foreground">{displayProduct.name}</li>
+          <li className="text-foreground font-medium">{displayProduct.name}</li>
         </ol>
       </nav>
 
       {/* Product details */}
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
-          {/* Gallery */}
-          <ProductGallery images={displayProduct.images} productName={displayProduct.name} />
+        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
+          {/* Gallery - Fixed height container to prevent resize */}
+          <div className="lg:sticky lg:top-32">
+            <ProductGallery images={displayProduct.images} productName={displayProduct.name} />
+          </div>
 
-          {/* Product info */}
-          <div className="lg:py-8">
-            <span className="label-md text-primary">{displayProduct.category}</span>
-            <h1 className="mt-2 display-md text-foreground">{displayProduct.name}</h1>
-            <p className="mt-4 headline-md text-foreground">
-              Rs. {displayProduct.price.toLocaleString("en-IN")}
-            </p>
-            <p className="mt-6 body-lg text-muted-foreground">{displayProduct.description}</p>
+          {/* Product info - Scrollable */}
+          <div className="space-y-6">
+            <div>
+              <span className="label-md text-primary">{displayProduct.category}</span>
+              <h1 className="mt-2 display-md text-foreground">{displayProduct.name}</h1>
+              <p className="mt-4 headline-md text-foreground">
+                Rs. {displayProduct.price.toLocaleString("en-IN")}
+              </p>
+              <p className="mt-1 body-md text-muted-foreground">Inclusive of all taxes</p>
+            </div>
+
+            <p className="body-lg text-muted-foreground">{displayProduct.description}</p>
 
             {/* Variant selector */}
-            <div className="mt-8">
+            <div className="pt-2">
               <VariantSelector variants={displayProduct.variants} />
             </div>
 
             {/* Add to cart */}
-            <div className="mt-8">
+            <div className="pt-4">
               <AddToCartButton productName={displayProduct.name} />
             </div>
 
-            {/* Product details accordion */}
-            <div className="mt-8 border-t border-border pt-8">
-              <details className="group">
-                <summary className="flex cursor-pointer items-center justify-between py-4 label-md text-foreground">
-                  Product Details
-                  <ChevronRight className="h-4 w-4 transition-transform group-open:rotate-90" />
-                </summary>
-                <ul className="pb-4 space-y-2">
-                  {displayProduct.details.map((detail, index) => (
-                    <li key={index} className="body-md text-muted-foreground">
-                      {detail}
-                    </li>
-                  ))}
-                </ul>
-              </details>
-              <details className="group border-t border-border">
-                <summary className="flex cursor-pointer items-center justify-between py-4 label-md text-foreground">
-                  Shipping & Returns
-                  <ChevronRight className="h-4 w-4 transition-transform group-open:rotate-90" />
-                </summary>
-                <div className="pb-4 space-y-2 body-md text-muted-foreground">
-                  <p>Free standard shipping on orders over Rs. 5,000.</p>
-                  <p>Express shipping available for an additional charge.</p>
-                  <p>Returns accepted within 30 days of delivery.</p>
-                </div>
-              </details>
+            {/* Trust badges */}
+            <div className="grid grid-cols-3 gap-4 py-6 border-t border-b border-border">
+              <div className="flex flex-col items-center text-center gap-2">
+                <Truck className="h-5 w-5 text-primary" />
+                <span className="body-md text-muted-foreground">Free Shipping</span>
+              </div>
+              <div className="flex flex-col items-center text-center gap-2">
+                <RotateCcw className="h-5 w-5 text-primary" />
+                <span className="body-md text-muted-foreground">30-Day Returns</span>
+              </div>
+              <div className="flex flex-col items-center text-center gap-2">
+                <Shield className="h-5 w-5 text-primary" />
+                <span className="body-md text-muted-foreground">Secure Payment</span>
+              </div>
             </div>
+
+            {/* Product details accordion - Contained within product info section */}
+            <ProductAccordion 
+              details={displayProduct.details}
+              care={displayProduct.care}
+            />
           </div>
         </div>
       </div>

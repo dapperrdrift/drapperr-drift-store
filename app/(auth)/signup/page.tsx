@@ -2,12 +2,13 @@
 
 import Link from "next/link"
 import { useState } from "react"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [password, setPassword] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -16,6 +17,12 @@ export default function SignupPage() {
     await new Promise((resolve) => setTimeout(resolve, 1500))
     setIsLoading(false)
   }
+
+  const passwordRequirements = [
+    { label: "At least 8 characters", met: password.length >= 8 },
+    { label: "One uppercase letter", met: /[A-Z]/.test(password) },
+    { label: "One number", met: /\d/.test(password) },
+  ]
 
   return (
     <div className="min-h-screen flex">
@@ -31,63 +38,88 @@ export default function SignupPage() {
             Join Drapperr Drift and discover curated fashion
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
-              <input
-                type="text"
-                placeholder="First name"
-                required
-                className="w-full border-b border-input bg-transparent px-0 py-3 body-md placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-              />
-              <input
-                type="text"
-                placeholder="Last name"
-                required
-                className="w-full border-b border-input bg-transparent px-0 py-3 body-md placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-              />
+              <div>
+                <label className="label-md text-foreground block mb-2">First Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter first name"
+                  required
+                  className="w-full border border-input rounded-md bg-transparent px-4 py-3 body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
+                />
+              </div>
+              <div>
+                <label className="label-md text-foreground block mb-2">Last Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter last name"
+                  required
+                  className="w-full border border-input rounded-md bg-transparent px-4 py-3 body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
+                />
+              </div>
             </div>
 
             <div>
+              <label className="label-md text-foreground block mb-2">Email</label>
               <input
                 type="email"
-                placeholder="Email address"
+                placeholder="Enter your email"
                 required
-                className="w-full border-b border-input bg-transparent px-0 py-3 body-md placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
+                className="w-full border border-input rounded-md bg-transparent px-4 py-3 body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
               />
             </div>
 
             <div>
+              <label className="label-md text-foreground block mb-2">Phone Number</label>
               <input
                 type="tel"
-                placeholder="Phone number"
+                placeholder="+91 XXXXX XXXXX"
                 required
-                className="w-full border-b border-input bg-transparent px-0 py-3 body-md placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
+                className="w-full border border-input rounded-md bg-transparent px-4 py-3 body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
               />
             </div>
 
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="Password"
-                required
-                className="w-full border-b border-input bg-transparent px-0 py-3 pr-10 body-md placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-              </button>
+            <div>
+              <label className="label-md text-foreground block mb-2">Password</label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Create a password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border border-input rounded-md bg-transparent px-4 py-3 pr-12 body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+              {password && (
+                <div className="mt-2 space-y-1">
+                  {passwordRequirements.map((req, index) => (
+                    <div key={index} className="flex items-center gap-2">
+                      <Check className={`h-4 w-4 ${req.met ? "text-green-600" : "text-muted-foreground"}`} />
+                      <span className={`body-md ${req.met ? "text-green-600" : "text-muted-foreground"}`}>
+                        {req.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            <p className="body-md text-muted-foreground">
-              Password must be at least 8 characters with one uppercase letter and one number.
-            </p>
-
-            <label className="flex items-start gap-2">
-              <input type="checkbox" required className="mt-1 h-4 w-4 border-border" />
+            <label className="flex items-start gap-3 cursor-pointer pt-2">
+              <input 
+                type="checkbox" 
+                required 
+                className="mt-1 h-4 w-4 rounded border-input text-primary focus:ring-primary" 
+              />
               <span className="body-md text-muted-foreground">
                 I agree to the{" "}
                 <Link href="/terms" className="text-primary hover:underline">
@@ -118,21 +150,21 @@ export default function SignupPage() {
 
           <p className="mt-8 text-center body-md text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="text-primary hover:underline">
+            <Link href="/login" className="text-primary font-medium hover:underline">
               Sign in
             </Link>
           </p>
         </div>
       </div>
 
-      {/* Right side - Image */}
-      <div className="hidden lg:block lg:w-1/2 bg-surface-container-low">
-        <div className="flex h-full items-center justify-center p-12">
+      {/* Right side - Brand */}
+      <div className="hidden lg:flex lg:w-1/2 bg-primary">
+        <div className="flex h-full w-full items-center justify-center p-12">
           <div className="max-w-md text-center">
-            <p className="display-md text-foreground text-balance">
+            <p className="display-md text-primary-foreground text-balance">
               Curated for the Discerning
             </p>
-            <p className="mt-4 body-lg text-muted-foreground">
+            <p className="mt-6 body-lg text-primary-foreground/80">
               Join our community and be the first to discover new collections and exclusive offers.
             </p>
           </div>

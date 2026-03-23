@@ -50,12 +50,12 @@ export function Footer() {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 border-b border-input bg-transparent px-0 py-3 body-md placeholder:text-muted-foreground focus:border-foreground focus:outline-none transition-colors"
+                className="flex-1 border border-input bg-transparent px-4 py-3 rounded-md body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
                 required
               />
               <button
                 type="submit"
-                className="bg-primary px-8 py-3 label-md text-primary-foreground transition-colors hover:bg-primary-hover"
+                className="bg-primary px-8 py-3 rounded-md label-md text-primary-foreground transition-colors hover:bg-primary-hover"
               >
                 Subscribe
               </button>
@@ -74,7 +74,7 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="body-md text-muted-foreground transition-colors hover:text-foreground"
+                    className="body-md text-muted-foreground transition-colors hover:text-primary"
                   >
                     {item.name}
                   </Link>
@@ -89,7 +89,7 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="body-md text-muted-foreground transition-colors hover:text-foreground"
+                    className="body-md text-muted-foreground transition-colors hover:text-primary"
                   >
                     {item.name}
                   </Link>
@@ -104,7 +104,7 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="body-md text-muted-foreground transition-colors hover:text-foreground"
+                    className="body-md text-muted-foreground transition-colors hover:text-primary"
                   >
                     {item.name}
                   </Link>
@@ -119,7 +119,7 @@ export function Footer() {
                 <li key={item.name}>
                   <Link
                     href={item.href}
-                    className="body-md text-muted-foreground transition-colors hover:text-foreground"
+                    className="body-md text-muted-foreground transition-colors hover:text-primary"
                   >
                     {item.name}
                   </Link>
@@ -139,7 +139,7 @@ export function Footer() {
                 <Link
                   key={social.name}
                   href={social.href}
-                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  className="text-muted-foreground transition-colors hover:text-primary"
                   aria-label={social.name}
                 >
                   <social.icon className="h-5 w-5" />
