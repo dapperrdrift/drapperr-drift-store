@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Plus, Search, MoreVertical, Edit, Trash2, Eye } from "lucide-react"

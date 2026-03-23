@@ -1,11 +1,9 @@
-import { Metadata } from "next"
+"use client"
+
+import { useSearchParams } from "next/navigation"
+import { useMemo } from "react"
 import { ProductFilters } from "@/components/products/product-filters"
 import { ProductGrid } from "@/components/products/product-grid"
-
-export const metadata: Metadata = {
-  title: "Shop All",
-  description: "Browse our curated collection of contemporary high-fashion pieces.",
-}
 
 // Mock data - will be replaced with database queries
 const allProducts = [
@@ -84,23 +82,53 @@ const allProducts = [
 ]
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams()
+  const categoryParam = searchParams.get("category")
+
+  // Filter products based on URL params
+  const filteredProducts = useMemo(() => {
+    if (!categoryParam || categoryParam === "all") {
+      return allProducts
+    }
+    return allProducts.filter(
+      (product) => product.category.toLowerCase() === categoryParam.toLowerCase()
+    )
+  }, [categoryParam])
+
+  // Get page title based on category
+  const pageTitle = useMemo(() => {
+    if (!categoryParam || categoryParam === "all") {
+      return "Shop All"
+    }
+    return categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)
+  }, [categoryParam])
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="display-md text-foreground">Shop All</h1>
+        <h1 className="display-md text-foreground">{pageTitle}</h1>
         <p className="mt-2 body-lg text-muted-foreground">
-          {allProducts.length} products
+          {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
         </p>
       </div>
 
       {/* Filters */}
       <div className="mb-8">
-        <ProductFilters />
+        <ProductFilters initialCategory={categoryParam || "all"} />
       </div>
 
       {/* Product grid */}
-      <ProductGrid products={allProducts} />
+      {filteredProducts.length > 0 ? (
+        <ProductGrid products={filteredProducts} />
+      ) : (
+        <div className="text-center py-16 bg-secondary rounded-lg">
+          <p className="title-lg text-foreground mb-2">No products found</p>
+          <p className="body-md text-muted-foreground">
+            Try adjusting your filters or browse all products.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

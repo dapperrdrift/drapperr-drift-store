@@ -161,7 +161,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
           {/* Product info - Scrollable */}
           <div className="space-y-6">
             <div>
-              <span className="label-md text-primary">{displayProduct.category}</span>
+              <Link 
+                href={`/products?category=${displayProduct.category.toLowerCase()}`}
+                className="label-md text-primary hover:underline"
+              >
+                {displayProduct.category}
+              </Link>
               <h1 className="mt-2 display-md text-foreground">{displayProduct.name}</h1>
               <p className="mt-4 headline-md text-foreground">
                 Rs. {displayProduct.price.toLocaleString("en-IN")}

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { ChevronDown, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -11,6 +12,7 @@ const categories = [
   { id: "women", name: "Women" },
   { id: "outerwear", name: "Outerwear" },
   { id: "knitwear", name: "Knitwear" },
+  { id: "tops", name: "Tops" },
   { id: "bottoms", name: "Bottoms" },
   { id: "accessories", name: "Accessories" },
 ]
@@ -35,6 +37,7 @@ const sizes = ["XS", "S", "M", "L", "XL", "XXL"]
 
 interface ProductFiltersProps {
   onFilterChange?: (filters: FilterState) => void
+  initialCategory?: string
 }
 
 interface FilterState {
@@ -44,19 +47,41 @@ interface FilterState {
   sizes: string[]
 }
 
-export function ProductFilters({ onFilterChange }: ProductFiltersProps) {
+export function ProductFilters({ onFilterChange, initialCategory = "all" }: ProductFiltersProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  
   const [filters, setFilters] = useState<FilterState>({
-    category: "all",
+    category: initialCategory,
     sort: "newest",
     colors: [],
     sizes: [],
   })
   const [openSection, setOpenSection] = useState<string | null>(null)
+  
+  // Sync with URL params
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get("category")
+    if (categoryFromUrl && categoryFromUrl !== filters.category) {
+      setFilters(prev => ({ ...prev, category: categoryFromUrl }))
+    }
+  }, [searchParams])
 
   const updateFilters = (newFilters: Partial<FilterState>) => {
     const updated = { ...filters, ...newFilters }
     setFilters(updated)
     onFilterChange?.(updated)
+    
+    // Update URL when category changes
+    if (newFilters.category !== undefined) {
+      const params = new URLSearchParams(searchParams.toString())
+      if (newFilters.category === "all") {
+        params.delete("category")
+      } else {
+        params.set("category", newFilters.category)
+      }
+      router.push(`/products?${params.toString()}`)
+    }
   }
 
   const toggleColor = (colorId: string) => {

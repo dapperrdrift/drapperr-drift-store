@@ -1,5 +1,8 @@
+"use client"
+
 import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 interface ProductCardProps {
   product: {
@@ -14,6 +17,16 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const router = useRouter()
+
+  const handleCategoryClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (product.category) {
+      router.push(`/products?category=${encodeURIComponent(product.category.toLowerCase())}`)
+    }
+  }
+
   return (
     <Link href={`/products/${product.slug}`} className="group block">
       <div className="relative aspect-[3/4] overflow-hidden bg-surface-container-low rounded-md">
@@ -38,7 +51,12 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
       <div className="mt-4">
         {product.category && (
-          <span className="label-md text-primary">{product.category}</span>
+          <button
+            onClick={handleCategoryClick}
+            className="label-md text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+          >
+            {product.category}
+          </button>
         )}
         <h3 className="mt-1 title-md text-foreground group-hover:text-primary transition-colors">
           {product.name}
