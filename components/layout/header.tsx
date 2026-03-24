@@ -20,7 +20,7 @@ export function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-surface-container-lowest">
+      <header className="sticky top-0 z-50 bg-surface-container-lowest">
         {/* Announcement bar */}
         <div className="bg-primary text-primary-foreground">
           <div className="mx-auto max-w-7xl px-4 py-2">

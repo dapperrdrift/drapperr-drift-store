@@ -4,13 +4,13 @@ import Link from "next/link"
 const collections = [
   {
     name: "Men",
-    description: "Refined tailoring for the modern gentleman",
+    description: "Bold streetwear for the fearless spirit",
     href: "/products?category=men",
     image: "/images/collection-men.jpg",
   },
   {
     name: "Women",
-    description: "Effortless elegance for every occasion",
+    description: "Vibrant styles that make statements",
     href: "/products?category=women",
     image: "/images/collection-women.jpg",
   },
