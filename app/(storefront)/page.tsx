@@ -1,7 +1,8 @@
 import { HeroSection } from "@/components/home/hero-section"
 import { CollectionsSection } from "@/components/home/collections-section"
 import { FeaturedProducts } from "@/components/home/featured-products"
-import { EditorialSection } from "@/components/home/editorial-section"
+import { TestimonialsSection } from "@/components/home/testimonials-section"
+import { CTASection } from "@/components/home/cta-section"
 
 export default function HomePage() {
   return (
@@ -9,7 +10,8 @@ export default function HomePage() {
       <HeroSection />
       <FeaturedProducts />
       <CollectionsSection />
-      <EditorialSection />
+      <TestimonialsSection />
+      <CTASection />
     </>
   )
 }
