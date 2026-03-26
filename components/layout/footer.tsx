@@ -18,9 +18,6 @@ const footerNavigation = {
   ],
   company: [
     { name: "About Us", href: "/about" },
-    { name: "Careers", href: "/careers" },
-    { name: "Press", href: "/press" },
-    { name: "Sustainability", href: "/sustainability" },
   ],
   legal: [
     { name: "Privacy Policy", href: "/privacy" },
