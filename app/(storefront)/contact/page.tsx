@@ -39,8 +39,8 @@ export default function ContactPage() {
     {
       icon: MapPin,
       title: "Visit Us",
-      details: "123 Fashion Street, Mumbai",
-      subtext: "Maharashtra, India 400001",
+      details: "Shop No. F6, First Floor, Shubh Affinity",
+      subtext: "Next to DMART, Swami Vivekananda Nagar, Kota, Rajasthan 324010",
     },
     {
       icon: Clock,
@@ -178,16 +178,19 @@ export default function ContactPage() {
           )}
         </div>
 
-        {/* Map/Image placeholder */}
-        <div className="rounded-lg bg-surface-container-low overflow-hidden h-[400px] lg:h-auto flex items-center justify-center">
-          <div className="text-center p-8">
-            <MapPin className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
-            <p className="title-md text-foreground mb-2">Our Store Location</p>
-            <p className="body-md text-muted-foreground">
-              123 Fashion Street, Mumbai<br />
-              Maharashtra, India 400001
-            </p>
-          </div>
+        {/* Google Maps Embed */}
+        <div className="rounded-lg overflow-hidden h-[400px] lg:h-auto min-h-[450px]">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3612.335134024094!2d75.82009657537948!3d25.124358177757987!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396f8511763b4585%3A0x5ae48c4c3a39ae2d!2sDapperr%20Drift!5e0!3m2!1sen!2sin!4v1774543438218!5m2!1sen!2sin"
+            width="100%"
+            height="100%"
+            style={{ border: 0, minHeight: "450px" }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Drapperr Drift Store Location"
+            className="w-full h-full"
+          />
         </div>
       </div>
     </div>
