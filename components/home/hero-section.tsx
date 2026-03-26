@@ -64,7 +64,7 @@ export function HeroSection() {
       <AnimatePresence initial={false}>
         <motion.div
           key={slides[current].id}
-          variants={imageVariants}
+          variants={imageVariants as any}
           initial="enter"
           animate="center"
           exit="exit"
