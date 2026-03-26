@@ -104,7 +104,7 @@ export default function CartPage() {
         </div>
 
         {/* Cart summary */}
-        <div className="lg:sticky lg:top-32 lg:h-fit">
+        <div className="lg:sticky lg:top-[calc(var(--header-height)+1rem)] lg:h-fit">
           <CartSummary subtotal={subtotal} itemCount={itemCount} />
         </div>
       </div>

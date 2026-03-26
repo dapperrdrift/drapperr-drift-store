@@ -126,7 +126,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   return (
     <div>
       {/* Breadcrumb */}
-      <nav className="mx-auto max-w-7xl px-4 py-4 lg:px-8">
+      <nav className="mx-auto max-w-7xl px-4 pt-6 pb-4 lg:px-8">
         <ol className="flex items-center gap-2 body-md text-muted-foreground">
           <li>
             <Link href="/" className="hover:text-primary transition-colors">
@@ -154,7 +154,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
           {/* Gallery - Fixed height container to prevent resize */}
-          <div className="lg:sticky lg:top-32">
+          <div className="lg:sticky lg:top-[calc(var(--header-height)+1rem)]">
             <ProductGallery images={displayProduct.images} productName={displayProduct.name} />
           </div>
 

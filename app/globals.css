@@ -9,6 +9,9 @@
  */
 
 :root {
+  /* Header height: announcement bar (40px) + nav bar (64px) */
+  --header-height: 104px;
+
   /* Surface Colors - Warm off-whites */
   --background: #FAFAFA;
   --foreground: #1A1A1A;
@@ -121,6 +124,7 @@
 @theme inline {
   --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --spacing-header: var(--header-height);
   
   --color-background: var(--background);
   --color-foreground: var(--foreground);
