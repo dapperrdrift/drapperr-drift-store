@@ -268,4 +268,21 @@
   .text-pretty {
     text-wrap: pretty;
   }
+
+  /* Offset utilities tied to the fixed header height */
+  .pt-header {
+    padding-top: var(--header-height);
+  }
+
+  .mt-neg-header {
+    margin-top: calc(var(--header-height) * -1);
+  }
+
+  .top-header {
+    top: var(--header-height);
+  }
+
+  .top-header-offset {
+    top: calc(var(--header-height) + 1rem);
+  }
 }

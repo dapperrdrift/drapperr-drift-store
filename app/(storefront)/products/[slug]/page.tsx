@@ -154,7 +154,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
           {/* Gallery - Fixed height container to prevent resize */}
-          <div className="lg:sticky lg:top-[calc(var(--header-height)+1rem)]">
+          <div className="lg:sticky lg:top-header-offset">
             <ProductGallery images={displayProduct.images} productName={displayProduct.name} />
           </div>
 

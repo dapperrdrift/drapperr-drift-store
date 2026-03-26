@@ -9,7 +9,7 @@ export default function StorefrontLayout({
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
-      <main className="flex-1 pt-[var(--header-height)]">{children}</main>
+      <main className="flex-1 pt-header">{children}</main>
       <Footer />
     </div>
   )
