@@ -1,126 +1,72 @@
-"use client"
-
-import { useSearchParams } from "next/navigation"
-import { useMemo, Suspense } from "react"
+import { Suspense } from "react"
 import { ProductFilters } from "@/components/products/product-filters"
 import { ProductGrid } from "@/components/products/product-grid"
+import { createClient } from "@/lib/supabase/server"
 
-// Mock data - will be replaced with database queries
-const allProducts = [
-  {
-    id: "1",
-    name: "Cashmere Knit Sweater",
-    slug: "cashmere-knit-sweater",
-    price: 12500,
-    image: "/images/product-1.jpg",
-    category: "Knitwear",
-    isNew: true,
-  },
-  {
-    id: "2",
-    name: "Tailored Wool Blazer",
-    slug: "tailored-wool-blazer",
-    price: 24500,
-    image: "/images/product-2.jpg",
-    category: "Outerwear",
-    isNew: true,
-  },
-  {
-    id: "3",
-    name: "Silk Wide-Leg Trousers",
-    slug: "silk-wide-leg-trousers",
-    price: 8900,
-    image: "/images/product-3.jpg",
-    category: "Bottoms",
-    isNew: false,
-  },
-  {
-    id: "4",
-    name: "Artisan Leather Belt",
-    slug: "artisan-leather-belt",
-    price: 4500,
-    image: "/images/product-4.jpg",
-    category: "Accessories",
-    isNew: false,
-  },
-  {
-    id: "5",
-    name: "Premium Cotton Shirt",
-    slug: "premium-cotton-shirt",
-    price: 6800,
-    image: "/images/product-5.jpg",
-    category: "Tops",
-    isNew: true,
-  },
-  {
-    id: "6",
-    name: "Camel Wool Overcoat",
-    slug: "camel-wool-overcoat",
-    price: 35000,
-    image: "/images/product-6.jpg",
-    category: "Outerwear",
-    isNew: false,
-  },
-  {
-    id: "7",
-    name: "Designer Indigo Denim",
-    slug: "designer-indigo-denim",
-    price: 9500,
-    image: "/images/product-7.jpg",
-    category: "Bottoms",
-    isNew: true,
-  },
-  {
-    id: "8",
-    name: "Silk Signature Scarf",
-    slug: "silk-signature-scarf",
-    price: 3200,
-    image: "/images/product-8.jpg",
-    category: "Accessories",
-    isNew: false,
-  },
-]
+interface PageProps {
+  searchParams: Promise<{ category?: string; sort?: string }>
+}
 
-function ProductsContent() {
-  const searchParams = useSearchParams()
-  const categoryParam = searchParams.get("category")
+async function ProductsContent({ searchParams }: PageProps) {
+  const { category, sort } = await searchParams
+  const supabase = await createClient()
 
-  // Filter products based on URL params
-  const filteredProducts = useMemo(() => {
-    if (!categoryParam || categoryParam === "all") {
-      return allProducts
-    }
-    return allProducts.filter(
-      (product) => product.category.toLowerCase() === categoryParam.toLowerCase()
-    )
-  }, [categoryParam])
+  let query = supabase
+    .from('products')
+    .select(`
+      id,
+      name,
+      base_price,
+      images,
+      created_at,
+      categories!inner(name, slug),
+      variants(id, price_override, stock_quantity)
+    `)
+    .eq('is_active', true)
 
-  // Get page title based on category
-  const pageTitle = useMemo(() => {
-    if (!categoryParam || categoryParam === "all") {
-      return "Shop All"
-    }
-    return categoryParam.charAt(0).toUpperCase() + categoryParam.slice(1)
-  }, [categoryParam])
+  if (category && category !== 'all') {
+    query = query.eq('categories.slug', category)
+  }
+
+  if (sort === 'price_asc') {
+    query = query.order('base_price', { ascending: true })
+  } else if (sort === 'price_desc') {
+    query = query.order('base_price', { ascending: false })
+  } else {
+    query = query.order('created_at', { ascending: false })
+  }
+
+  const { data: products } = await query
+
+  const mappedProducts = (products ?? []).map((p: any) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.id,
+    price: p.variants?.[0]?.price_override ?? p.base_price,
+    image: p.images?.[0] ?? null,
+    category: p.categories?.name ?? 'Uncategorized',
+    isNew: false,
+  }))
+
+  const pageTitle = category && category !== 'all'
+    ? category.charAt(0).toUpperCase() + category.slice(1)
+    : 'Shop All'
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
-      {/* Page header */}
       <div className="mb-8">
         <h1 className="display-md text-foreground">{pageTitle}</h1>
         <p className="mt-2 body-lg text-muted-foreground">
-          {filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""}
+          {mappedProducts.length} product{mappedProducts.length !== 1 ? 's' : ''}
         </p>
       </div>
 
-      {/* Filters */}
       <div className="mb-8">
-        <ProductFilters initialCategory={categoryParam || "all"} />
+        <ProductFilters initialCategory={category || 'all'} />
       </div>
 
-      {/* Product grid */}
-      {filteredProducts.length > 0 ? (
-        <ProductGrid products={filteredProducts} />
+      {mappedProducts.length > 0 ? (
+        <ProductGrid products={mappedProducts} />
       ) : (
         <div className="text-center py-16 bg-secondary rounded-lg">
           <p className="title-lg text-foreground mb-2">No products found</p>
@@ -133,7 +79,7 @@ function ProductsContent() {
   )
 }
 
-export default function ProductsPage() {
+export default function ProductsPage({ searchParams }: PageProps) {
   return (
     <Suspense fallback={
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
@@ -142,7 +88,7 @@ export default function ProductsPage() {
         </div>
       </div>
     }>
-      <ProductsContent />
+      <ProductsContent searchParams={searchParams} />
     </Suspense>
   )
 }

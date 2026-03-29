@@ -1,48 +1,39 @@
 import Link from "next/link"
-import { ProductCard } from "@/components/products/product-card"
+import Image from "next/image"
 import { ArrowRight } from "lucide-react"
+import { createClient } from "@/lib/supabase/server"
 
-// Mock data - will be replaced with database queries
-const featuredProducts = [
-  {
-    id: "1",
-    name: "Cashmere Knit Sweater",
-    slug: "cashmere-knit-sweater",
-    price: 12500,
-    image: "/images/product-1.jpg",
-    category: "Knitwear",
-    isNew: true,
-  },
-  {
-    id: "2",
-    name: "Tailored Wool Blazer",
-    slug: "tailored-wool-blazer",
-    price: 24500,
-    image: "/images/product-2.jpg",
-    category: "Outerwear",
-    isNew: true,
-  },
-  {
-    id: "3",
-    name: "Silk Wide-Leg Trousers",
-    slug: "silk-wide-leg-trousers",
-    price: 8900,
-    image: "/images/product-3.jpg",
-    category: "Bottoms",
-    isNew: false,
-  },
-  {
-    id: "4",
-    name: "Artisan Leather Belt",
-    slug: "artisan-leather-belt",
-    price: 4500,
-    image: "/images/product-4.jpg",
-    category: "Accessories",
-    isNew: false,
-  },
-]
+export async function FeaturedProducts() {
+  const supabase = await createClient()
 
-export function FeaturedProducts() {
+  const { data: products } = await supabase
+    .from('products')
+    .select(`
+      id,
+      name,
+      base_price,
+      images,
+      categories(name, slug),
+      variants(id, price_override, stock_quantity)
+    `)
+    .eq('is_active', true)
+    .order('created_at', { ascending: false })
+    .limit(4)
+
+  const featuredProducts = (products ?? []).map((p: any) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.id, // using id as slug for routing until slug column is added
+    price: p.variants?.[0]?.price_override ?? p.base_price,
+    image: p.images?.[0] ?? null,
+    category: p.categories?.name ?? 'Uncategorized',
+    isNew: true,
+  }))
+
+  if (featuredProducts.length === 0) {
+    return null
+  }
+
   return (
     <section className="bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
@@ -62,7 +53,37 @@ export function FeaturedProducts() {
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <Link key={product.id} href={`/products/${product.slug}`} className="group">
+              <div className="aspect-[3/4] relative overflow-hidden rounded-md bg-muted">
+                {product.image ? (
+                  <Image
+                    src={product.image}
+                    alt={product.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                  />
+                ) : (
+                  <div className="flex h-full items-center justify-center bg-muted">
+                    <span className="body-md text-muted-foreground">No image</span>
+                  </div>
+                )}
+                {product.isNew && (
+                  <span className="absolute top-3 left-3 bg-primary px-2 py-1 label-sm text-primary-foreground rounded">
+                    NEW
+                  </span>
+                )}
+              </div>
+              <div className="mt-4">
+                <p className="label-sm text-muted-foreground">{product.category}</p>
+                <h3 className="mt-1 title-md text-foreground group-hover:text-primary transition-colors">
+                  {product.name}
+                </h3>
+                <p className="mt-1 title-md text-foreground">
+                  ₹{product.price.toLocaleString('en-IN')}
+                </p>
+              </div>
+            </Link>
           ))}
         </div>
       </div>

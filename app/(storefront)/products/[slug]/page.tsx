@@ -1,100 +1,13 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { ChevronRight, ChevronDown, Truck, RotateCcw, Shield } from "lucide-react"
+import { notFound } from "next/navigation"
+import { ChevronRight, Truck, RotateCcw, Shield } from "lucide-react"
 import { ProductGallery } from "@/components/products/product-gallery"
 import { VariantSelector } from "@/components/products/variant-selector"
 import { AddToCartButton } from "@/components/products/add-to-cart-button"
 import { ProductGrid } from "@/components/products/product-grid"
 import { ProductAccordion } from "@/components/products/product-accordion"
-
-// Mock product data - will be replaced with database queries
-const mockProducts: Record<string, {
-  id: string
-  name: string
-  slug: string
-  description: string
-  price: number
-  images: string[]
-  category: string
-  details: string[]
-  care: string[]
-  variants: Array<{
-    size: string
-    color: string
-    colorHex: string
-    stock: number
-    sku: string
-  }>
-}> = {
-  "cashmere-knit-sweater": {
-    id: "1",
-    name: "Cashmere Knit Sweater",
-    slug: "cashmere-knit-sweater",
-    description: "Luxuriously soft cashmere sweater crafted from the finest Mongolian cashmere. Features a relaxed fit with ribbed cuffs and hem for a timeless silhouette that transitions effortlessly from casual to refined.",
-    price: 12500,
-    images: ["/images/product-1.jpg", "/images/product-1.jpg", "/images/product-1.jpg"],
-    category: "Knitwear",
-    details: [
-      "100% Grade-A Mongolian Cashmere",
-      "Relaxed fit",
-      "Ribbed cuffs and hem",
-      "Made in Italy",
-    ],
-    care: [
-      "Dry clean recommended",
-      "Store folded to maintain shape",
-      "Avoid direct sunlight",
-    ],
-    variants: [
-      { size: "XS", color: "Cream", colorHex: "#F5F0E6", stock: 5, sku: "CKS-CR-XS" },
-      { size: "S", color: "Cream", colorHex: "#F5F0E6", stock: 8, sku: "CKS-CR-S" },
-      { size: "M", color: "Cream", colorHex: "#F5F0E6", stock: 12, sku: "CKS-CR-M" },
-      { size: "L", color: "Cream", colorHex: "#F5F0E6", stock: 6, sku: "CKS-CR-L" },
-      { size: "XL", color: "Cream", colorHex: "#F5F0E6", stock: 3, sku: "CKS-CR-XL" },
-      { size: "XS", color: "Black", colorHex: "#1C1B1B", stock: 0, sku: "CKS-BL-XS" },
-      { size: "S", color: "Black", colorHex: "#1C1B1B", stock: 4, sku: "CKS-BL-S" },
-      { size: "M", color: "Black", colorHex: "#1C1B1B", stock: 7, sku: "CKS-BL-M" },
-      { size: "L", color: "Black", colorHex: "#1C1B1B", stock: 2, sku: "CKS-BL-L" },
-      { size: "XL", color: "Black", colorHex: "#1C1B1B", stock: 0, sku: "CKS-BL-XL" },
-    ],
-  },
-}
-
-// Related products mock data
-const relatedProducts = [
-  {
-    id: "2",
-    name: "Tailored Wool Blazer",
-    slug: "tailored-wool-blazer",
-    price: 24500,
-    image: "/images/product-2.jpg",
-    category: "Outerwear",
-  },
-  {
-    id: "3",
-    name: "Silk Wide-Leg Trousers",
-    slug: "silk-wide-leg-trousers",
-    price: 8900,
-    image: "/images/product-3.jpg",
-    category: "Bottoms",
-  },
-  {
-    id: "5",
-    name: "Premium Cotton Shirt",
-    slug: "premium-cotton-shirt",
-    price: 6800,
-    image: "/images/product-5.jpg",
-    category: "Tops",
-  },
-  {
-    id: "6",
-    name: "Camel Wool Overcoat",
-    slug: "camel-wool-overcoat",
-    price: 35000,
-    image: "/images/product-6.jpg",
-    category: "Outerwear",
-  },
-]
+import { createClient } from "@/lib/supabase/server"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -102,26 +15,80 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const product = mockProducts[slug]
-  
+  const supabase = await createClient()
+
+  const { data: product } = await supabase
+    .from('products')
+    .select('name, description')
+    .eq('id', slug)
+    .eq('is_active', true)
+    .single()
+
   if (!product) {
-    return {
-      title: "Product Not Found",
-    }
+    return { title: "Product Not Found" }
   }
 
   return {
     title: product.name,
-    description: product.description,
+    description: product.description ?? undefined,
   }
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params
-  const product = mockProducts[slug]
+  const supabase = await createClient()
 
-  // For demo, show the cashmere sweater for any slug
-  const displayProduct = product || mockProducts["cashmere-knit-sweater"]
+  const { data: product } = await supabase
+    .from('products')
+    .select(`
+      id,
+      name,
+      description,
+      base_price,
+      images,
+      categories(name, slug),
+      variants(id, size, color, sku, price_override, stock_quantity)
+    `)
+    .eq('id', slug)
+    .eq('is_active', true)
+    .single()
+
+  if (!product) {
+    notFound()
+  }
+
+  // Fetch related products from the same category
+  const { data: relatedRaw } = await supabase
+    .from('products')
+    .select('id, name, base_price, images, categories(name, slug), variants(price_override)')
+    .eq('is_active', true)
+    .eq('category_id', (product as any).category_id)
+    .neq('id', product.id)
+    .limit(4)
+
+  const relatedProducts = (relatedRaw ?? []).map((p: any) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.id,
+    price: p.variants?.[0]?.price_override ?? p.base_price,
+    image: p.images?.[0] ?? null,
+    category: p.categories?.name ?? '',
+  }))
+
+  const price = (product as any).variants?.[0]?.price_override ?? product.base_price
+  const images: string[] = (product as any).images ?? []
+  const category = (product as any).categories?.name ?? 'Apparel'
+  const categorySlug = (product as any).categories?.slug ?? 'apparel'
+
+  // Map variants for VariantSelector
+  const variants = ((product as any).variants ?? []).map((v: any) => ({
+    id: v.id,
+    size: v.size,
+    color: v.color,
+    colorHex: '#888888',
+    stock: v.stock_quantity,
+    sku: v.sku,
+  }))
 
   return (
     <div>
@@ -129,61 +96,59 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <nav className="mx-auto max-w-7xl px-4 py-4 lg:px-8">
         <ol className="flex items-center gap-2 body-md text-muted-foreground">
           <li>
-            <Link href="/" className="hover:text-primary transition-colors">
-              Home
-            </Link>
+            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           </li>
           <ChevronRight className="h-4 w-4" />
           <li>
-            <Link href="/products" className="hover:text-primary transition-colors">
-              Shop
-            </Link>
+            <Link href="/products" className="hover:text-primary transition-colors">Shop</Link>
           </li>
           <ChevronRight className="h-4 w-4" />
           <li>
-            <Link href={`/products?category=${displayProduct.category.toLowerCase()}`} className="hover:text-primary transition-colors">
-              {displayProduct.category}
+            <Link href={`/products?category=${categorySlug}`} className="hover:text-primary transition-colors">
+              {category}
             </Link>
           </li>
           <ChevronRight className="h-4 w-4" />
-          <li className="text-foreground font-medium">{displayProduct.name}</li>
+          <li className="text-foreground font-medium">{product.name}</li>
         </ol>
       </nav>
 
       {/* Product details */}
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
-          {/* Gallery - Fixed height container to prevent resize */}
+          {/* Gallery */}
           <div className="lg:sticky lg:top-32">
-            <ProductGallery images={displayProduct.images} productName={displayProduct.name} />
+            <ProductGallery
+              images={images.length > 0 ? images : ['/images/product-placeholder.jpg']}
+              productName={product.name}
+            />
           </div>
 
-          {/* Product info - Scrollable */}
+          {/* Product info */}
           <div className="space-y-6">
             <div>
-              <Link 
-                href={`/products?category=${displayProduct.category.toLowerCase()}`}
-                className="label-md text-primary hover:underline"
-              >
-                {displayProduct.category}
+              <Link href={`/products?category=${categorySlug}`} className="label-md text-primary hover:underline">
+                {category}
               </Link>
-              <h1 className="mt-2 display-md text-foreground">{displayProduct.name}</h1>
+              <h1 className="mt-2 display-md text-foreground">{product.name}</h1>
               <p className="mt-4 headline-md text-foreground">
-                Rs. {displayProduct.price.toLocaleString("en-IN")}
+                ₹{price.toLocaleString('en-IN')}
               </p>
               <p className="mt-1 body-md text-muted-foreground">Inclusive of all taxes</p>
             </div>
 
-            <p className="body-lg text-muted-foreground">{displayProduct.description}</p>
+            {product.description && (
+              <p className="body-lg text-muted-foreground">{product.description}</p>
+            )}
 
             {/* Variant selector */}
             <div className="pt-2">
-              <VariantSelector variants={displayProduct.variants} />
+              <VariantSelector variants={variants} />
             </div>
 
             {/* Add to cart */}
             <div className="pt-4">
-              <AddToCartButton productName={displayProduct.name} />
+              <AddToCartButton productName={product.name} variants={variants} />
             </div>
 
             {/* Trust badges */}
@@ -202,24 +167,25 @@ export default async function ProductDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Product details accordion - Contained within product info section */}
-            <ProductAccordion 
-              details={displayProduct.details}
-              care={displayProduct.care}
+            <ProductAccordion
+              details={['See product description above']}
+              care={['Handle with care', 'Follow label instructions']}
             />
           </div>
         </div>
       </div>
 
       {/* Related products */}
-      <section className="bg-surface-container-low">
-        <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
-          <h2 className="headline-lg text-foreground">You May Also Like</h2>
-          <div className="mt-8">
-            <ProductGrid products={relatedProducts} />
+      {relatedProducts.length > 0 && (
+        <section className="bg-surface-container-low">
+          <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
+            <h2 className="headline-lg text-foreground">You May Also Like</h2>
+            <div className="mt-8">
+              <ProductGrid products={relatedProducts} />
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   )
 }

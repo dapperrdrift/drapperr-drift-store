@@ -2,27 +2,79 @@
 
 import Link from "next/link"
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Eye, EyeOff, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { createClient } from "@/lib/supabase/client"
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [password, setPassword] = useState("")
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    // Simulate signup - will be replaced with actual auth
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsLoading(false)
-  }
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const router = useRouter()
 
   const passwordRequirements = [
     { label: "At least 8 characters", met: password.length >= 8 },
     { label: "One uppercase letter", met: /[A-Z]/.test(password) },
     { label: "One number", met: /\d/.test(password) },
   ]
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError(null)
+
+    const form = e.currentTarget
+    const formData = new FormData(form)
+    const firstName = formData.get('firstName') as string
+    const lastName = formData.get('lastName') as string
+    const email = formData.get('email') as string
+    const phone = formData.get('phone') as string
+
+    const supabase = createClient()
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          name: `${firstName} ${lastName}`.trim(),
+          phone,
+        },
+      },
+    })
+
+    if (error) {
+      setError(error.message)
+      setIsLoading(false)
+      return
+    }
+
+    setSuccess(true)
+    setIsLoading(false)
+  }
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="max-w-md text-center">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
+            <Check className="h-8 w-8 text-primary" />
+          </div>
+          <h1 className="headline-lg text-foreground">Check your email</h1>
+          <p className="mt-4 body-lg text-muted-foreground">
+            We&apos;ve sent a verification link to your email address. Please check your inbox and click the link to activate your account.
+          </p>
+          <Link href="/login">
+            <Button className="mt-8 bg-primary text-primary-foreground">
+              Back to Login
+            </Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen flex">
@@ -38,11 +90,18 @@ export default function SignupPage() {
             Join Drapperr Drift and discover curated fashion
           </p>
 
+          {error && (
+            <div className="mt-4 rounded-md bg-destructive/10 border border-destructive/20 px-4 py-3">
+              <p className="body-md text-destructive">{error}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="mt-8 space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
                 <label className="label-md text-foreground block mb-2">First Name</label>
                 <input
+                  name="firstName"
                   type="text"
                   placeholder="Enter first name"
                   required
@@ -52,6 +111,7 @@ export default function SignupPage() {
               <div>
                 <label className="label-md text-foreground block mb-2">Last Name</label>
                 <input
+                  name="lastName"
                   type="text"
                   placeholder="Enter last name"
                   required
@@ -63,6 +123,7 @@ export default function SignupPage() {
             <div>
               <label className="label-md text-foreground block mb-2">Email</label>
               <input
+                name="email"
                 type="email"
                 placeholder="Enter your email"
                 required
@@ -73,9 +134,9 @@ export default function SignupPage() {
             <div>
               <label className="label-md text-foreground block mb-2">Phone Number</label>
               <input
+                name="phone"
                 type="tel"
                 placeholder="+91 XXXXX XXXXX"
-                required
                 className="w-full border border-input rounded-md bg-transparent px-4 py-3 body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
               />
             </div>
