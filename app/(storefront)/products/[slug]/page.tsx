@@ -93,7 +93,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   return (
     <div>
       {/* Breadcrumb */}
-      <nav className="mx-auto max-w-7xl px-4 py-4 lg:px-8">
+      <nav className="mx-auto max-w-7xl px-4 pt-6 pb-4 lg:px-8">
         <ol className="flex items-center gap-2 body-md text-muted-foreground">
           <li>
             <Link href="/" className="hover:text-primary transition-colors">Home</Link>
