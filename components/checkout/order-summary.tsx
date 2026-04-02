@@ -1,4 +1,5 @@
 import Image from "next/image"
+import React from "react"
 
 interface OrderItem {
   id: string
@@ -16,12 +17,50 @@ interface OrderSummaryProps {
   discount: number
   shipping: number
   total: number
+  onApplyCoupon?: (code: string) => Promise<void>
+  appliedCouponCode?: string
 }
 
-export function OrderSummary({ items, subtotal, discount, shipping, total }: OrderSummaryProps) {
+export function OrderSummary({ 
+  items, 
+  subtotal, 
+  discount, 
+  shipping, 
+  total,
+  onApplyCoupon,
+  appliedCouponCode
+}: OrderSummaryProps) {
+  const [couponCode, setCouponCode] = React.useState("")
+
   return (
     <div className="bg-surface-container-low p-6 lg:p-8">
       <h2 className="headline-md text-foreground">Order Summary</h2>
+
+      {/* Coupon code input */}
+      <div className="mt-6 flex flex-col gap-2">
+        <label htmlFor="coupon" className="label-md text-foreground">Coupon Code</label>
+        <div className="flex gap-2">
+          <input
+            type="text"
+            id="coupon"
+            value={couponCode}
+            onChange={(e) => setCouponCode(e.target.value)}
+            className="flex-1 border border-border bg-surface-container-lowest p-2 body-md text-foreground focus:border-primary focus:outline-none"
+            placeholder="Enter code"
+            disabled={!!appliedCouponCode}
+          />
+          <button
+            onClick={() => onApplyCoupon?.(couponCode)}
+            disabled={!couponCode || !!appliedCouponCode}
+            className="bg-primary px-4 py-2 label-md text-primary-foreground hover:bg-primary-hover disabled:opacity-50"
+          >
+            {appliedCouponCode ? "Applied" : "Apply"}
+          </button>
+        </div>
+        {appliedCouponCode && (
+          <p className="body-md text-primary">Coupon &quot;{appliedCouponCode}&quot; applied!</p>
+        )}
+      </div>
 
       {/* Items */}
       <div className="mt-6 space-y-4">

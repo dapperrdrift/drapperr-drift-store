@@ -1,11 +1,14 @@
 "use client"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
-import { ShoppingBag, Search, User, Menu, X } from "lucide-react"
+import { ShoppingBag, Search, User, Menu, X, Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SearchModal } from "@/components/layout/search-modal"
 import { cn } from "@/lib/utils"
+import { NotificationIndicator } from "@/components/layout/notification-indicator"
+import { useCart } from "@/contexts/cart-context"
 
 const navigation = [
   { name: "New Arrivals", href: "/products?filter=new" },
@@ -15,9 +18,13 @@ const navigation = [
 ]
 
 export function Header() {
+  const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+
+  const isHomePage = pathname === "/"
+  const isSolid = scrolled || !isHomePage
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,12 +36,14 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  const { count } = useCart()
+
   return (
     <>
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out",
-          scrolled
+          isSolid
             ? "bg-surface-container-lowest shadow-sm"
             : "bg-transparent"
         )}
@@ -57,7 +66,7 @@ export function Header() {
         <div
           className={cn(
             "transition-all duration-500 ease-in-out",
-            scrolled ? "border-b border-border" : "border-b border-transparent"
+            isSolid ? "border-b border-border" : "border-b border-transparent"
           )}
         >
           <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
@@ -70,7 +79,7 @@ export function Header() {
                 aria-label="Toggle menu"
                 className={cn(
                   "transition-colors duration-300",
-                  !scrolled && !mobileMenuOpen
+                  !isSolid && !mobileMenuOpen
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:text-primary"
                 )}
@@ -91,7 +100,7 @@ export function Header() {
                   href={item.href}
                   className={cn(
                     "label-md transition-colors duration-300",
-                    scrolled
+                    isSolid
                       ? "text-muted-foreground hover:text-primary"
                       : "text-white/90 hover:text-white drop-shadow-sm"
                   )}
@@ -106,7 +115,7 @@ export function Header() {
               <span
                 className={cn(
                   "display-md tracking-tight transition-colors duration-300",
-                  scrolled ? "text-foreground" : "text-white drop-shadow-md"
+                  isSolid ? "text-foreground" : "text-white drop-shadow-md"
                 )}
               >
                 DRAPPERR
@@ -122,20 +131,23 @@ export function Header() {
                 aria-label="Search"
                 className={cn(
                   "transition-colors duration-300",
-                  !scrolled
+                  !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:text-primary"
                 )}
               >
                 <Search className="h-5 w-5" />
               </Button>
+
+              <NotificationIndicator scrolled={isSolid} />
+
               <Button
                 variant="ghost"
                 size="icon"
                 asChild
                 className={cn(
                   "transition-colors duration-300",
-                  !scrolled
+                  !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:text-primary"
                 )}
@@ -144,12 +156,13 @@ export function Header() {
                   <User className="h-5 w-5" />
                 </Link>
               </Button>
+
               <Button
                 variant="ghost"
                 size="icon"
                 className={cn(
                   "relative transition-colors duration-300",
-                  !scrolled
+                  !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:text-primary"
                 )}
@@ -158,7 +171,7 @@ export function Header() {
                 <Link href="/cart" aria-label="Shopping cart">
                   <ShoppingBag className="h-5 w-5" />
                   <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
-                    0
+                    {count}
                   </span>
                 </Link>
               </Button>
@@ -179,10 +192,10 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
-            <div className="pt-4">
+            <div className="pt-4 flex items-center justify-between">
               <Button
                 variant="ghost"
-                className="w-full justify-start gap-2"
+                className="justify-start gap-2"
                 onClick={() => {
                   setMobileMenuOpen(false)
                   setSearchOpen(true)
@@ -191,6 +204,7 @@ export function Header() {
                 <Search className="h-5 w-5" />
                 <span className="label-md">Search</span>
               </Button>
+              <NotificationIndicator scrolled={true} />
             </div>
           </div>
         </div>

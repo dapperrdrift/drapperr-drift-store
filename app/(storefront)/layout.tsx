@@ -11,7 +11,7 @@ export default function StorefrontLayout({
     <CartProvider>
       <div className="flex min-h-screen flex-col">
         <Header />
-        <main className="flex-1 pt-0">{children}</main>
+        <main className="flex-1 pt-header">{children}</main>
         <Footer />
       </div>
     </CartProvider>
