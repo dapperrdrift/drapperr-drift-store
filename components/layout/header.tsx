@@ -111,68 +111,72 @@ export function Header() {
             </div>
 
             {/* Logo */}
-            <Link href="/" className="flex-shrink-0">
-              <span
+            <Link href="/" className="flex-shrink-0 transition-opacity hover:opacity-80">
+              <img
+                src="/images/logo-black.svg"
+                alt="Drapper Drift"
                 className={cn(
-                  "display-md tracking-tight transition-colors duration-300",
-                  isSolid ? "text-foreground" : "text-white drop-shadow-md"
+                  "h-8 w-auto transition-all duration-300",
+                  !isSolid ? "brightness-0 invert drop-shadow-md" : "brightness-100"
                 )}
-              >
-                DRAPPERR
-              </span>
+              />
             </Link>
 
             {/* Right actions */}
-            <div className="flex items-center gap-x-1">
+            <div className="flex items-center gap-x-3">
+              {/* Search */}
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
                 className={cn(
-                  "transition-colors duration-300",
+                  "transition-all duration-300",
                   !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
-                    : "text-foreground hover:text-primary"
+                    : "text-foreground hover:bg-primary hover:text-white"
                 )}
               >
                 <Search className="h-5 w-5" />
               </Button>
 
-              <NotificationIndicator scrolled={isSolid} />
-
-              <Button
-                variant="ghost"
-                size="icon"
-                asChild
-                className={cn(
-                  "transition-colors duration-300",
-                  !isSolid
-                    ? "text-white hover:text-white hover:bg-white/20"
-                    : "text-foreground hover:text-primary"
-                )}
-              >
-                <Link href="/account" aria-label="Account">
-                  <User className="h-5 w-5" />
-                </Link>
-              </Button>
-
+              {/* Cart */}
               <Button
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "relative transition-colors duration-300",
+                  "relative transition-all duration-300",
                   !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
-                    : "text-foreground hover:text-primary"
+                    : "text-foreground hover:bg-primary hover:text-white"
                 )}
                 asChild
               >
                 <Link href="/cart" aria-label="Shopping cart">
                   <ShoppingBag className="h-5 w-5" />
-                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                  <span className={cn(
+                    "absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold shadow-sm",
+                    !isSolid ? "bg-white text-primary" : "bg-primary text-white"
+                  )}>
                     {count}
                   </span>
+                </Link>
+              </Button>
+
+              {/* Profile */}
+              <Button
+                variant="ghost"
+                size="icon"
+                asChild
+                className={cn(
+                  "transition-all duration-300",
+                  !isSolid
+                    ? "text-white hover:text-white hover:bg-white/20"
+                    : "text-foreground hover:bg-primary hover:text-white"
+                )}
+              >
+                <Link href="/account" aria-label="Account">
+                  <User className="h-5 w-5" />
                 </Link>
               </Button>
             </div>
@@ -192,19 +196,48 @@ export function Header() {
                 {item.name}
               </Link>
             ))}
-            <div className="pt-4 flex items-center justify-between">
+            <div className="pt-4 flex items-center justify-between border-t border-border">
+              {/* Mobile Search */}
               <Button
                 variant="ghost"
-                className="justify-start gap-2"
+                size="icon"
                 onClick={() => {
                   setMobileMenuOpen(false)
                   setSearchOpen(true)
                 }}
+                className="text-foreground hover:bg-primary hover:text-white transition-all duration-300"
               >
                 <Search className="h-5 w-5" />
-                <span className="label-md">Search</span>
               </Button>
-              <NotificationIndicator scrolled={true} />
+
+              {/* Mobile Cart */}
+              <Button
+                variant="ghost"
+                size="icon"
+                asChild
+                className="relative text-foreground hover:bg-primary hover:text-white transition-all duration-300"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Link href="/cart">
+                  <ShoppingBag className="h-5 w-5" />
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm">
+                    {count}
+                  </span>
+                </Link>
+              </Button>
+
+              {/* Mobile Profile */}
+              <Button
+                variant="ghost"
+                size="icon"
+                asChild
+                className="text-foreground hover:bg-primary hover:text-white transition-all duration-300"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Link href="/account">
+                  <User className="h-5 w-5" />
+                </Link>
+              </Button>
             </div>
           </div>
         </div>

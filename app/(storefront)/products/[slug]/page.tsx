@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { data: product } = await supabase
     .from('products')
     .select('name, description')
-    .eq('id', slug)
+    .eq('slug', slug)
     .eq('is_active', true)
     .single()
 
@@ -43,13 +43,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
     .select(`
       id,
       name,
+      slug,
       description,
       base_price,
       images,
       categories(name, slug),
       variants(id, size, color, sku, price_override, stock_quantity)
     `)
-    .eq('id', slug)
+    .eq('slug', slug)
     .eq('is_active', true)
     .single()
 
@@ -60,7 +61,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   // Fetch related products from the same category
   const { data: relatedRaw } = await supabase
     .from('products')
-    .select('id, name, base_price, images, categories(name, slug), variants(price_override)')
+    .select('id, name, slug, base_price, images, categories(name, slug), variants(price_override)')
     .eq('is_active', true)
     .eq('category_id', (product as any).category_id)
     .neq('id', product.id)
@@ -69,7 +70,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const relatedProducts = (relatedRaw ?? []).map((p: any) => ({
     id: p.id,
     name: p.name,
-    slug: p.id,
+    slug: p.slug || p.id,
     price: p.variants?.[0]?.price_override ?? p.base_price,
     image: p.images?.[0] ?? null,
     category: p.categories?.name ?? '',
@@ -85,7 +86,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
     id: v.id,
     size: v.size,
     color: v.color,
-    colorHex: '#888888',
+    colorHex: v.color?.toLowerCase().replace(/\s+/g, '') || '#888888',
     stock: v.stock_quantity,
     sku: v.sku,
   }))

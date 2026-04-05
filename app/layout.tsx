@@ -23,20 +23,7 @@ export const metadata: Metadata = {
   keywords: ['fashion', 'luxury', 'clothing', 'designer', 'contemporary', 'high fashion'],
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
+    icon: '/favicon.png?v=2',
     apple: '/apple-icon.png',
   },
 }

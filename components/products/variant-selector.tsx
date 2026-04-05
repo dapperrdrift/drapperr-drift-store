@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 import { SizeGuideModal } from "@/components/products/size-guide-modal"
 
 interface Variant {
+  id: string
   size: string
   color: string
   colorHex: string
@@ -28,13 +29,13 @@ export function VariantSelector({ variants, onVariantChange }: VariantSelectorPr
 
   // Get available sizes for selected color
   const availableSizes = selectedColor
-    ? variants.filter((v) => v.color === selectedColor && v.stock > 0).map((v) => v.size)
-    : sizes
+    ? variants.filter((v) => v.color === selectedColor && (v.stock > 0 || v.stock === null)).map((v) => v.size)
+    : Array.from(new Set(variants.filter((v) => v.stock > 0 || v.stock === null).map((v) => v.size)))
 
   // Get available colors for selected size
   const availableColors = selectedSize
-    ? variants.filter((v) => v.size === selectedSize && v.stock > 0).map((v) => v.color)
-    : colors.map((c) => c.name)
+    ? variants.filter((v) => v.size === selectedSize && (v.stock > 0 || v.stock === null)).map((v) => v.color)
+    : Array.from(new Set(variants.filter((v) => v.stock > 0 || v.stock === null).map((v) => v.color)))
 
   // Get selected variant
   const selectedVariant = variants.find(
@@ -44,7 +45,7 @@ export function VariantSelector({ variants, onVariantChange }: VariantSelectorPr
   const handleColorChange = (color: string) => {
     setSelectedColor(color)
     // Reset size if not available in new color
-    if (selectedSize && !variants.find((v) => v.color === color && v.size === selectedSize && v.stock > 0)) {
+    if (selectedSize && !variants.find((v) => v.color === color && v.size === selectedSize && (v.stock > 0 || v.stock === null))) {
       setSelectedSize(null)
       onVariantChange?.(null)
     } else if (selectedSize) {

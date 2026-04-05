@@ -285,4 +285,13 @@
   .top-header-offset {
     top: calc(var(--header-height) + 1rem);
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
 }

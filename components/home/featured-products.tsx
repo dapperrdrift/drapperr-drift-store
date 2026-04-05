@@ -11,6 +11,7 @@ export async function FeaturedProducts() {
     .select(`
       id,
       name,
+      slug,
       base_price,
       images,
       categories(name, slug),
@@ -23,7 +24,7 @@ export async function FeaturedProducts() {
   const featuredProducts = (products ?? []).map((p: any) => ({
     id: p.id,
     name: p.name,
-    slug: p.id, // using id as slug for routing until slug column is added
+    slug: p.slug || p.id, // using id as fallback if slug is missing
     price: p.variants?.[0]?.price_override ?? p.base_price,
     image: p.images?.[0] ?? null,
     category: p.categories?.name ?? 'Uncategorized',

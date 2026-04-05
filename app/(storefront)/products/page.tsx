@@ -16,6 +16,7 @@ async function ProductsContent({ searchParams }: PageProps) {
     .select(`
       id,
       name,
+      slug,
       base_price,
       images,
       created_at,
@@ -36,12 +37,13 @@ async function ProductsContent({ searchParams }: PageProps) {
     query = query.order('created_at', { ascending: false })
   }
 
-  const { data: products } = await query
+  const { data: products, error } = await query
+  if (error) console.error('SUPABASE DB ERROR:', error)
 
   const mappedProducts = (products ?? []).map((p: any) => ({
     id: p.id,
     name: p.name,
-    slug: p.id,
+    slug: p.slug || p.id,
     price: p.variants?.[0]?.price_override ?? p.base_price,
     image: p.images?.[0] ?? null,
     category: p.categories?.name ?? 'Uncategorized',

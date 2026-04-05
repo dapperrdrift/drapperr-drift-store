@@ -63,7 +63,19 @@ export function Footer() {
 
       {/* Links section */}
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:py-16">
-        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
+          <div className="col-span-2 md:col-span-1">
+            <Link href="/" className="inline-block transition-opacity hover:opacity-80">
+              <img
+                src="/images/logo-black.svg"
+                alt="Drapper Drift"
+                className="h-8 w-auto grayscale brightness-0 opacity-80"
+              />
+            </Link>
+            <p className="mt-4 body-md text-muted-foreground mr-4">
+              Redefining contemporary elegance through high fashion pieces. CURATED. TIMELESS. BOLD.
+            </p>
+          </div>
           <div>
             <h4 className="label-md text-foreground">Shop</h4>
             <ul className="mt-4 space-y-3">
