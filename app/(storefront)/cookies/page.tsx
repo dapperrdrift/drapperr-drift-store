@@ -27,27 +27,27 @@ export default function CookiePolicyPage() {
           </p>
           <ul className="space-y-2 ml-4">
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span>To enable essential website functionality</span>
             </li>
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span>To remember your preferences and settings</span>
             </li>
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span>To keep you signed in to your account</span>
             </li>
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span>To analyze how our website is used</span>
             </li>
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span>To personalize content and recommendations</span>
             </li>
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span>To deliver relevant advertising</span>
             </li>
           </ul>
@@ -201,15 +201,15 @@ export default function CookiePolicyPage() {
           </p>
           <ul className="space-y-2 ml-4 mb-4">
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span><strong className="text-foreground">Browser Settings:</strong> Most browsers allow you to refuse or delete cookies through their settings</span>
             </li>
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span><strong className="text-foreground">Cookie Preferences:</strong> Use our cookie consent banner to customize your preferences</span>
             </li>
             <li className="flex items-start gap-3 body-md text-muted-foreground">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+              <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
               <span><strong className="text-foreground">Opt-Out Tools:</strong> Use tools like the Digital Advertising Alliance&apos;s opt-out page</span>
             </li>
           </ul>
