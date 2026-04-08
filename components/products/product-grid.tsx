@@ -5,7 +5,7 @@ interface Product {
   name: string
   slug: string
   price: number
-  image: string
+  image: string | null
   category?: string
   isNew?: boolean
 }

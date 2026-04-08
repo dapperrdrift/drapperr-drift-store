@@ -1,7 +1,7 @@
 import Link from "next/link"
-import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { createClient } from "@/lib/supabase/server"
+import { ProductCard } from "@/components/products/product-card"
 
 export async function FeaturedProducts() {
   const supabase = await createClient()
@@ -24,9 +24,9 @@ export async function FeaturedProducts() {
   const featuredProducts = (products ?? []).map((p: any) => ({
     id: p.id,
     name: p.name,
-    slug: p.slug || p.id, // using id as fallback if slug is missing
+    slug: p.slug || p.id,
     price: p.variants?.[0]?.price_override ?? p.base_price,
-    image: p.images?.[0] ?? null,
+    image: p.images?.[0] ?? '',
     category: p.categories?.name ?? 'Uncategorized',
     isNew: true,
   }))
@@ -54,37 +54,7 @@ export async function FeaturedProducts() {
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {featuredProducts.map((product) => (
-            <Link key={product.id} href={`/products/${product.slug}`} className="group">
-              <div className="aspect-[3/4] relative overflow-hidden rounded-md bg-muted">
-                {product.image ? (
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center bg-muted">
-                    <span className="body-md text-muted-foreground">No image</span>
-                  </div>
-                )}
-                {product.isNew && (
-                  <span className="absolute top-3 left-3 bg-primary px-2 py-1 label-sm text-primary-foreground rounded">
-                    NEW
-                  </span>
-                )}
-              </div>
-              <div className="mt-4">
-                <p className="label-sm text-muted-foreground">{product.category}</p>
-                <h3 className="mt-1 title-md text-foreground group-hover:text-primary transition-colors">
-                  {product.name}
-                </h3>
-                <p className="mt-1 title-md text-foreground">
-                  ₹{product.price.toLocaleString('en-IN')}
-                </p>
-              </div>
-            </Link>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </div>

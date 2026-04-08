@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Heart, ShoppingCart, Plus, Eye } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useWishlist } from "@/contexts/wishlist-context"
+import { QuickViewModal } from "./quick-view-modal"
 
 interface ProductCardProps {
   product: {
@@ -13,7 +15,7 @@ interface ProductCardProps {
     name: string
     slug: string
     price: number
-    image: string
+    image: string | null
     category?: string
     isNew?: boolean
   }
@@ -21,8 +23,10 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter()
-  const [isFavorite, setIsFavorite] = useState(false)
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist()
+  
+  const isFavorite = isInWishlist(product.id)
+  const [isQuickViewOpen, setQuickViewOpen] = useState(false)
 
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -32,38 +36,45 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }
 
-  const handleFavoriteClick = (e: React.MouseEvent) => {
+  const handleFavoriteClick = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setIsFavorite(!isFavorite)
-    // TODO: Backend integration - save to user's wishlist
+    if (isFavorite) {
+      await removeFromWishlist(product.id)
+    } else {
+      await addToWishlist(product.id)
+    }
   }
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    setIsAddingToCart(true)
-    // TODO: Backend integration - add to cart
-    setTimeout(() => setIsAddingToCart(false), 1000)
+    // Open Quick View Modal to let user select variant before adding to cart
+    setQuickViewOpen(true)
   }
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    // TODO: Open quick view modal
-    router.push(`/products/${product.slug}`)
+    setQuickViewOpen(true)
   }
-
   return (
-    <Link href={`/products/${product.slug}`} className="group block">
-      <div className="relative aspect-[3/4] overflow-hidden bg-surface-container-low rounded-md">
-        <Image
-          src={product.image}
-          alt={product.name}
-          fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-        />
+    <>
+      <Link href={`/products/${product.slug}`} className="group block">
+        <div className="relative aspect-[3/4] overflow-hidden bg-surface-container-low rounded-md">
+        {product.image ? (
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-muted">
+            <span className="body-md text-muted-foreground">No image</span>
+          </div>
+        )}
         {product.isNew && (
           <span className="absolute left-3 top-3 bg-primary px-3 py-1 rounded label-md text-primary-foreground">
             New
@@ -98,10 +109,8 @@ export function ProductCard({ product }: ProductCardProps) {
             {/* Add to Cart button - Right */}
             <button
               onClick={handleAddToCart}
-              disabled={isAddingToCart}
               className={cn(
-                "flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110 disabled:opacity-70",
-                isAddingToCart && "animate-pulse"
+                "flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110"
               )}
               aria-label="Add to cart"
             >
@@ -127,6 +136,18 @@ export function ProductCard({ product }: ProductCardProps) {
           Rs. {product.price.toLocaleString("en-IN")}
         </p>
       </div>
-    </Link>
+      </Link>
+      <QuickViewModal 
+        isOpen={isQuickViewOpen}
+        onClose={() => setQuickViewOpen(false)}
+        productSlug={product.slug}
+        productBase={{
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          category: product.category
+        }}
+      />
+    </>
   )
 }
