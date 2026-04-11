@@ -4,9 +4,10 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { Heart, ShoppingCart, Plus, Eye } from "lucide-react"
+import { Heart, ShoppingCart, Plus, Eye, Minus, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useWishlist } from "@/contexts/wishlist-context"
+import { useCart } from "@/contexts/cart-context"
 import { QuickViewModal } from "./quick-view-modal"
 
 interface ProductCardProps {
@@ -18,15 +19,24 @@ interface ProductCardProps {
     image: string | null
     category?: string
     isNew?: boolean
+    variants?: { id: string }[]
   }
 }
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter()
   const { isInWishlist, addToWishlist, removeFromWishlist } = useWishlist()
+  const { items, addItem, updateQty } = useCart()
   
   const isFavorite = isInWishlist(product.id)
   const [isQuickViewOpen, setQuickViewOpen] = useState(false)
+  const [isAdding, setIsAdding] = useState(false)
+  const hasSingleVariant = (product.variants?.length ?? 0) === 1
+  const firstVariantId = product.variants?.[0]?.id
+  const singleVariantCartItem = firstVariantId
+    ? items.find((item) => item.variant_id === firstVariantId)
+    : undefined
+  const totalInCart = singleVariantCartItem?.quantity ?? 0
 
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -46,11 +56,21 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   }
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    // Open Quick View Modal to let user select variant before adding to cart
-    setQuickViewOpen(true)
+    
+    if (hasSingleVariant && firstVariantId) {
+      try {
+        setIsAdding(true)
+        await addItem(firstVariantId, 1)
+      } finally {
+        setIsAdding(false)
+      }
+    } else {
+      // Multiple variants require size/color selection.
+      setQuickViewOpen(true)
+    }
   }
 
   const handleQuickView = (e: React.MouseEvent) => {
@@ -61,7 +81,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <>
       <Link href={`/products/${product.slug}`} className="group block">
-        <div className="relative aspect-[3/4] overflow-hidden bg-surface-container-low rounded-md">
+        <div className="relative aspect-3/4 overflow-hidden bg-surface-container-low rounded-md">
         {product.image ? (
           <Image
             src={product.image}
@@ -82,7 +102,7 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
         
         {/* Action buttons overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        <div className="absolute inset-x-0 bottom-0 p-3 bg-linear-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <div className="flex items-center justify-center gap-2">
             {/* Favorite button - Left */}
             <button
@@ -105,18 +125,57 @@ export function ProductCard({ product }: ProductCardProps) {
               <Eye className="h-4 w-4" />
               <span>Quick View</span>
             </button>
-            
+
             {/* Add to Cart button - Right */}
-            <button
-              onClick={handleAddToCart}
-              className={cn(
-                "flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110"
-              )}
-              aria-label="Add to cart"
-            >
-              <Plus className="h-4 w-4 absolute" />
-              <ShoppingCart className="h-5 w-5" />
-            </button>
+            {totalInCart > 0 && hasSingleVariant ? (
+              <div 
+                className="flex items-center justify-between h-10 w-24 bg-primary text-primary-foreground rounded-full shadow-lg px-1 transition-all"
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+              >
+                <button
+                  onClick={async (e) => { 
+                    e.preventDefault(); 
+                    e.stopPropagation(); 
+                    if (!singleVariantCartItem) return
+                    await updateQty(singleVariantCartItem.id, singleVariantCartItem.quantity - 1)
+                  }}
+                  className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-primary-foreground/20 transition-colors"
+                >
+                  <Minus className="h-3 w-3" />
+                </button>
+                <span className="body-md font-medium w-4 text-center">{totalInCart}</span>
+                <button
+                  onClick={async (e) => { 
+                    e.preventDefault(); 
+                    e.stopPropagation(); 
+                    if (!singleVariantCartItem) return
+                    await updateQty(singleVariantCartItem.id, singleVariantCartItem.quantity + 1)
+                  }}
+                  className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-primary-foreground/20 transition-colors"
+                >
+                  <Plus className="h-3 w-3" />
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={handleAddToCart}
+                disabled={isAdding}
+                className={cn(
+                  "flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110",
+                  isAdding && "opacity-75 cursor-not-allowed"
+                )}
+                aria-label="Add to cart"
+              >
+                {isAdding ? (
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 absolute" />
+                    <ShoppingCart className="h-5 w-5" />
+                  </>
+                )}
+              </button>
+            )}
           </div>
         </div>
       </div>

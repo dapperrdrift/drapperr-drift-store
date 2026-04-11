@@ -9,6 +9,14 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { VariantSelector } from "./variant-selector"
 import { AddToCartButton } from "./add-to-cart-button"
 
+interface Variant {
+  id: string
+  size: string
+  color: string
+  stock_quantity: number
+  sku: string
+}
+
 interface QuickViewModalProps {
   isOpen: boolean
   onClose: () => void
@@ -24,6 +32,7 @@ interface QuickViewModalProps {
 export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: QuickViewModalProps) {
   const [product, setProduct] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -61,12 +70,11 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
   }, [isOpen, productSlug])
 
   // Map variants for VariantSelector if product is loaded
-  const variants = product?.variants?.map((v: any) => ({
+  const variants: Variant[] = product?.variants?.map((v: any) => ({
     id: v.id,
     size: v.size,
     color: v.color,
-    colorHex: v.color?.toLowerCase().replace(/\s+/g, '') || '#888888',
-    stock: v.stock_quantity,
+    stock_quantity: v.stock_quantity,
     sku: v.sku,
   })) || []
 
@@ -83,9 +91,9 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
           <span className="sr-only">Close</span>
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 max-h-[90vh] md:max-h-[600px] overflow-y-auto custom-scrollbar">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-h-[90vh] md:max-h-150 overflow-y-auto custom-scrollbar">
           {/* Left: Image */}
-          <div className="relative aspect-[3/4] md:aspect-auto w-full h-full min-h-[300px] bg-surface-container-low">
+          <div className="relative aspect-3/4 md:aspect-auto w-full h-full min-h-75 bg-surface-container-low">
             {product?.images?.[0] || productBase.image ? (
               <Image
                 src={product?.images?.[0] || productBase.image}
@@ -128,14 +136,18 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
 
                 <div className="flex-1">
                   {variants.length > 0 ? (
-                    <VariantSelector variants={variants} />
+                    <VariantSelector variants={variants} onVariantChange={setSelectedVariant} />
                   ) : (
                     <p className="body-md text-muted-foreground">No variant options available.</p>
                   )}
                 </div>
 
                 <div className="pt-4 border-t border-border mt-auto">
-                  <AddToCartButton productName={product.name} variants={variants} />
+                  <AddToCartButton
+                    productName={product.name}
+                    variants={variants}
+                    selectedVariantId={selectedVariant?.id}
+                  />
                   <Link 
                     href={`/products/${productSlug}`}
                     onClick={onClose}

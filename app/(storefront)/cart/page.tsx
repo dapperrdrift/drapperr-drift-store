@@ -1,59 +1,30 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
-import { ShoppingBag, ArrowLeft } from "lucide-react"
+import { ShoppingBag, ArrowLeft, Loader2 } from "lucide-react"
 import { CartItem } from "@/components/cart/cart-item"
 import { CartSummary } from "@/components/cart/cart-summary"
 import { Button } from "@/components/ui/button"
-
-// Mock cart data - will be replaced with actual cart state
-const initialCartItems = [
-  {
-    id: "cart-1",
-    productId: "1",
-    name: "Cashmere Knit Sweater",
-    slug: "cashmere-knit-sweater",
-    image: "/images/product-1.jpg",
-    price: 12500,
-    size: "M",
-    color: "Cream",
-    quantity: 1,
-  },
-  {
-    id: "cart-2",
-    productId: "2",
-    name: "Tailored Wool Blazer",
-    slug: "tailored-wool-blazer",
-    image: "/images/product-2.jpg",
-    price: 24500,
-    size: "L",
-    color: "Charcoal",
-    quantity: 1,
-  },
-]
+import { useCart } from "@/contexts/cart-context"
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(initialCartItems)
+  const { items: cartItems, updateQty, removeItem, total: subtotal, count: itemCount, loading } = useCart()
 
   const handleUpdateQuantity = (id: string, quantity: number) => {
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
-    )
+    updateQty(id, quantity)
   }
 
   const handleRemoveItem = (id: string) => {
-    setCartItems((items) => items.filter((item) => item.id !== id))
+    removeItem(id)
   }
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  )
-
-  const itemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
+  if (loading) {
+    return (
+      <div className="mx-auto flex max-w-7xl items-center justify-center px-4 py-32 lg:px-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    )
+  }
 
   if (cartItems.length === 0) {
     return (

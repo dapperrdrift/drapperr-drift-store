@@ -19,17 +19,21 @@ export async function FeaturedProducts() {
     `)
     .eq('is_active', true)
     .order('created_at', { ascending: false })
-    .limit(4)
+    .limit(12)
 
-  const featuredProducts = (products ?? []).map((p: any) => ({
-    id: p.id,
-    name: p.name,
-    slug: p.slug || p.id,
-    price: p.variants?.[0]?.price_override ?? p.base_price,
-    image: p.images?.[0] ?? '',
-    category: p.categories?.name ?? 'Uncategorized',
-    isNew: true,
-  }))
+  const featuredProducts = (products ?? [])
+    .filter((p: any) => (p.variants ?? []).some((v: any) => v.stock_quantity > 0))
+    .slice(0, 4)
+    .map((p: any) => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug || p.id,
+      price: p.variants?.[0]?.price_override ?? p.base_price,
+      image: p.images?.[0] ?? '',
+      category: p.categories?.name ?? 'Uncategorized',
+      isNew: true,
+      variants: p.variants?.map((v: any) => ({ id: v.id })),
+    }))
 
   if (featuredProducts.length === 0) {
     return null

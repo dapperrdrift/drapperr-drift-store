@@ -1,13 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ArrowLeft, Check, CreditCard, MapPin, Shield } from "lucide-react"
 import { ShippingForm } from "@/components/checkout/shipping-form"
 import { OrderSummary } from "@/components/checkout/order-summary"
 import { useCart } from "@/contexts/cart-context"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { createClient } from "@/lib/supabase/client"
 
 // Declare the Razorpay global injected by the script
 declare global {
@@ -30,6 +31,18 @@ interface ShippingAddress {
   pincode: string
 }
 
+interface SavedAddress {
+  id: string
+  first_name: string
+  last_name: string
+  phone: string
+  address: string
+  city: string
+  state: string
+  pincode: string
+  is_default: boolean | null
+}
+
 /** Dynamically loads the Razorpay checkout SDK script */
 function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
@@ -47,12 +60,50 @@ function loadRazorpayScript(): Promise<boolean> {
 
 export default function CheckoutPage() {
   const { items: cartItems, total: cartTotal, loading: cartLoading } = useCart()
+  const supabase = createClient()
   
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("shipping")
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; couponId: string; discountAmount: number } | null>(null)
   const [confirmedOrderId, setConfirmedOrderId] = useState<string | null>(null)
+  const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([])
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
+  const [showNewAddressForm, setShowNewAddressForm] = useState(true)
+  const [userEmail, setUserEmail] = useState("")
+
+  useEffect(() => {
+    let isCancelled = false
+
+    const fetchSavedAddresses = async () => {
+      const { data: authData } = await supabase.auth.getUser()
+      const user = authData.user
+      if (!user) return
+      setUserEmail(user.email ?? "")
+
+      const { data } = await supabase
+        .from("addresses")
+        .select("id, first_name, last_name, phone, address, city, state, pincode, is_default")
+        .eq("user_id", user.id)
+        .order("is_default", { ascending: false })
+        .order("created_at", { ascending: false })
+
+      if (!isCancelled && data) {
+        setSavedAddresses(data as SavedAddress[])
+        if (data.length > 0) {
+          const defaultAddress = (data as SavedAddress[]).find((address) => address.is_default) ?? data[0]
+          setSelectedAddressId(defaultAddress.id)
+        }
+        setShowNewAddressForm(data.length === 0)
+      }
+    }
+
+    fetchSavedAddresses()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [supabase])
 
   if (cartLoading) {
     return (
@@ -69,10 +120,15 @@ export default function CheckoutPage() {
 
   const handleApplyCoupon = async (code: string) => {
     try {
+      const normalizedCode = code.trim().toUpperCase()
+      if (!normalizedCode) {
+        throw new Error("Coupon code is required")
+      }
+
       const res = await fetch("/api/coupon/validate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code, amount: subtotal }),
+        body: JSON.stringify({ code: normalizedCode, amount: subtotal }),
       })
       if (!res.ok) {
         const err = await res.json()
@@ -89,8 +145,68 @@ export default function CheckoutPage() {
     }
   }
 
-  const handleShippingSubmit = (address: ShippingAddress) => {
+  const handleShippingSubmit = async (address: ShippingAddress) => {
+    const { data: authData } = await supabase.auth.getUser()
+    const user = authData.user
+
+    if (user) {
+      const { data: existing } = await supabase
+        .from("addresses")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("first_name", address.firstName)
+        .eq("last_name", address.lastName)
+        .eq("phone", address.phone)
+        .eq("address", address.address)
+        .eq("city", address.city)
+        .eq("state", address.state)
+        .eq("pincode", address.pincode)
+        .maybeSingle()
+
+      if (!existing) {
+        const { data: inserted } = await supabase
+          .from("addresses")
+          .insert({
+            user_id: user.id,
+            first_name: address.firstName,
+            last_name: address.lastName,
+            phone: address.phone,
+            address: address.address,
+            city: address.city,
+            state: address.state,
+            pincode: address.pincode,
+            type: "home",
+            is_default: savedAddresses.length === 0,
+          })
+          .select("id, first_name, last_name, phone, address, city, state, pincode, is_default")
+          .single()
+
+        if (inserted) {
+          setSavedAddresses((prev) => [inserted as SavedAddress, ...prev])
+        }
+      }
+    }
+
     setShippingAddress(address)
+    setCurrentStep("payment")
+  }
+
+  const handleSelectSavedAddress = (address: SavedAddress) => {
+    setShippingAddress({
+      firstName: address.first_name,
+      lastName: address.last_name,
+      email: userEmail,
+      phone: address.phone,
+      address: address.address,
+      city: address.city,
+      state: address.state,
+      pincode: address.pincode,
+    })
+    setSelectedAddressId(address.id)
+  }
+
+  const handleDeliverToSelectedAddress = () => {
+    if (!shippingAddress) return
     setCurrentStep("payment")
   }
 
@@ -262,7 +378,78 @@ export default function CheckoutPage() {
         {/* Main content */}
         <div className="lg:col-span-3">
           {currentStep === "shipping" && (
-            <ShippingForm onSubmit={handleShippingSubmit} />
+            <div className="space-y-6">
+              {savedAddresses.length > 0 && (
+                <div className="rounded-lg border border-border bg-surface p-5 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="headline-md text-foreground">Saved Addresses</h2>
+                    <button
+                      type="button"
+                      onClick={() => setShowNewAddressForm((prev) => !prev)}
+                      className="body-md text-primary hover:underline"
+                    >
+                      {showNewAddressForm ? "Hide New Address Form" : "Use New Address"}
+                    </button>
+                  </div>
+                  <div className="mt-4 space-y-3">
+                    {savedAddresses.map((address) => (
+                      <div
+                        key={address.id}
+                        className={cn(
+                          "rounded-md border bg-background p-4 transition-colors",
+                          selectedAddressId === address.id
+                            ? "border-primary bg-primary/5 ring-1 ring-primary/20"
+                            : "border-border hover:border-primary/40"
+                        )}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="title-md text-foreground">{address.first_name} {address.last_name}</p>
+                            <p className="body-md text-muted-foreground mt-1">{address.address}</p>
+                            <p className="body-md text-muted-foreground">{address.city}, {address.state} {address.pincode}</p>
+                            <p className="body-md text-muted-foreground">{address.phone}</p>
+                          </div>
+                          {address.is_default && (
+                            <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                              Default
+                            </span>
+                          )}
+                        </div>
+
+                        <div className="mt-3 flex items-center gap-2">
+                          <Button
+                            type="button"
+                            variant={selectedAddressId === address.id ? "default" : "outline"}
+                            size="sm"
+                            className="label-md"
+                            onClick={() => handleSelectSavedAddress(address)}
+                          >
+                            {selectedAddressId === address.id ? "Selected" : "Select"}
+                          </Button>
+                          {selectedAddressId === address.id && (
+                            <Button
+                              type="button"
+                              size="sm"
+                              className="label-md bg-primary text-primary-foreground hover:bg-primary-hover"
+                              onClick={handleDeliverToSelectedAddress}
+                            >
+                              Deliver Here
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {(showNewAddressForm || savedAddresses.length === 0) && (
+                <ShippingForm
+                  onSubmit={handleShippingSubmit}
+                  initialData={shippingAddress || undefined}
+                />
+              )}
+            </div>
           )}
 
           {currentStep === "payment" && shippingAddress && (

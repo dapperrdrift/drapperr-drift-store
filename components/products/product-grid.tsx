@@ -8,6 +8,7 @@ interface Product {
   image: string | null
   category?: string
   isNew?: boolean
+  variants?: { id: string }[]
 }
 
 interface ProductGridProps {

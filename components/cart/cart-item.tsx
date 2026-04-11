@@ -7,10 +7,10 @@ import { Minus, Plus, X } from "lucide-react"
 interface CartItemProps {
   item: {
     id: string
-    productId: string
+    product_id: string
     name: string
     slug: string
-    image: string
+    image: string | null
     price: number
     size: string
     color: string
@@ -25,13 +25,19 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
     <div className="flex gap-4 py-6 border-b border-border">
       {/* Product image */}
       <Link href={`/products/${item.slug}`} className="relative h-32 w-24 flex-shrink-0 overflow-hidden bg-surface-container-low">
-        <Image
-          src={item.image}
-          alt={item.name}
-          fill
-          className="object-cover"
-          sizes="96px"
-        />
+        {item.image ? (
+          <Image
+            src={item.image}
+            alt={item.name}
+            fill
+            className="object-cover"
+            sizes="96px"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-muted">
+            <span className="body-md text-muted-foreground">No image</span>
+          </div>
+        )}
       </Link>
 
       {/* Product details */}

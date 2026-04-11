@@ -87,9 +87,13 @@ async function ProductsContent({ searchParams }: PageProps) {
     image: p.images?.[0] ?? null,
     category: p.categories?.name ?? 'Uncategorized',
     isNew: false,
-    // keep variant info for filtering
-    _variants: (p.variants ?? []) as { color: string; size: string }[],
+    variants: p.variants?.map((v: any) => ({ id: v.id })),
+    // keep variant info for filtering and in-stock checks
+    _variants: (p.variants ?? []) as { id: string; color: string; size: string; stock_quantity: number }[],
   }))
+
+  // Hide products with no variants or no in-stock variants
+  mappedProducts = mappedProducts.filter((p) => p._variants.some((v) => v.stock_quantity > 0))
 
   // Filter by color (match against variant colors, case-insensitive)
   if (activeColors.length > 0) {

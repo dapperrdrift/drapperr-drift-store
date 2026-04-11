@@ -28,10 +28,13 @@ export function AddToCartButton({ disabled, productName, variants = [], selected
   const [isAdded, setIsAdded] = useState(false)
   const { addItem } = useCart()
 
-  // Determine current variant and stock
-  const currentVariant = variants.find(v => v.id === selectedVariantId) ?? variants[0]
+  // Use explicitly selected variant when available; otherwise fall back to first in-stock variant.
+  const defaultVariant = variants.find((v) => v.stock_quantity > 0) ?? variants[0]
+  const currentVariant = selectedVariantId
+    ? variants.find((v) => v.id === selectedVariantId)
+    : defaultVariant
   const maxStock = currentVariant?.stock_quantity ?? 0
-  const isOutOfStock = maxStock === 0
+  const isOutOfStock = !currentVariant || maxStock === 0
 
   const handleAddToCart = async () => {
     if (disabled || isOutOfStock || !currentVariant) return
@@ -48,7 +51,7 @@ export function AddToCartButton({ disabled, productName, variants = [], selected
     }
   }
 
-  const isDisabled = disabled || isOutOfStock || !currentVariant || isAdding
+  const isDisabled = disabled || isOutOfStock || isAdding
 
   return (
     <div className="space-y-4">
@@ -84,7 +87,7 @@ export function AddToCartButton({ disabled, productName, variants = [], selected
         onClick={handleAddToCart}
         disabled={isDisabled}
         className={cn(
-          "w-full py-6 label-md transition-all",
+          "w-full py-6 label-md transition-all overflow-hidden",
           isAdded
             ? "bg-green-600 hover:bg-green-600 text-white"
             : isOutOfStock
@@ -93,21 +96,21 @@ export function AddToCartButton({ disabled, productName, variants = [], selected
         )}
       >
         {isAdding ? (
-          <span className="flex items-center gap-2">
+          <span className="flex items-center justify-center gap-2 min-w-0 whitespace-nowrap">
             <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
             Adding...
           </span>
         ) : isAdded ? (
-          <span className="flex items-center gap-2">
+          <span className="flex items-center justify-center gap-2 min-w-0 whitespace-nowrap">
             <Check className="h-5 w-5" />
             Added to Cart
           </span>
         ) : isOutOfStock ? (
           "Out of Stock"
         ) : (
-          <span className="flex items-center gap-2">
-            <ShoppingBag className="h-5 w-5" />
-            {disabled ? "Select Options" : `Add to Cart — ${quantity} ${quantity === 1 ? "item" : "items"}`}
+          <span className="flex items-center justify-center gap-2 min-w-0 whitespace-nowrap">
+            <ShoppingBag className="h-5 w-5 shrink-0" />
+            <span className="truncate">Add to Cart</span>
           </span>
         )}
       </Button>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 
 interface ShippingAddress {
@@ -40,6 +40,8 @@ export function ShippingForm({ onSubmit, initialData }: ShippingFormProps) {
     pincode: initialData?.pincode || "",
   })
   const [errors, setErrors] = useState<Partial<ShippingAddress>>({})
+  const [isPincodeLoading, setIsPincodeLoading] = useState(false)
+  const [pincodeNote, setPincodeNote] = useState<string | null>(null)
 
   const validateForm = () => {
     const newErrors: Partial<ShippingAddress> = {}
@@ -74,14 +76,127 @@ export function ShippingForm({ onSubmit, initialData }: ShippingFormProps) {
     }
   }
 
+  useEffect(() => {
+    let ignore = false
+
+    const lookupByPincode = async () => {
+      if (!/^\d{6}$/.test(formData.pincode)) {
+        setPincodeNote(null)
+        return
+      }
+
+      setIsPincodeLoading(true)
+      setPincodeNote(null)
+
+      try {
+        const res = await fetch(`https://api.postalpincode.in/pincode/${formData.pincode}`)
+        const data = await res.json()
+        const first = data?.[0]
+
+        if (!first || first.Status !== "Success" || !first.PostOffice?.length) {
+          throw new Error("Could not find location for this pincode")
+        }
+
+        const office = first.PostOffice[0]
+        const city = office.District || office.Block || ""
+        const state = office.State || ""
+
+        if (!ignore) {
+          setFormData((prev) => ({
+            ...prev,
+            city,
+            state,
+          }))
+          setPincodeNote("City and state auto-filled from pincode")
+          setErrors((prev) => ({ ...prev, city: undefined, state: undefined, pincode: undefined }))
+        }
+      } catch {
+        if (!ignore) {
+          setPincodeNote("Unable to auto-fill. Please verify pincode or enter city/state manually.")
+        }
+      } finally {
+        if (!ignore) {
+          setIsPincodeLoading(false)
+        }
+      }
+    }
+
+    lookupByPincode()
+
+    return () => {
+      ignore = true
+    }
+  }, [formData.pincode])
+
   const inputClasses = (field: keyof ShippingAddress) =>
-    `w-full border-b bg-transparent px-0 py-3 body-md placeholder:text-muted-foreground focus:outline-none transition-colors ${
+    `w-full rounded-md border bg-background px-3 py-3 body-md placeholder:text-muted-foreground focus:outline-none transition-colors ${
       errors[field] ? "border-destructive" : "border-input focus:border-foreground"
     }`
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="headline-md text-foreground">Shipping Address</h2>
+    <form onSubmit={handleSubmit} className="space-y-6 rounded-lg border border-border bg-surface p-5 sm:p-6">
+      <div className="space-y-1 border-b border-border pb-4">
+        <h2 className="headline-md text-foreground">Shipping Address</h2>
+        <p className="body-md text-muted-foreground">Enter pincode first to auto-fill city and state.</p>
+      </div>
+
+      <div className="space-y-2">
+        <label className="label-md text-foreground" htmlFor="pincode">Pincode</label>
+        <input
+          id="pincode"
+          type="text"
+          placeholder="Pincode"
+          value={formData.pincode}
+          onChange={(e) => handleChange("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))}
+          maxLength={6}
+          className={inputClasses("pincode")}
+        />
+        {isPincodeLoading && <p className="body-md text-muted-foreground">Fetching city and state...</p>}
+        {!isPincodeLoading && pincodeNote && (
+          <p className={`body-md ${pincodeNote.startsWith("City and state") ? "text-emerald-700" : "text-amber-700"}`}>
+            {pincodeNote}
+          </p>
+        )}
+        {errors.pincode && (
+          <p className="body-md text-destructive">{errors.pincode}</p>
+        )}
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label className="label-md text-foreground" htmlFor="city">City</label>
+          <input
+            id="city"
+            type="text"
+            placeholder="City"
+            value={formData.city}
+            onChange={(e) => handleChange("city", e.target.value)}
+            className={inputClasses("city")}
+          />
+          {errors.city && (
+            <p className="mt-1 body-md text-destructive">{errors.city}</p>
+          )}
+        </div>
+        <div>
+          <label className="label-md text-foreground" htmlFor="state">State</label>
+          <select
+            id="state"
+            value={formData.state}
+            onChange={(e) => handleChange("state", e.target.value)}
+            className={`${inputClasses("state")} cursor-pointer`}
+          >
+            <option value="">Select State</option>
+            {indianStates.map((state) => (
+              <option key={state} value={state}>
+                {state}
+              </option>
+            ))}
+          </select>
+          {errors.state && (
+            <p className="mt-1 body-md text-destructive">{errors.state}</p>
+          )}
+        </div>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
@@ -138,61 +253,18 @@ export function ShippingForm({ onSubmit, initialData }: ShippingFormProps) {
       </div>
 
       <div>
+        <label className="label-md text-foreground" htmlFor="address">Full Address</label>
         <textarea
+          id="address"
           placeholder="Full Address"
           value={formData.address}
           onChange={(e) => handleChange("address", e.target.value)}
           rows={3}
-          className={`${inputClasses("address")} resize-none border rounded-none border-input p-3`}
+          className={`${inputClasses("address")} resize-none`}
         />
         {errors.address && (
           <p className="mt-1 body-md text-destructive">{errors.address}</p>
         )}
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div>
-          <input
-            type="text"
-            placeholder="City"
-            value={formData.city}
-            onChange={(e) => handleChange("city", e.target.value)}
-            className={inputClasses("city")}
-          />
-          {errors.city && (
-            <p className="mt-1 body-md text-destructive">{errors.city}</p>
-          )}
-        </div>
-        <div>
-          <select
-            value={formData.state}
-            onChange={(e) => handleChange("state", e.target.value)}
-            className={`${inputClasses("state")} cursor-pointer`}
-          >
-            <option value="">Select State</option>
-            {indianStates.map((state) => (
-              <option key={state} value={state}>
-                {state}
-              </option>
-            ))}
-          </select>
-          {errors.state && (
-            <p className="mt-1 body-md text-destructive">{errors.state}</p>
-          )}
-        </div>
-        <div>
-          <input
-            type="text"
-            placeholder="Pincode"
-            value={formData.pincode}
-            onChange={(e) => handleChange("pincode", e.target.value)}
-            maxLength={6}
-            className={inputClasses("pincode")}
-          />
-          {errors.pincode && (
-            <p className="mt-1 body-md text-destructive">{errors.pincode}</p>
-          )}
-        </div>
       </div>
 
       <Button

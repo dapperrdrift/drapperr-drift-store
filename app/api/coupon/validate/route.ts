@@ -1,21 +1,23 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 
 export async function POST(req: NextRequest) {
   try {
     const { code, amount } = await req.json()
+    const normalizedCode = String(code ?? "").trim().toUpperCase()
+    const orderAmount = Number(amount ?? 0)
 
-    if (!code) {
+    if (!normalizedCode) {
       return NextResponse.json({ error: "Coupon code is required" }, { status: 400 })
     }
 
-    const supabase = await createClient()
+    const supabase = createAdminClient()
     const { data: coupon, error } = await supabase
       .from("coupons")
       .select("*")
-      .eq("code", code)
+      .ilike("code", normalizedCode)
       .eq("is_active", true)
-      .single()
+      .maybeSingle()
 
     if (error || !coupon) {
       return NextResponse.json({ error: "Invalid or inactive coupon code" }, { status: 404 })
@@ -33,7 +35,7 @@ export async function POST(req: NextRequest) {
 
 
     // Check min order value
-    if (amount < (coupon.min_order_value || 0)) {
+    if (orderAmount < (coupon.min_order_value || 0)) {
       return NextResponse.json({ 
         error: `Minimum order value of Rs. ${coupon.min_order_value} required` 
       }, { status: 400 })
@@ -43,13 +45,13 @@ export async function POST(req: NextRequest) {
     if (coupon.discount_type === "flat") {
       discountAmount = coupon.discount_value
     } else if (coupon.discount_type === "percentage") {
-      discountAmount = (amount * coupon.discount_value) / 100
+      discountAmount = (orderAmount * coupon.discount_value) / 100
     }
 
     return NextResponse.json({
       valid: true,
       couponId: coupon.id,
-      discountAmount: Math.min(discountAmount, amount),
+      discountAmount: Math.min(discountAmount, orderAmount),
       code: coupon.code
     })
   } catch (error) {

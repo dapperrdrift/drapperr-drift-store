@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import crypto from "crypto"
 
 export async function POST(req: NextRequest) {
@@ -10,6 +11,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid order data" }, { status: 400 })
     }
 
+    // Use user client only to authenticate; use admin client for DB writes to bypass RLS
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
@@ -25,6 +27,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Payment gateway not configured" }, { status: 500 })
     }
 
+    const adminDb = createAdminClient()
+
     // 1. Calculate totals server-side
     let subtotal = 0
     items.forEach((item: any) => {
@@ -33,7 +37,7 @@ export async function POST(req: NextRequest) {
 
     let discountAmount = 0
     if (couponId) {
-      const { data: coupon } = await supabase
+      const { data: coupon } = await adminDb
         .from("coupons")
         .select("*")
         .eq("id", couponId)
@@ -52,8 +56,8 @@ export async function POST(req: NextRequest) {
     const shippingFee = subtotal >= 5000 ? 0 : 299
     const totalAmount = subtotal - discountAmount + shippingFee
 
-    // 2. Create order in Supabase
-    const { data: order, error: orderError } = await supabase
+    // 2. Create order in Supabase (admin client bypasses RLS)
+    const { data: order, error: orderError } = await adminDb
       .from("orders")
       .insert({
         user_id: user.id,
@@ -81,7 +85,7 @@ export async function POST(req: NextRequest) {
       line_total: item.price * item.quantity
     }))
 
-    const { error: itemsError } = await supabase
+    const { error: itemsError } = await adminDb
       .from("order_items")
       .insert(orderItems)
 
@@ -118,7 +122,7 @@ export async function POST(req: NextRequest) {
     const razorpayOrder = await razorpayRes.json()
 
     // 5. Create payment record
-    const { error: paymentError } = await supabase
+    const { error: paymentError } = await adminDb
       .from("payments")
       .insert({
         order_id: order.id,

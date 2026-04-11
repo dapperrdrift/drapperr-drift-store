@@ -16,7 +16,9 @@ import { useCart } from "@/contexts/cart-context"
 
 type TabType = "orders" | "wishlist" | "addresses" | "notifications" | "settings"
 
-export default function AccountPage() {
+import { Suspense } from "react"
+
+function AccountContent() {
   const [activeTab, setActiveTab] = useState<TabType>("orders")
   const [isEditing, setIsEditing] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -68,9 +70,11 @@ export default function AccountPage() {
             *,
             order_items (
               *,
-              products (
-                name,
-                images
+              variants (
+                products (
+                  name,
+                  images
+                )
               )
             )
           `)
@@ -104,6 +108,9 @@ export default function AccountPage() {
           .order("created_at", { ascending: false })
       ])
 
+      if (ordersRes.error) {
+        console.error("Failed to fetch orders:", ordersRes.error)
+      }
       if (ordersRes.data) setOrders(ordersRes.data)
       if (addressesRes.data) setAddresses(addressesRes.data)
       if (wishlistRes.data) setWishlist(wishlistRes.data)
@@ -292,7 +299,7 @@ export default function AccountPage() {
         </nav>
 
         {/* Content Area */}
-        <div className="min-h-[400px]">
+        <div className="min-h-100">
           {/* Orders Tab */}
           {activeTab === "orders" && (
             <div>
@@ -320,21 +327,26 @@ export default function AccountPage() {
                           <div key={index} className="flex items-center gap-3">
                             <div className="relative h-16 w-16 rounded overflow-hidden bg-surface-container-low">
                               <Image
-                                src={item.products?.images?.[0] || "/images/placeholder.jpg"}
-                                alt={item.products?.name || "Product"}
+                                src={item.variants?.products?.images?.[0] || "/images/placeholder.jpg"}
+                                alt={item.variants?.products?.name || "Product"}
                                 fill
                                 className="object-cover"
                                 sizes="64px"
                               />
                             </div>
                             <div>
-                              <p className="body-md text-foreground">{item.products?.name}</p>
+                              <p className="body-md text-foreground">{item.variants?.products?.name || "Product"}</p>
                               <p className="body-md text-muted-foreground">Qty: {item.quantity}</p>
                             </div>
                           </div>
                         ))}
                       </div>
-                      <div className="mt-4 flex justify-end">
+                      <div className="mt-4 flex flex-wrap justify-end gap-3">
+                        <Button asChild variant="outline" size="sm" className="border-primary/40 text-primary hover:bg-primary hover:text-primary-foreground">
+                          <Link href={`/orders/${order.id}`}>
+                            Track Order
+                          </Link>
+                        </Button>
                         <Link 
                           href={`/orders/${order.id}`}
                           className="flex items-center gap-1 text-primary body-md hover:underline"
@@ -432,7 +444,7 @@ export default function AccountPage() {
                       Add New
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="sm:max-w-[500px]">
+                  <DialogContent className="sm:max-w-125">
                     <DialogHeader>
                       <DialogTitle>{editingAddress ? "Edit Address" : "Add New Address"}</DialogTitle>
                       <DialogDescription>
@@ -750,5 +762,13 @@ export default function AccountPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function AccountPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center"><Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" /></div>}>
+      <AccountContent />
+    </Suspense>
   )
 }

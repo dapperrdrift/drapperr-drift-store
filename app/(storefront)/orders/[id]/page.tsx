@@ -20,32 +20,41 @@ export default function OrderDetailPage() {
   useEffect(() => {
     async function getOrder() {
       const { data: { user } } = await supabase.auth.getUser()
+      if (!user) {
+        router.push("/login")
+        return
+      }
       
       const { data: orderData, error } = await supabase
         .from("orders")
         .select(`
           *,
+          payments (
+            id,
+            status,
+            method,
+            razorpay_payment_id,
+            created_at
+          ),
           order_items (
             *,
-            products (
-              name,
-              images,
-              description
+            variants (
+              size,
+              color,
+              products (
+                name,
+                images,
+                description
+              )
             )
           )
         `)
         .eq("id", id)
-        .single()
+        .eq("user_id", user.id)
+        .maybeSingle()
 
       if (error || !orderData) {
-        console.error("Order not found:", error)
         setLoading(false)
-        return
-      }
-
-      // Basic security: only allow customer to see their own order
-      if (user && orderData.user_id && orderData.user_id !== user.id) {
-        router.push("/account")
         return
       }
 
@@ -96,9 +105,17 @@ export default function OrderDetailPage() {
     )
   }
 
+  const paymentStatus = Array.isArray(order.payments)
+    ? order.payments[0]?.status
+    : order.payments?.status
+  const paymentMethod = Array.isArray(order.payments)
+    ? order.payments[0]?.method
+    : order.payments?.method
+  const isPaymentCompleted = paymentStatus === "completed"
+
   const trackingSteps = [
     { status: "Order Placed", completed: true, date: new Date(order.created_at).toLocaleString() },
-    { status: "Payment Completed", completed: order.payment_status === "completed", date: order.payment_status === "completed" ? "Verified" : "" },
+    { status: "Payment Completed", completed: isPaymentCompleted, date: isPaymentCompleted ? "Verified" : "" },
     { status: "Shipped", completed: ["shipped", "delivered"].includes(order.status), date: "" },
     { status: "Delivered", completed: order.status === "delivered", date: "" },
   ]
@@ -136,18 +153,18 @@ export default function OrderDetailPage() {
                 <div key={item.id} className="flex gap-4">
                   <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden bg-surface-container-lowest border border-border rounded">
                     <Image
-                      src={item.products?.images?.[0] || "/images/placeholder.jpg"}
-                      alt={item.products?.name || "Product"}
+                      src={item.variants?.products?.images?.[0] || "/images/placeholder.jpg"}
+                      alt={item.variants?.products?.name || "Product"}
                       fill
                       className="object-cover"
                     />
                   </div>
                   <div className="flex flex-1 flex-col justify-center">
-                    <h3 className="title-md text-foreground">{item.products?.name}</h3>
-                    <p className="body-md text-muted-foreground">Size: {item.size} | Color: {item.color}</p>
+                    <h3 className="title-md text-foreground">{item.variants?.products?.name || "Product"}</h3>
+                    <p className="body-md text-muted-foreground">Size: {item.variants?.size || "-"} | Color: {item.variants?.color || "-"}</p>
                     <div className="mt-2 flex items-center justify-between">
                       <span className="body-md text-foreground">Qty: {item.quantity}</span>
-                      <span className="title-md text-foreground">Rs. {item.price.toLocaleString("en-IN")}</span>
+                      <span className="title-md text-foreground">Rs. {Number(item.unit_price || 0).toLocaleString("en-IN")}</span>
                     </div>
                   </div>
                 </div>
@@ -221,8 +238,8 @@ export default function OrderDetailPage() {
               </div>
             </div>
             <div className="mt-6 p-3 rounded bg-surface text-center">
-              <p className="body-xs text-muted-foreground">Paid via Razorpay</p>
-              <p className="body-xs font-mono text-muted-foreground">{order.payment_status === "completed" ? "Verified" : "Pending Verification"}</p>
+              <p className="body-xs text-muted-foreground">Paid via {paymentMethod ? String(paymentMethod).toUpperCase() : "Razorpay"}</p>
+              <p className="body-xs font-mono text-muted-foreground">{isPaymentCompleted ? "Verified" : "Pending Verification"}</p>
             </div>
           </section>
         </div>
