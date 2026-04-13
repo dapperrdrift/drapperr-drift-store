@@ -1,13 +1,14 @@
+"use client"
+
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Instagram, Twitter, Facebook } from "lucide-react"
 
 const footerNavigation = {
   shop: [
     { name: "New Arrivals", href: "/products?filter=new" },
     { name: "Best Sellers", href: "/products?filter=bestsellers" },
-    { name: "Men", href: "/products?category=men" },
-    { name: "Women", href: "/products?category=women" },
-    { name: "Sale", href: "/products?filter=sale" },
+    { name: "About Us", href: "/about" },
   ],
   help: [
     { name: "Contact Us", href: "/contact" },
@@ -16,8 +17,11 @@ const footerNavigation = {
     { name: "Size Guide", href: "/size-guide" },
     { name: "Track Order", href: "/orders" },
   ],
-  company: [
-    { name: "About Us", href: "/about" },
+  categories: [
+    { name: "T-Shirts", href: "/products?category=t-shirts" },
+    { name: "Hoodies", href: "/products?category=hoodies" },
+    { name: "Denim", href: "/products?category=denim" },
+    { name: "Accessories", href: "/products?category=accessories" },
   ],
   legal: [
     { name: "Privacy Policy", href: "/privacy" },
@@ -33,33 +37,37 @@ const socialLinks = [
 ]
 
 export function Footer() {
+  const pathname = usePathname()
+  const showNewsletter = pathname === "/"
+
   return (
     <footer className="bg-surface-container-low">
-      {/* Newsletter section */}
-      <div className="border-b border-border">
-        <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
-          <div className="flex flex-col items-center text-center">
-            <h3 className="headline-lg text-foreground">Join the Inner Circle</h3>
-            <p className="mt-2 body-lg text-muted-foreground max-w-md">
-              Be the first to know about new collections, exclusive offers, and style inspiration.
-            </p>
-            <form className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 border border-input bg-transparent px-4 py-3 rounded-md body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
-                required
-              />
-              <button
-                type="submit"
-                className="bg-primary px-8 py-3 rounded-md label-md text-primary-foreground transition-colors hover:bg-primary-hover"
-              >
-                Subscribe
-              </button>
-            </form>
+      {showNewsletter && (
+        <div className="border-b border-border">
+          <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
+            <div className="flex flex-col items-center text-center">
+              <h3 className="headline-lg text-foreground">Join the Inner Circle</h3>
+              <p className="mt-2 body-lg text-muted-foreground max-w-md">
+                Be the first to know about new collections, exclusive offers, and style inspiration.
+              </p>
+              <form className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="flex-1 border border-input bg-transparent px-4 py-3 rounded-md body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="bg-primary px-8 py-3 rounded-md label-md text-primary-foreground transition-colors hover:bg-primary-hover"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Links section */}
       <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:py-16">
@@ -107,9 +115,9 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="label-md text-foreground">Company</h4>
+            <h4 className="label-md text-foreground">Categories</h4>
             <ul className="mt-4 space-y-3">
-              {footerNavigation.company.map((item) => (
+              {footerNavigation.categories.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}

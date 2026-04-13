@@ -19,7 +19,7 @@ function CategoryCard({ category }: { category: Category }) {
       href={`/products?category=${category.slug}`}
       className="group relative overflow-hidden rounded-sm"
     >
-      <div className="aspect-[3/4] relative">
+      <div className="aspect-3/4 relative">
         <Image
           src={imgSrc}
           alt={category.name}
@@ -29,7 +29,7 @@ function CategoryCard({ category }: { category: Category }) {
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         {/* Dark gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/60 via-foreground/10 to-transparent transition-opacity group-hover:from-foreground/70" />
+        <div className="absolute inset-0 bg-linear-to-t from-foreground/60 via-foreground/10 to-transparent transition-opacity group-hover:from-foreground/70" />
 
         {/* Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-end p-8 text-center">
@@ -46,7 +46,7 @@ function CategoryCard({ category }: { category: Category }) {
 // Loading skeleton
 function CategorySkeleton() {
   return (
-    <div className="aspect-[3/4] w-full animate-pulse rounded-sm bg-muted" />
+    <div className="aspect-3/4 w-full animate-pulse rounded-sm bg-muted" />
   )
 }
 
