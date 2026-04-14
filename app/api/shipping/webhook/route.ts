@@ -51,11 +51,19 @@ const NOTIFICATION_MESSAGES: Record<OrderStatus, { title: string; body: string }
 
 export async function POST(req: NextRequest) {
   try {
-    // 1. Validate secret token
+    // 1. Validate — accept either the ?secret= query param OR the x-api-key header
+    //    Shiprocket sends the Token value as the x-api-key header.
+    //    Both must match SHIPROCKET_WEBHOOK_SECRET.
     const { searchParams } = new URL(req.url)
-    const secret = searchParams.get("secret")
+    const querySecret = searchParams.get("secret")
+    const headerToken = req.headers.get("x-api-key")
+    const expected = process.env.SHIPROCKET_WEBHOOK_SECRET
 
-    if (!secret || secret !== process.env.SHIPROCKET_WEBHOOK_SECRET) {
+    const isValid =
+      (querySecret && querySecret === expected) ||
+      (headerToken && headerToken === expected)
+
+    if (!isValid) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
