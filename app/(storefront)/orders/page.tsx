@@ -63,7 +63,8 @@ export default function OrderHistoryPage() {
         )
       `)
       .eq("user_id", user.id)
-      .eq("hidden_by_user", false)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .eq("hidden_by_user" as any, false)
       .order("created_at", { ascending: false })
 
     if (!error && data) setOrders(data)
