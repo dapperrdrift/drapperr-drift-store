@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
@@ -24,6 +25,7 @@ function AccountContent() {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [orders, setOrders] = useState<any[]>([])
+  const [clearingHistory, setClearingHistory] = useState(false)
   const [addresses, setAddresses] = useState<any[]>([])
   const [wishlist, setWishlist] = useState<any[]>([])
   const [notifications, setNotifications] = useState<any[]>([])
@@ -79,6 +81,8 @@ function AccountContent() {
             )
           `)
           .eq("user_id", user.id)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .eq("hidden_by_user" as any, false)
           .order("created_at", { ascending: false }),
         
         supabase
@@ -218,6 +222,16 @@ function AccountContent() {
     }
   }
 
+  const clearOrderHistory = async () => {
+    setClearingHistory(true)
+    try {
+      await fetch("/api/orders/clear-history", { method: "POST" })
+      setOrders([])
+    } finally {
+      setClearingHistory(false)
+    }
+  }
+
   const tabs = [
     { id: "orders" as const, label: "Orders", icon: Package },
     { id: "wishlist" as const, label: "Wishlist", icon: Heart },
@@ -303,7 +317,37 @@ function AccountContent() {
           {/* Orders Tab */}
           {activeTab === "orders" && (
             <div>
-              <h2 className="headline-md text-foreground mb-6">Your Orders</h2>
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="headline-md text-foreground">Your Orders</h2>
+                {orders.length > 0 && (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/5">
+                        <Trash2 className="h-4 w-4" />
+                        Clear History
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Clear order history?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This will hide all orders from your view. Your orders are still being processed and tracked — this only clears your history display.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={clearOrderHistory}
+                          disabled={clearingHistory}
+                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        >
+                          {clearingHistory ? "Clearing…" : "Clear History"}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                )}
+              </div>
               {orders.length > 0 ? (
                 <div className="space-y-4">
                   {orders.map((order) => (
