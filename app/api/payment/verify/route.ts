@@ -162,7 +162,10 @@ export async function POST(req: NextRequest) {
 
         await adminDb
           .from("orders")
-          .update({ shiprocket_order_id: String(srResult.order_id) } as any)
+          .update({
+            shiprocket_order_id: String(srResult.order_id),
+            shiprocket_shipment_id: String(srResult.shipment_id),
+          } as any)
           .eq("id", fullOrder.id)
       }
     } catch (srError) {
