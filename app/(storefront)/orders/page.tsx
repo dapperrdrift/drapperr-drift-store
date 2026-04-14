@@ -1,13 +1,24 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Package, ChevronRight, Loader2, ShoppingBag } from "lucide-react"
+import { Package, ChevronRight, Loader2, ShoppingBag, Trash2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
 import Image from "next/image"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 const STATUS_STYLES: Record<string, string> = {
   placed: "bg-yellow-100 text-yellow-800",
@@ -22,44 +33,56 @@ const STATUS_STYLES: Record<string, string> = {
 export default function OrderHistoryPage() {
   const [orders, setOrders] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [clearing, setClearing] = useState(false)
   const router = useRouter()
   const supabase = createClient()
 
-  useEffect(() => {
-    async function fetchOrders() {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        router.push("/auth/login?next=/orders")
-        return
-      }
-
-      const { data, error } = await supabase
-        .from("orders")
-        .select(`
-          id,
-          status,
-          total_amount,
-          discount_amount,
-          shipping_fee,
-          created_at,
-          order_items (
-            quantity,
-            unit_price,
-            products (
-              name,
-              images
-            )
-          )
-        `)
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-
-      if (!error && data) setOrders(data)
-      setLoading(false)
+  async function fetchOrders() {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      router.push("/auth/login?next=/orders")
+      return
     }
 
+    const { data, error } = await supabase
+      .from("orders")
+      .select(`
+        id,
+        status,
+        total_amount,
+        discount_amount,
+        shipping_fee,
+        created_at,
+        order_items (
+          quantity,
+          unit_price,
+          products (
+            name,
+            images
+          )
+        )
+      `)
+      .eq("user_id", user.id)
+      .eq("hidden_by_user", false)
+      .order("created_at", { ascending: false })
+
+    if (!error && data) setOrders(data)
+    setLoading(false)
+  }
+
+  useEffect(() => {
     fetchOrders()
-  }, [supabase, router])
+  }, [])
+
+  const clearHistory = async () => {
+    setClearing(true)
+    try {
+      await fetch("/api/orders/clear-history", { method: "POST" })
+      setOrders([])
+    } finally {
+      setClearing(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -76,9 +99,39 @@ export default function OrderHistoryPage() {
           <h1 className="display-sm text-foreground">My Orders</h1>
           <p className="body-md text-muted-foreground mt-1">{orders.length} order{orders.length !== 1 ? "s" : ""} placed</p>
         </div>
-        <Button asChild variant="outline">
-          <Link href="/account">← Account</Link>
-        </Button>
+        <div className="flex items-center gap-3">
+          {orders.length > 0 && (
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2 text-destructive border-destructive/30 hover:bg-destructive/5">
+                  <Trash2 className="h-4 w-4" />
+                  Clear History
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Clear order history?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This will hide all your orders from this view. Your orders will still be processed and tracked — this only clears your history display.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={clearHistory}
+                    disabled={clearing}
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  >
+                    {clearing ? "Clearing…" : "Clear History"}
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
+          <Button asChild variant="outline">
+            <Link href="/account">← Account</Link>
+          </Button>
+        </div>
       </div>
 
       {orders.length === 0 ? (
