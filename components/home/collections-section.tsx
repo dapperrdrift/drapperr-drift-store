@@ -90,7 +90,7 @@ function CollectionsSectionUI({
   return (
     <section className="bg-surface-container-low">
       <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
-        <div className="text-center">
+        <div className="text-center" data-aos="fade-up">
           <span className="label-md text-primary">Collections</span>
           <h2 className="mt-2 headline-lg text-foreground">Shop by Category</h2>
           {fallback && (
@@ -99,8 +99,10 @@ function CollectionsSectionUI({
         </div>
 
         <div className={`mt-12 grid gap-6 ${gridCols}`}>
-          {categories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+          {categories.map((category, index) => (
+            <div key={category.id} data-aos="fade-up" data-aos-delay={String(index * 80)}>
+              <CategoryCard category={category} />
+            </div>
           ))}
         </div>
       </div>

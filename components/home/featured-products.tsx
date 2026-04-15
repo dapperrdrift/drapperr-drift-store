@@ -43,12 +43,14 @@ export async function FeaturedProducts() {
     <section className="bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
-          <div>
+          <div data-aos="fade-up">
             <span className="label-md text-primary">Curated Selection</span>
             <h2 className="mt-2 headline-lg text-foreground">Featured Pieces</h2>
           </div>
           <Link
             href="/products"
+            data-aos="fade-up"
+            data-aos-delay="100"
             className="inline-flex items-center gap-2 label-md text-foreground transition-colors hover:text-primary"
           >
             View All
@@ -57,8 +59,10 @@ export async function FeaturedProducts() {
         </div>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {featuredProducts.map((product, index) => (
+            <div key={product.id} data-aos="fade-up" data-aos-delay={String(index * 80)}>
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       </div>

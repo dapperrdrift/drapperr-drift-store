@@ -364,7 +364,7 @@ export default function CheckoutPage() {
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    "mx-4 h-[2px] w-12 sm:w-24",
+                    "mx-4 h-0.5 w-12 sm:w-24",
                     isCompleted ? "bg-primary" : "bg-border"
                   )}
                 />

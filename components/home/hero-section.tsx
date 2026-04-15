@@ -5,6 +5,8 @@ import Link from "next/link"
 import { motion, AnimatePresence } from "motion/react"
 import { ArrowRight } from "lucide-react"
 import { useState, useEffect, useCallback } from "react"
+import AOS from "aos"
+import "aos/dist/aos.css"
 
 const slides = [
   {
@@ -43,6 +45,14 @@ export function HeroSection() {
     return () => clearInterval(timer)
   }, [next])
 
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      once: true,
+      easing: "ease-out-cubic",
+    })
+  }, [])
+
   const imageVariants = {
     enter: { opacity: 0, scale: 1.05 },
     center: {
@@ -78,29 +88,44 @@ export function HeroSection() {
             priority
             sizes="100vw"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/45 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+          <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/45 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20" />
         </motion.div>
       </AnimatePresence>
 
-      {/* Static content overlay — never animates */}
+      {/* Content overlay — animates on load via AOS */}
       <div className="relative z-10 w-full max-w-7xl mx-auto px-4 lg:px-8 py-24">
         <div className="max-w-2xl">
 
-          <span className="inline-block bg-primary px-4 py-2 rounded label-md text-primary-foreground mb-6">
+          <span 
+            data-aos="fade-down"
+            className="inline-block bg-primary px-4 py-2 rounded label-md text-primary-foreground mb-6"
+          >
             {staticContent.badge}
           </span>
 
-          <h1 className="display-lg text-white leading-tight">
+          <h1 
+            data-aos="fade-up" 
+            data-aos-delay="200"
+            className="display-lg text-white leading-tight"
+          >
             <span className="block">{staticContent.headline1}</span>
             <span className="block">{staticContent.headline2}</span>
           </h1>
 
-          <p className="mt-6 body-lg text-white/80 max-w-lg text-pretty">
+          <p 
+            data-aos="fade-up" 
+            data-aos-delay="400"
+            className="mt-6 body-lg text-white/80 max-w-lg text-pretty"
+          >
             {staticContent.body}
           </p>
 
-          <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+          <div 
+            data-aos="fade-up" 
+            data-aos-delay="600"
+            className="mt-10 flex flex-col gap-4 sm:flex-row"
+          >
             <Link
               href={staticContent.ctaPrimary.href}
               className="group inline-flex items-center justify-center gap-2 bg-primary px-8 py-4 label-md text-primary-foreground rounded-md transition-all hover:bg-primary-hover hover:gap-3"
@@ -117,7 +142,11 @@ export function HeroSection() {
           </div>
 
           {/* Social proof */}
-          <div className="mt-16 flex items-center gap-6">
+          <div 
+            data-aos="fade-up" 
+            data-aos-delay="800"
+            className="mt-16 flex items-center gap-6"
+          >
             <div className="flex -space-x-3">
               {[1, 2, 3, 4].map((i) => (
                 <div

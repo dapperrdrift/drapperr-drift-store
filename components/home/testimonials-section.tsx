@@ -45,7 +45,7 @@ export function TestimonialsSection() {
   return (
     <section className="bg-surface py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4">
-        <div className="text-center mb-8">
+        <div className="text-center mb-8" data-aos="fade-up">
           <span className="label-md text-primary">What Our Customers Say</span>
           <h2 className="mt-4 display-md text-foreground">
             Loved by Fashion Enthusiasts

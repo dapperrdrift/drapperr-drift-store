@@ -38,7 +38,7 @@ export function BrandStorySection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 min-h-150">
 
             {/* Image side */}
-            <div className="relative min-h-100 lg:min-h-full">
+            <div className="relative min-h-100 lg:min-h-full" data-aos="fade-right">
               <Image
                 src="/images/brand-story.jpg"
                 alt="Drapperr behind the scenes"
@@ -60,29 +60,29 @@ export function BrandStorySection() {
             {/* Content side */}
             <div className="flex flex-col justify-center px-8 py-16 lg:px-16">
 
-              <span className="label-md text-primary uppercase tracking-widest mb-4">
+              <span data-aos="fade-left" className="label-md text-primary uppercase tracking-widest mb-4">
                 Our Story
               </span>
 
-              <h2 className="headline-lg text-white text-balance leading-tight">
+              <h2 data-aos="fade-left" data-aos-delay="80" className="headline-lg text-white text-balance leading-tight">
                 Drapperr wasn&apos;t designed in a boardroom. It was sketched on a napkin at 2am.
               </h2>
 
-              <p className="mt-6 body-lg text-white/60 text-pretty leading-relaxed">
+              <p data-aos="fade-left" data-aos-delay="160" className="mt-6 body-lg text-white/60 text-pretty leading-relaxed">
                 We started because we were tired of choosing between clothes that looked good
                 and clothes that felt like us. So we built the third option — fashion that has
                 a point of view, a pulse, and a price tag that doesn&apos;t make you sweat.
               </p>
 
-              <p className="mt-4 body-lg text-white/60 text-pretty leading-relaxed">
+              <p data-aos="fade-left" data-aos-delay="220" className="mt-4 body-lg text-white/60 text-pretty leading-relaxed">
                 Every piece is designed in-house, tested on real bodies, and obsessed over
                 until it&apos;s right. No middlemen. No compromises. Just clothes that mean something.
               </p>
 
               {/* Pillars */}
               <div className="mt-10 grid grid-cols-2 gap-6 border-t border-white/10 pt-10">
-                {pillars.map((p) => (
-                  <div key={p.label}>
+                {pillars.map((p, index) => (
+                  <div key={p.label} data-aos="fade-up" data-aos-delay={String(300 + index * 80)}>
                     <p className="display-md text-primary font-black">{p.stat}</p>
                     <p className="title-md text-white mt-1">{p.label}</p>
                     <p className="body-sm text-white/40 mt-0.5">{p.detail}</p>
@@ -92,6 +92,8 @@ export function BrandStorySection() {
 
               <Link
                 href="/products"
+                data-aos="fade-up"
+                data-aos-delay="400"
                 className="group mt-10 inline-flex items-center gap-2 label-md text-primary hover:gap-3 transition-all w-fit"
               >
                 Shop the brand

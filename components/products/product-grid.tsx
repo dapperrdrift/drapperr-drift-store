@@ -29,8 +29,10 @@ export function ProductGrid({ products }: ProductGridProps) {
 
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+      {products.map((product, index) => (
+        <div key={product.id} data-aos="fade-up" data-aos-delay={String(Math.min(index, 7) * 60)}>
+          <ProductCard product={product} />
+        </div>
       ))}
     </div>
   )

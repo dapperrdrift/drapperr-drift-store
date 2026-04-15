@@ -149,8 +149,8 @@ async function ProductsContent({ searchParams }: PageProps) {
     <div className="mx-auto max-w-full px-4 py-8 lg:px-8 lg:py-12">
       {/* Page header */}
       <div className="mb-8">
-        <h1 className="display-md text-foreground">{pageTitle}</h1>
-        <p className="mt-2 body-lg text-muted-foreground">
+        <h1 data-aos="fade-down" className="display-md text-foreground">{pageTitle}</h1>
+        <p data-aos="fade-down" data-aos-delay="80" className="mt-2 body-lg text-muted-foreground">
           {mappedProducts.length} product{mappedProducts.length !== 1 ? 's' : ''}
         </p>
       </div>

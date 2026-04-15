@@ -1,5 +1,6 @@
 import { Header } from "@/components/layout/header"
 import { Footer } from "@/components/layout/footer"
+import { AOSInit } from "@/components/layout/aos-init"
 import { CartProvider } from "@/contexts/cart-context"
 import { AuthProvider } from "@/contexts/auth-context"
 import { WishlistProvider } from "@/contexts/wishlist-context"
@@ -13,6 +14,7 @@ export default function StorefrontLayout({
     <AuthProvider>
       <WishlistProvider>
         <CartProvider>
+          <AOSInit />
           <div className="flex min-h-screen flex-col">
             <Header />
             <main className="flex-1 pt-header">{children}</main>

@@ -184,7 +184,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
       {/* Breadcrumb */}
-      <nav className="mx-auto max-w-7xl px-4 pt-6 pb-4 lg:px-8">
+      <nav data-aos="fade-down" className="mx-auto max-w-7xl px-4 pt-6 pb-4 lg:px-8">
         <ol className="flex items-center gap-2 body-md text-muted-foreground">
           <li>
             <Link href="/" className="hover:text-primary transition-colors">Home</Link>
@@ -208,7 +208,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
           {/* Gallery */}
-          <div className="lg:sticky lg:top-32">
+          <div data-aos="fade-right" className="lg:sticky lg:top-32">
             <ProductGallery
               images={images.length > 0 ? images : ['/images/product-placeholder.jpg']}
               productName={product.name}
@@ -216,7 +216,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </div>
 
           {/* Product info */}
-          <div className="space-y-6">
+          <div data-aos="fade-left" data-aos-delay="100" className="space-y-6">
             <div>
               <Link href={`/products?category=${categorySlug}`} className="label-md text-primary hover:underline">
                 {category}
@@ -235,7 +235,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <ProductInfo productName={product.name} variants={variants} />
 
             {/* Trust badges */}
-            <div className="grid grid-cols-3 gap-4 py-6 border-t border-b border-border">
+            <div data-aos="fade-up" className="grid grid-cols-3 gap-4 py-6 border-t border-b border-border">
               <div className="flex flex-col items-center text-center gap-2">
                 <Truck className="h-5 w-5 text-primary" />
                 <span className="body-md text-muted-foreground">Free Shipping</span>
@@ -262,7 +262,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       {relatedProducts.length > 0 && (
         <section className="bg-surface-container-highest border-t border-border">
           <div className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
-            <div className="flex flex-col items-center text-center space-y-4 mb-12">
+            <div data-aos="fade-up" className="flex flex-col items-center text-center space-y-4 mb-12">
               <h2 className="display-sm text-foreground font-serif tracking-tight">Our Personal Recommendation</h2>
               <p className="body-lg text-muted-foreground max-w-2xl">
                 Specially curated pieces from our {category} collection that pair perfectly with this item.

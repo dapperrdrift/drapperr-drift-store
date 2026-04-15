@@ -323,7 +323,7 @@ export function Header() {
             </div>
 
             {/* Logo */}
-            <Link href="/" className="flex-shrink-0 transition-opacity hover:opacity-80">
+            <Link href="/" className="shrink-0 transition-opacity hover:opacity-80">
               <img
                 src="/images/logo-black.svg"
                 alt="Drapperr Drift"
