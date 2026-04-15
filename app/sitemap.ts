@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next'
-import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@supabase/supabase-js'
 
 const SITE_URL = 'https://dapperrdrift.com'
 
@@ -62,10 +62,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Dynamic product pages
+  // Dynamic product pages — use a cookieless client (sitemaps have no request context)
   let productPages: MetadataRoute.Sitemap = []
   try {
-    const supabase = await createClient()
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
     const { data: products } = await supabase
       .from('products')
       .select('slug, updated_at')
