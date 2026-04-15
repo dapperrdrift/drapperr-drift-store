@@ -27,7 +27,7 @@ const faqCategories = [
       {
         question: "Can I change my shipping address after placing an order?",
         answer:
-          "Address changes can be made within 2 hours of placing your order. Please contact our customer support immediately at support@drapperr.com or call our helpline.",
+          "Address changes can be made within 2 hours of placing your order. Please contact our customer support immediately at support@dapperr.com or call our helpline.",
       },
     ],
   },

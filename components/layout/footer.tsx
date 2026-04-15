@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Instagram, Twitter, Facebook } from "lucide-react"
+import { Instagram } from "lucide-react"
 
 const footerNavigation = {
   shop: [
@@ -31,9 +31,9 @@ const footerNavigation = {
 }
 
 const socialLinks = [
-  { name: "Instagram", href: "#", icon: Instagram },
-  { name: "Twitter", href: "#", icon: Twitter },
-  { name: "Facebook", href: "#", icon: Facebook },
+  { name: "Instagram", href: "https://www.instagram.com/dapperr.drift", icon: Instagram },
+  // { name: "Twitter", href: "#", icon: Twitter },
+  // { name: "Facebook", href: "#", icon: Facebook },
 ]
 
 export function Footer() {
@@ -156,8 +156,10 @@ export function Footer() {
                 <Link
                   key={social.name}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-muted-foreground transition-colors hover:text-primary"
-                  aria-label={social.name}
+                  aria-label={`Follow Drapperr Drift on ${social.name}`}
                 >
                   <social.icon className="h-5 w-5" />
                 </Link>

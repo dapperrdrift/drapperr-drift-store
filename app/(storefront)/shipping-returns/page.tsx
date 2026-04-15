@@ -1,5 +1,22 @@
+import type { Metadata } from 'next'
 import { Truck, RotateCcw, Clock, MapPin, Package, CreditCard } from "lucide-react"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: 'Shipping & Returns | Drapperr Drift – Kota, Rajasthan',
+  description:
+    'Drapperr Drift ships pan-India from our store in Kota, Rajasthan. Free shipping on eligible orders. Easy 30-day returns. Learn about our shipping policy and hassle-free returns.',
+  keywords: [
+    'Drapperr Drift shipping policy',
+    'clothing store Kota shipping',
+    'fashion store returns Rajasthan',
+    'free shipping India clothing',
+    'Drapperr Drift returns policy',
+  ],
+  alternates: {
+    canonical: 'https://dapperrdrift.com/shipping-returns',
+  },
+}
 
 export default function ShippingReturnsPage() {
   return (
@@ -93,19 +110,19 @@ export default function ShippingReturnsPage() {
             <h3 className="title-md text-foreground mb-3">Return Eligibility</h3>
             <ul className="space-y-2">
               <li className="flex items-start gap-3 body-md text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
                 Items must be unworn, unwashed, and in original condition with all tags attached
               </li>
               <li className="flex items-start gap-3 body-md text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
                 Returns must be initiated within 30 days of delivery
               </li>
               <li className="flex items-start gap-3 body-md text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
                 Items must be returned in original packaging
               </li>
               <li className="flex items-start gap-3 body-md text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <span className="h-1.5 w-1.5 rounded-full bg-primary mt-2 shrink-0" />
                 Sale items and intimate apparel are final sale and cannot be returned
               </li>
             </ul>
@@ -151,7 +168,7 @@ export default function ShippingReturnsPage() {
 
         <div className="space-y-4">
           <div className="flex items-start gap-4 p-4 rounded-lg border border-border">
-            <Package className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+            <Package className="h-5 w-5 text-primary shrink-0 mt-1" />
             <div>
               <p className="title-md text-foreground mb-1">Refund Processing</p>
               <p className="body-md text-muted-foreground">
@@ -160,7 +177,7 @@ export default function ShippingReturnsPage() {
             </div>
           </div>
           <div className="flex items-start gap-4 p-4 rounded-lg border border-border">
-            <CreditCard className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+            <CreditCard className="h-5 w-5 text-primary shrink-0 mt-1" />
             <div>
               <p className="title-md text-foreground mb-1">Refund Methods</p>
               <p className="body-md text-muted-foreground">

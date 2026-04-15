@@ -131,8 +131,8 @@ export function SizeGuideModal({ isOpen, onClose }: SizeGuideModalProps) {
           <div className="text-center pt-4 border-t border-border">
             <p className="body-md text-muted-foreground">
               Still unsure about your size? Contact our styling team at{" "}
-              <a href="mailto:style@drapperr.com" className="text-primary hover:underline">
-                style@drapperr.com
+              <a href="mailto:style@dapperr.com" className="text-primary hover:underline">
+                style@dapperr.com
               </a>
             </p>
           </div>

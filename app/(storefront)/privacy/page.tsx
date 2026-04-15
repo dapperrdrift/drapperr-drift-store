@@ -192,7 +192,7 @@ export default function PrivacyPolicyPage() {
               <p className="body-md text-muted-foreground">
                 123 Fashion Street, Mumbai<br />
                 Maharashtra, India 400001<br />
-                Email: privacy@drapperr.com<br />
+                Email: privacy@dapperr.com<br />
                 Phone: +91 1800-123-4567
               </p>
             </div>

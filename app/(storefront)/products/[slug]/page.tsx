@@ -56,8 +56,27 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: product.name,
-    description: product.description ?? undefined,
+    title: `${product.name} | Drapperr Drift – Clothing Store Kota`,
+    description: product.description
+      ? `${product.description} Shop ${product.name} at Drapperr Drift, Kota's best clothing store. Visit us in Swami Vivekananda Nagar, Kota or order online across India.`
+      : `Shop ${product.name} at Drapperr Drift — Kota's trendiest clothing store. Located at Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan. Pan-India delivery available.`,
+    keywords: [
+      product.name,
+      `${product.name} Kota`,
+      `buy ${product.name} online India`,
+      'clothing store Kota',
+      'fashion store Kota Rajasthan',
+      'Drapperr Drift',
+    ],
+    alternates: {
+      canonical: `https://dapperrdrift.com/products/${slug}`,
+    },
+    openGraph: {
+      title: `${product.name} | Drapperr Drift`,
+      description: product.description ?? `Shop ${product.name} at Drapperr Drift, Kota's best clothing store.`,
+      url: `https://dapperrdrift.com/products/${slug}`,
+      type: 'website',
+    },
   }
 }
 
@@ -120,8 +139,50 @@ export default async function ProductDetailPage({ params }: PageProps) {
     sku: v.sku,
   }))
 
+  const productSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description ?? undefined,
+    image: images.map((img) => img),
+    brand: { '@type': 'Brand', name: 'Drapperr Drift' },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'INR',
+      price: price,
+      availability: 'https://schema.org/InStock',
+      seller: {
+        '@type': 'Organization',
+        name: 'Drapperr Drift',
+        url: 'https://dapperrdrift.com',
+      },
+      url: `https://dapperrdrift.com/products/${product.slug}`,
+      areaServed: { '@type': 'Country', name: 'India' },
+    },
+    category: category,
+  }
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://dapperrdrift.com' },
+      { '@type': 'ListItem', position: 2, name: 'Shop', item: 'https://dapperrdrift.com/products' },
+      { '@type': 'ListItem', position: 3, name: category, item: `https://dapperrdrift.com/products?category=${categorySlug}` },
+      { '@type': 'ListItem', position: 4, name: product.name, item: `https://dapperrdrift.com/products/${product.slug}` },
+    ],
+  }
+
   return (
     <div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       {/* Breadcrumb */}
       <nav className="mx-auto max-w-7xl px-4 pt-6 pb-4 lg:px-8">
         <ol className="flex items-center gap-2 body-md text-muted-foreground">

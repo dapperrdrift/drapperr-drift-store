@@ -1,7 +1,35 @@
+import type { Metadata } from 'next'
 import { Suspense } from "react"
 import { ProductFilters } from "@/components/products/product-filters"
 import { ProductGrid } from "@/components/products/product-grid"
 import { createClient } from "@/lib/supabase/server"
+
+export const metadata: Metadata = {
+  title: 'Shop All Clothing | Drapperr Drift – Kota, Rajasthan',
+  description:
+    'Browse Drapperr Drift\'s full collection of T-shirts, hoodies, denim, and streetwear. Kota\'s best fashion store — shop in-store at Swami Vivekananda Nagar or order online across India.',
+  keywords: [
+    'buy clothes online Kota',
+    'men T-shirts Kota',
+    'hoodies Kota',
+    'denim jeans Kota Rajasthan',
+    'streetwear Kota',
+    'fashion online Rajasthan',
+    'affordable clothing India',
+    'shop clothing Kota',
+    'Drapperr Drift collection',
+  ],
+  alternates: {
+    canonical: 'https://dapperrdrift.com/products',
+  },
+  openGraph: {
+    title: 'Shop All Clothing | Drapperr Drift – Kota, Rajasthan',
+    description:
+      'T-shirts, hoodies, denim & streetwear from Kota\'s trendiest clothing store. Shop online or visit us in Swami Vivekananda Nagar, Kota.',
+    url: 'https://dapperrdrift.com/products',
+    type: 'website',
+  },
+}
 
 interface PageProps {
   searchParams: Promise<{
@@ -130,7 +158,7 @@ async function ProductsContent({ searchParams }: PageProps) {
       {/* Sidebar + Grid layout */}
       <div className="flex gap-8 lg:gap-12">
         {/* Sidebar filters */}
-        <div className="hidden md:block md:w-[260px] lg:w-[280px] flex-shrink-0">
+        <div className="hidden md:block md:w-65 lg:w-70 shrink-0">
           <ProductFilters
             initialCategory={category || 'all'}
             categories={categoriesWithCount}
@@ -196,7 +224,7 @@ export default function ProductsPage({ searchParams }: PageProps) {
         <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
           <div className="flex gap-8 lg:gap-12">
             {/* Sidebar skeleton */}
-            <div className="hidden md:block w-[260px] lg:w-[280px] flex-shrink-0 space-y-6">
+            <div className="hidden md:block w-65 lg:w-70 shrink-0 space-y-6">
               <div className="h-5 w-24 bg-muted rounded animate-pulse" />
               <div className="h-9 w-full bg-muted rounded animate-pulse" />
               <div className="space-y-3">
@@ -217,7 +245,7 @@ export default function ProductsPage({ searchParams }: PageProps) {
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="space-y-3">
-                    <div className="aspect-[3/4] bg-muted rounded-md animate-pulse" />
+                    <div className="aspect-3/4 bg-muted rounded-md animate-pulse" />
                     <div className="h-4 w-3/4 bg-muted rounded animate-pulse" />
                     <div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
                   </div>

@@ -1,6 +1,30 @@
+import type { Metadata } from 'next'
 import Image from "next/image"
 import Link from "next/link"
 import { Heart, Leaf, Award, Users } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: 'About Us | Drapperr Drift – Clothing Store in Kota',
+  description:
+    'Drapperr Drift was born in Kota, Rajasthan. We bring trendy T-shirts, hoodies, denim, and streetwear to the youth of Kota and across India. Visit our store at Shubh Affinity, Swami Vivekananda Nagar.',
+  keywords: [
+    'about Drapperr Drift Kota',
+    'clothing brand Kota Rajasthan',
+    'fashion store Kota story',
+    'men fashion brand Kota',
+    'Drapperr Drift about',
+  ],
+  alternates: {
+    canonical: 'https://dapperrdrift.com/about',
+  },
+  openGraph: {
+    title: 'About Drapperr Drift | Kota\'s Favourite Clothing Store',
+    description:
+      'Learn about Drapperr Drift, Kota\'s go-to clothing destination. We bring bold, affordable streetwear and fashion to the youth of Rajasthan and beyond.',
+    url: 'https://dapperrdrift.com/about',
+    type: 'website',
+  },
+}
 
 export default function AboutPage() {
   const values = [
@@ -8,36 +32,35 @@ export default function AboutPage() {
       icon: Heart,
       title: "Craftsmanship",
       description:
-        "Every piece is crafted with meticulous attention to detail, using time-honored techniques passed down through generations of master artisans.",
+        "Every piece is crafted with meticulous attention to detail, using quality techniques that ensure your clothes look great and last long.",
     },
     {
       icon: Leaf,
       title: "Sustainability",
       description:
-        "We're committed to ethical sourcing and sustainable practices, working with partners who share our vision for a more responsible fashion industry.",
+        "We're committed to responsible sourcing and sustainable practices, working with partners who share our vision for a better fashion industry.",
     },
     {
       icon: Award,
       title: "Quality",
       description:
-        "We source only the finest materials—from Italian wool to Mongolian cashmere—ensuring every garment meets our exacting standards.",
+        "We source only premium fabrics and materials — ensuring every garment meets our high standards of comfort, fit, and durability.",
     },
     {
       icon: Users,
       title: "Community",
       description:
-        "We believe in building lasting relationships with our customers, artisans, and partners, creating a community united by a love for timeless style.",
+        "Rooted in Kota, Rajasthan, we believe in building lasting relationships with our customers and partners — united by a love for bold, timeless style.",
     },
   ]
 
   const milestones = [
-    { year: "2018", event: "Drapperr founded in Mumbai with a vision to redefine Indian luxury fashion" },
-    { year: "2019", event: "Launched our first collection featuring 50 handcrafted pieces" },
-    { year: "2020", event: "Expanded to online retail, reaching customers across India" },
-    { year: "2021", event: "Introduced our sustainable fashion initiative" },
-    { year: "2022", event: "Opened flagship store in Delhi and expanded to 10,000+ happy customers" },
-    { year: "2023", event: "Launched premium cashmere and wool collection" },
-    { year: "2024", event: "Celebrating 6 years of timeless Indian craftsmanship" },
+    { year: "2022", event: "Drapperr Drift founded in Kota, Rajasthan with a vision to bring big-city fashion to local youth" },
+    { year: "2023", event: "Opened our flagship store at Shubh Affinity, Swami Vivekananda Nagar, Kota" },
+    { year: "2023", event: "Launched online store, delivering fashion to customers across Rajasthan and India" },
+    { year: "2024", event: "Expanded product range — T-shirts, hoodies, denim, and premium streetwear" },
+    { year: "2024", event: "Crossed 5,000+ happy customers in Kota, Vigyan Nagar, Talwandi, and beyond" },
+    { year: "2025", event: "Continued growth with new arrivals every season and pan-India shipping" },
   ]
 
   return (
@@ -48,10 +71,12 @@ export default function AboutPage() {
           <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
             <div>
               <h1 className="display-lg text-foreground mb-6">
-                Crafting Timeless Elegance Since 2018
+                Kota's Go-To Clothing Store, Since Day One
               </h1>
               <p className="body-lg text-muted-foreground mb-8 leading-relaxed">
-                Drapperr was born from a simple belief: that exceptional clothing should be both beautifully crafted and thoughtfully made. We blend traditional Indian craftsmanship with contemporary design to create pieces that transcend seasons and trends.
+                Drapperr Drift was born in Kota, Rajasthan — built for the bold, the stylish, and the young at heart.
+                We bring premium streetwear, trendy T-shirts, hoodies, and denim to the youth of Kota and ship across India.
+                Walk into our store at Shubh Affinity, Swami Vivekananda Nagar, or shop from anywhere in the country.
               </p>
               <Link
                 href="/products"
@@ -60,10 +85,10 @@ export default function AboutPage() {
                 Explore Our Collection
               </Link>
             </div>
-            <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-secondary">
+            <div className="relative aspect-4/3 rounded-lg overflow-hidden bg-secondary">
               <Image
                 src="/images/about-hero.jpg"
-                alt="Drapperr atelier with artisans at work"
+                alt="Drapperr Drift store interior in Kota, Rajasthan"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -79,13 +104,18 @@ export default function AboutPage() {
           <h2 className="display-sm text-foreground mb-8">Our Story</h2>
           <div className="space-y-6 body-lg text-muted-foreground leading-relaxed">
             <p>
-              Founded in Mumbai in 2018, Drapperr emerged from founder Vikram Mehta&apos;s passion for preserving India&apos;s rich textile heritage while creating contemporary wardrobe essentials. After years working with luxury fashion houses across Europe and Asia, Vikram returned home with a vision: to create a brand that honors traditional craftsmanship while embracing modern sensibilities.
+              Drapperr Drift started with a simple idea: why should the youth of Kota, Rajasthan have to travel to metro cities
+              just to find fashion that actually speaks to them? We set up shop in Kota's Swami Vivekananda Nagar to bring
+              bold, contemporary clothing right to the doorstep of Rajasthan's most dynamic city.
             </p>
             <p>
-              What started as a small atelier with five skilled artisans has grown into a beloved brand serving thousands of customers who appreciate the art of slow fashion. Each piece in our collection is designed in-house, crafted with care, and made to be treasured for years to come.
+              From our flagship store at Shubh Affinity — right next to DMART, Kota — we've served customers from Vigyan Nagar,
+              Talwandi, Mahaveer Nagar, Landmark City, Shreenathpuram, Gumanpura, and every corner of Kota.
+              Today, we also ship pan-India so everyone can dress like Kota's finest.
             </p>
             <p>
-              Today, we work with over 50 master craftspeople across India, from weavers in Varanasi to tailors in Mumbai, ensuring that each garment carries the soul of Indian artisanship while meeting the highest international standards of quality.
+              We curate every piece with care — from graphic tees to premium hoodies, from relaxed denim to streetwear essentials —
+              because great style should be accessible, not exclusive. That's the Drapperr Drift promise.
             </p>
           </div>
         </div>
@@ -123,17 +153,17 @@ export default function AboutPage() {
           <div className="text-center mb-16">
             <h2 className="display-sm text-foreground mb-4">Our Journey</h2>
             <p className="body-lg text-muted-foreground">
-              Key milestones in the Drapperr story
+              Key milestones in the Drapperr Drift story
             </p>
           </div>
           <div className="relative">
             {/* Timeline line */}
             <div className="absolute left-4 sm:left-1/2 top-0 bottom-0 w-0.5 bg-border sm:-translate-x-px" />
-            
+
             <div className="space-y-8">
               {milestones.map((milestone, index) => (
                 <div
-                  key={milestone.year}
+                  key={`${milestone.year}-${index}`}
                   className={`relative flex items-center gap-8 ${
                     index % 2 === 0 ? "sm:flex-row" : "sm:flex-row-reverse"
                   }`}
@@ -142,7 +172,7 @@ export default function AboutPage() {
                   <div className="absolute left-4 sm:left-1/2 -translate-x-1/2 flex h-8 w-16 items-center justify-center rounded-full bg-primary text-primary-foreground z-10">
                     <span className="label-md">{milestone.year}</span>
                   </div>
-                  
+
                   {/* Content */}
                   <div
                     className={`ml-16 sm:ml-0 sm:w-[calc(50%-2rem)] ${
@@ -153,7 +183,7 @@ export default function AboutPage() {
                       <p className="body-md text-foreground">{milestone.event}</p>
                     </div>
                   </div>
-                  
+
                   {/* Spacer for alternating layout */}
                   <div className="hidden sm:block sm:w-[calc(50%-2rem)]" />
                 </div>
@@ -166,9 +196,10 @@ export default function AboutPage() {
       {/* CTA Section */}
       <section className="bg-primary text-primary-foreground py-20">
         <div className="mx-auto max-w-4xl px-4 lg:px-8 text-center">
-          <h2 className="display-sm mb-4">Join the Drapperr Family</h2>
+          <h2 className="display-sm mb-4">Join the Drapperr Drift Family</h2>
           <p className="body-lg opacity-90 mb-8 max-w-2xl mx-auto">
-            Experience the perfect blend of tradition and modernity. Discover pieces crafted with passion, designed to last, and made for those who appreciate true quality.
+            Whether you're in Kota, Rajasthan or anywhere across India — discover clothing that speaks
+            before you do. Bold pieces, fair prices, fast delivery.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -181,7 +212,7 @@ export default function AboutPage() {
               href="/contact"
               className="inline-flex items-center justify-center rounded-md border border-primary-foreground/30 bg-transparent px-8 py-3 label-md transition-colors hover:bg-primary-foreground/10"
             >
-              Get in Touch
+              Visit Our Store in Kota
             </Link>
           </div>
         </div>

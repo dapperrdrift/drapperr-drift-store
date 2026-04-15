@@ -16,7 +16,7 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="headline-sm text-foreground mb-4">1. Acceptance of Terms</h2>
           <p className="body-md text-muted-foreground leading-relaxed">
-            Welcome to Drapperr. By accessing or using our website (www.drapperr.com), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any part of these terms, you may not use our services. These terms apply to all visitors, users, and customers of the website.
+            Welcome to Drapperr. By accessing or using our website (www.dapperr.com), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any part of these terms, you may not use our services. These terms apply to all visitors, users, and customers of the website.
           </p>
         </section>
 
@@ -201,7 +201,7 @@ export default function TermsOfServicePage() {
             <p className="body-md text-muted-foreground">
               123 Fashion Street, Mumbai<br />
               Maharashtra, India 400001<br />
-              Email: legal@drapperr.com<br />
+              Email: legal@dapperr.com<br />
               Phone: +91 1800-123-4567
             </p>
           </div>
