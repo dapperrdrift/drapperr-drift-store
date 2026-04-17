@@ -15,7 +15,7 @@ export function CartSummary({ subtotal, itemCount }: CartSummaryProps) {
   const total = subtotal - discount + shipping
 
   return (
-    <div className="bg-surface-container-low p-6 lg:p-8">
+    <div className="bg-surface-container-low p-5 sm:p-6 lg:p-8">
       <h2 className="headline-md text-foreground">Order Summary</h2>
 
       {/* Summary lines */}

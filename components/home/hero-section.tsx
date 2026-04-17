@@ -68,7 +68,7 @@ export function HeroSection() {
   }
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden mt-neg-header">
+    <section className="relative min-h-screen md:min-h-screen flex items-center justify-center overflow-hidden mt-neg-header">
 
       {/* Background image carousel — only images animate */}
       <AnimatePresence initial={false}>
@@ -94,12 +94,12 @@ export function HeroSection() {
       </AnimatePresence>
 
       {/* Content overlay — animates on load via AOS */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 lg:px-8 py-24">
+      <div className="relative z-10 w-full max-w-7xl lg:mx-auto px-3 sm:px-4 lg:px-8 py-16 md:py-24">
         <div className="max-w-2xl">
 
           <span 
             data-aos="fade-down"
-            className="inline-block bg-primary px-4 py-2 rounded label-md text-primary-foreground mb-6"
+            className="hidden md:inline-block bg-primary px-4 py-2 rounded label-md text-primary-foreground mb-6"
           >
             {staticContent.badge}
           </span>
@@ -107,16 +107,16 @@ export function HeroSection() {
           <h1 
             data-aos="fade-up" 
             data-aos-delay="200"
-            className="display-lg text-white leading-tight"
+            className="text-[3.5rem] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white sm:display-lg sm:normal-case sm:tracking-normal sm:leading-tight"
           >
             <span className="block">{staticContent.headline1}</span>
-            <span className="block">{staticContent.headline2}</span>
+            <span className="block text-white">{staticContent.headline2}</span>
           </h1>
 
           <p 
             data-aos="fade-up" 
             data-aos-delay="400"
-            className="mt-6 body-lg text-white/80 max-w-lg text-pretty"
+            className="hidden md:block mt-6 body-lg text-white/80 max-w-lg text-pretty"
           >
             {staticContent.body}
           </p>
@@ -124,18 +124,18 @@ export function HeroSection() {
           <div 
             data-aos="fade-up" 
             data-aos-delay="600"
-            className="mt-10 flex flex-col gap-4 sm:flex-row"
+            className="mt-8 md:mt-10 grid grid-cols-2 gap-3 sm:flex sm:flex-row"
           >
             <Link
               href={staticContent.ctaPrimary.href}
-              className="group inline-flex items-center justify-center gap-2 bg-primary px-8 py-4 label-md text-primary-foreground rounded-md transition-all hover:bg-primary-hover hover:gap-3"
+              className="group inline-flex w-full sm:w-auto items-center justify-center gap-2 bg-primary px-4 sm:px-8 py-4 label-md uppercase tracking-widest text-primary-foreground rounded-none sm:rounded-md transition-all hover:bg-primary-hover hover:gap-3"
             >
               {staticContent.ctaPrimary.label}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <Link
               href={staticContent.ctaSecondary.href}
-              className="inline-flex items-center justify-center border-2 border-white/40 px-8 py-4 label-md text-white rounded-md transition-all hover:bg-white/10 hover:border-white"
+              className="inline-flex w-full sm:w-auto items-center justify-center border border-white/40 px-4 sm:px-8 py-4 label-md uppercase tracking-widest text-white rounded-none sm:rounded-md transition-all hover:bg-white/10 hover:border-white"
             >
               {staticContent.ctaSecondary.label}
             </Link>
@@ -145,7 +145,7 @@ export function HeroSection() {
           <div 
             data-aos="fade-up" 
             data-aos-delay="800"
-            className="mt-16 flex items-center gap-6"
+            className="hidden md:flex mt-16 items-center gap-6"
           >
             <div className="flex -space-x-3">
               {[1, 2, 3, 4].map((i) => (
@@ -173,7 +173,7 @@ export function HeroSection() {
       </div>
 
       {/* Dot indicators only — no arrows */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+      <div className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-20 items-center gap-3">
         {slides.map((s, i) => (
           <button
             key={s.id}
@@ -189,7 +189,7 @@ export function HeroSection() {
       </div>
 
       {/* Slide counter */}
-      <div className="absolute bottom-8 right-6 z-20">
+      <div className="hidden md:block absolute bottom-8 right-6 z-20">
         <span className="label-md text-white/50">
           {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
         </span>

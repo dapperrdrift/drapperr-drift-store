@@ -43,7 +43,7 @@ export function Footer() {
   return (
     <footer className="bg-surface-container-low">
       {showNewsletter && (
-        <div className="border-b border-border">
+        <div className="hidden md:block border-b border-border">
           <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8">
             <div className="flex flex-col items-center text-center">
               <h3 className="headline-lg text-foreground">Join the Inner Circle</h3>
@@ -69,8 +69,21 @@ export function Footer() {
         </div>
       )}
 
+      <div className="md:hidden bg-surface-container-lowest px-6 pt-12 pb-8 text-center">
+        <div className="text-xl font-bold uppercase tracking-wider text-foreground">Drapperr</div>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">
+          <Link href="/privacy" className="transition-colors hover:text-foreground">Privacy</Link>
+          <Link href="/terms" className="transition-colors hover:text-foreground">Terms</Link>
+          <Link href="/shipping-returns" className="transition-colors hover:text-foreground">Shipping</Link>
+          <Link href="https://www.instagram.com/dapperr.drift" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-foreground">Instagram</Link>
+        </div>
+        <p className="mt-6 text-[0.6875rem] uppercase tracking-widest text-on-surface-variant">
+          &copy; {new Date().getFullYear()} Drapperr. Est 2021.
+        </p>
+      </div>
+
       {/* Links section */}
-      <div className="mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:py-16">
+      <div className="hidden md:block mx-auto max-w-7xl px-4 py-12 lg:px-8 lg:py-16">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-5">
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="inline-block transition-opacity hover:opacity-80">
@@ -148,7 +161,7 @@ export function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-border">
+      <div className="hidden md:block border-t border-border">
         <div className="mx-auto max-w-7xl px-4 py-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
             <div className="flex items-center gap-4">

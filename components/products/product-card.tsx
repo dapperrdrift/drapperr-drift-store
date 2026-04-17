@@ -102,34 +102,34 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
         
         {/* Action buttons overlay */}
-        <div className="absolute inset-x-0 bottom-0 p-3 bg-linear-to-t from-foreground/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <div className="flex items-center justify-center gap-2">
+        <div className="pointer-events-auto absolute inset-x-0 bottom-0 p-2 sm:p-3 bg-linear-to-t from-foreground/40 to-transparent opacity-100 transition-opacity duration-300 md:pointer-events-none md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:group-hover:pointer-events-auto md:group-focus-within:pointer-events-auto">
+          <div className="flex items-center justify-center gap-1.5 sm:gap-2">
             {/* Favorite button - Left */}
             <button
               onClick={handleFavoriteClick}
               className={cn(
-                "flex items-center justify-center w-10 h-10 rounded-full bg-card shadow-lg transition-all hover:scale-110",
+                "flex h-9 w-9 items-center justify-center rounded-full bg-card shadow-lg transition-all hover:scale-110 sm:h-10 sm:w-10",
                 isFavorite ? "text-primary" : "text-foreground"
               )}
               aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
             >
-              <Heart className={cn("h-5 w-5", isFavorite && "fill-current")} />
+              <Heart className={cn("h-4 w-4 sm:h-5 sm:w-5", isFavorite && "fill-current")} />
             </button>
             
             {/* Quick View button - Center */}
             <button
               onClick={handleQuickView}
-              className="flex items-center gap-2 px-4 py-2 bg-card rounded-full shadow-lg text-foreground body-md transition-all hover:scale-105"
+              className="flex items-center gap-1 px-2.5 py-2 sm:gap-2 sm:px-4 bg-card rounded-full shadow-lg text-foreground body-md transition-all hover:scale-105"
               aria-label="Quick view"
             >
               <Eye className="h-4 w-4" />
-              <span>Quick View</span>
+              <span className="hidden sm:inline">Quick View</span>
             </button>
 
             {/* Add to Cart button - Right */}
             {totalInCart > 0 && hasSingleVariant ? (
               <div 
-                className="flex items-center justify-between h-10 w-24 bg-primary text-primary-foreground rounded-full shadow-lg px-1 transition-all"
+                className="flex h-9 w-21 items-center justify-between rounded-full bg-primary px-1 text-primary-foreground shadow-lg transition-all sm:h-10 sm:w-24"
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
               >
                 <button
@@ -139,11 +139,11 @@ export function ProductCard({ product }: ProductCardProps) {
                     if (!singleVariantCartItem) return
                     await updateQty(singleVariantCartItem.id, singleVariantCartItem.quantity - 1)
                   }}
-                  className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-primary-foreground/20 transition-colors"
+                  className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-primary-foreground/20 sm:h-8 sm:w-8"
                 >
                   <Minus className="h-3 w-3" />
                 </button>
-                <span className="body-md font-medium w-4 text-center">{totalInCart}</span>
+                <span className="w-4 text-center body-md font-medium">{totalInCart}</span>
                 <button
                   onClick={async (e) => { 
                     e.preventDefault(); 
@@ -151,7 +151,7 @@ export function ProductCard({ product }: ProductCardProps) {
                     if (!singleVariantCartItem) return
                     await updateQty(singleVariantCartItem.id, singleVariantCartItem.quantity + 1)
                   }}
-                  className="flex items-center justify-center h-8 w-8 rounded-full hover:bg-primary-foreground/20 transition-colors"
+                  className="flex h-7 w-7 items-center justify-center rounded-full transition-colors hover:bg-primary-foreground/20 sm:h-8 sm:w-8"
                 >
                   <Plus className="h-3 w-3" />
                 </button>
@@ -161,17 +161,17 @@ export function ProductCard({ product }: ProductCardProps) {
                 onClick={handleAddToCart}
                 disabled={isAdding}
                 className={cn(
-                  "flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110",
+                  "flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-all hover:scale-110 sm:h-10 sm:w-10",
                   isAdding && "opacity-75 cursor-not-allowed"
                 )}
                 aria-label="Add to cart"
               >
                 {isAdding ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
+                  <Loader2 className="h-4 w-4 animate-spin sm:h-5 sm:w-5" />
                 ) : (
                   <>
-                    <Plus className="h-4 w-4 absolute" />
-                    <ShoppingCart className="h-5 w-5" />
+                    <Plus className="absolute h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                    <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                   </>
                 )}
               </button>
@@ -179,7 +179,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
       </div>
-      <div className="mt-4">
+      <div className="mt-3 sm:mt-4">
         {product.category && (
           <button
             onClick={handleCategoryClick}
@@ -188,10 +188,10 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.category}
           </button>
         )}
-        <h3 className="mt-1 title-md text-foreground group-hover:text-primary transition-colors">
+        <h3 className="mt-1 line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-primary sm:title-md">
           {product.name}
         </h3>
-        <p className="mt-2 title-md text-primary font-semibold">
+        <p className="mt-1.5 text-sm font-semibold text-primary sm:mt-2 sm:title-md">
           Rs. {product.price.toLocaleString("en-IN")}
         </p>
       </div>

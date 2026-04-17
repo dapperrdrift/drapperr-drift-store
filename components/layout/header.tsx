@@ -256,14 +256,14 @@ export function Header() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out",
           isSolid
-            ? "bg-surface-container-lowest shadow-sm"
+            ? "bg-transparent md:bg-surface-container-lowest md:shadow-sm"
             : "bg-transparent"
         )}
       >
         {/* Announcement bar */}
         <div
           className={cn(
-            "bg-primary text-primary-foreground overflow-hidden transition-all duration-500 ease-in-out",
+            "hidden md:block bg-primary text-primary-foreground overflow-hidden transition-all duration-500 ease-in-out",
             scrolled ? "max-h-0 py-0" : "max-h-10 py-2"
           )}
         >
@@ -278,10 +278,10 @@ export function Header() {
         <div
           className={cn(
             "transition-all duration-500 ease-in-out",
-            isSolid ? "border-b border-border" : "border-b border-transparent"
+            isSolid ? "border-b border-transparent md:border-border" : "border-b border-transparent"
           )}
         >
-          <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
+          <nav className="mx-auto flex max-w-7xl items-center justify-between px-3 sm:px-4 py-4 lg:px-8">
             {/* Mobile menu button */}
             <div className="flex lg:hidden">
               <Button
@@ -291,7 +291,7 @@ export function Header() {
                 aria-label="Toggle menu"
                 className={cn(
                   "transition-colors duration-300",
-                  !isSolid && !mobileMenuOpen
+                  (isHomePage || !isSolid) && !mobileMenuOpen
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:text-primary"
                 )}
@@ -329,13 +329,13 @@ export function Header() {
                 alt="Drapperr Drift"
                 className={cn(
                   "h-8 w-auto transition-all duration-300",
-                  !isSolid ? "brightness-0 invert drop-shadow-md" : "brightness-100"
+                  (isHomePage || !isSolid) ? "brightness-0 invert drop-shadow-md" : "brightness-100"
                 )}
               />
             </Link>
 
             {/* Right actions */}
-            <div className="flex items-center gap-x-2">
+            <div className="flex items-center gap-x-1 md:gap-x-2">
               {/* Search */}
               <Button
                 variant="ghost"
@@ -343,8 +343,8 @@ export function Header() {
                 onClick={() => setSearchOpen(true)}
                 aria-label="Search"
                 className={cn(
-                  "transition-all duration-300",
-                  !isSolid
+                  "hidden md:inline-flex transition-all duration-300",
+                  isHomePage || !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:bg-primary hover:text-white"
                 )}
@@ -358,7 +358,7 @@ export function Header() {
                 size="icon"
                 className={cn(
                   "relative transition-all duration-300",
-                  !isSolid
+                  isHomePage || !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:bg-primary hover:text-white"
                 )}
@@ -369,7 +369,7 @@ export function Header() {
                   {count > 0 && (
                     <span className={cn(
                       "absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold shadow-sm",
-                      !isSolid ? "bg-white text-primary" : "bg-primary text-white"
+                      isHomePage || !isSolid ? "bg-white text-primary" : "bg-primary text-white"
                     )}>
                       {count}
                     </span>
@@ -379,7 +379,9 @@ export function Header() {
 
               {/* Auth: Login/Signup or Avatar Dropdown */}
               {!authLoading && (
-                <UserDropdown isSolid={isSolid} />
+                <div className="hidden md:block">
+                  <UserDropdown isSolid={isSolid} />
+                </div>
               )}
             </div>
           </nav>

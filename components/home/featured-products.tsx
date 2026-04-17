@@ -41,24 +41,24 @@ export async function FeaturedProducts() {
 
   return (
     <section className="bg-surface">
-      <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
-        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+      <div className="mx-auto max-w-7xl px-3 sm:px-4 py-16 lg:px-8 lg:py-24">
+        <div className="flex items-end justify-between gap-4">
           <div data-aos="fade-up">
-            <span className="label-md text-primary">Curated Selection</span>
-            <h2 className="mt-2 headline-lg text-foreground">Featured Pieces</h2>
+            <span className="hidden md:inline-block label-md text-primary">Curated Selection</span>
+            <h2 className="mt-0 md:mt-2 text-2xl md:headline-lg font-bold uppercase tracking-wide text-foreground">Featured Pieces</h2>
           </div>
           <Link
             href="/products"
             data-aos="fade-up"
             data-aos-delay="100"
-            className="inline-flex items-center gap-2 label-md text-foreground transition-colors hover:text-primary"
+            className="inline-flex items-center gap-2 text-xs md:label-md uppercase tracking-widest text-foreground transition-colors hover:text-primary"
           >
-            View All
-            <ArrowRight className="h-4 w-4" />
+            Shop All
+            <ArrowRight className="hidden md:block h-4 w-4" />
           </Link>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 md:mt-10 grid grid-cols-2 gap-3 md:gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {featuredProducts.map((product, index) => (
             <div key={product.id} data-aos="fade-up" data-aos-delay={String(index * 80)}>
               <ProductCard product={product} />

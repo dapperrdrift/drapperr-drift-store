@@ -22,9 +22,9 @@ interface CartItemProps {
 
 export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
   return (
-    <div className="flex gap-4 py-6 border-b border-border">
+    <div className="flex flex-col gap-3 border-b border-border py-5 sm:flex-row sm:gap-4 sm:py-6">
       {/* Product image */}
-      <Link href={`/products/${item.slug}`} className="relative h-32 w-24 flex-shrink-0 overflow-hidden bg-surface-container-low">
+      <Link href={`/products/${item.slug}`} className="relative h-40 w-full shrink-0 overflow-hidden bg-surface-container-low sm:h-32 sm:w-24">
         {item.image ? (
           <Image
             src={item.image}
@@ -53,28 +53,28 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
           </div>
           <button
             onClick={() => onRemove(item.id)}
-            className="text-muted-foreground hover:text-foreground transition-colors"
+            className="p-1 text-muted-foreground transition-colors hover:text-foreground"
             aria-label="Remove item"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="mt-auto flex items-end justify-between">
+        <div className="mt-4 flex items-center justify-between sm:mt-auto sm:items-end">
           {/* Quantity selector */}
           <div className="flex items-center border border-border">
             <button
               onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))}
-              className="p-2 transition-colors hover:bg-surface-container-low disabled:opacity-50"
+              className="p-2.5 transition-colors hover:bg-surface-container-low disabled:opacity-50 sm:p-2"
               disabled={item.quantity <= 1}
               aria-label="Decrease quantity"
             >
               <Minus className="h-4 w-4" />
             </button>
-            <span className="w-10 text-center body-md">{item.quantity}</span>
+            <span className="w-10 text-center body-md sm:w-10">{item.quantity}</span>
             <button
               onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-              className="p-2 transition-colors hover:bg-surface-container-low"
+              className="p-2.5 transition-colors hover:bg-surface-container-low sm:p-2"
               aria-label="Increase quantity"
             >
               <Plus className="h-4 w-4" />

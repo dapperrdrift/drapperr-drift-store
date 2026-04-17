@@ -310,23 +310,24 @@ export default function CheckoutPage() {
   ]
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
+    <div className="mx-auto max-w-7xl overflow-x-hidden px-4 py-8 lg:px-8 lg:py-12">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Link href="/" className="display-md text-foreground">
+        <Link href="/" className="text-2xl font-bold tracking-wide text-foreground sm:display-md">
           DRAPPERR
         </Link>
         <Link
           href="/cart"
-          className="inline-flex items-center gap-2 body-md text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-1.5 body-md text-muted-foreground transition-colors hover:text-foreground sm:gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Back to Cart
+          <span className="hidden sm:inline">Back to Cart</span>
+          <span className="sm:hidden">Cart</span>
         </Link>
       </div>
 
       {/* Progress steps */}
-      <div className="mt-8 flex items-center justify-center">
+      <div className="no-scrollbar sticky top-header-offset z-20 mt-6 flex items-center justify-start overflow-x-auto border-y border-border bg-background/95 px-1 py-3 backdrop-blur-sm sm:justify-center lg:static lg:mt-8 lg:justify-center lg:overflow-visible lg:border-0 lg:bg-transparent lg:px-0 lg:py-0 lg:backdrop-blur-none">
         {steps.map((step, index) => {
           const isActive = step.id === currentStep
           const isCompleted =
@@ -338,7 +339,7 @@ export default function CheckoutPage() {
               <div className="flex items-center gap-2">
                 <div
                   className={cn(
-                    "flex h-10 w-10 items-center justify-center rounded-full transition-colors",
+                    "flex h-8 w-8 items-center justify-center rounded-full transition-colors sm:h-10 sm:w-10",
                     isCompleted
                       ? "bg-primary text-primary-foreground"
                       : isActive
@@ -347,14 +348,14 @@ export default function CheckoutPage() {
                   )}
                 >
                   {isCompleted ? (
-                    <Check className="h-5 w-5" />
+                    <Check className="h-4 w-4 sm:h-5 sm:w-5" />
                   ) : (
-                    <step.icon className="h-5 w-5" />
+                    <step.icon className="h-4 w-4 sm:h-5 sm:w-5" />
                   )}
                 </div>
                 <span
                   className={cn(
-                    "hidden sm:block label-md",
+                    "hidden md:block label-md",
                     isActive || isCompleted ? "text-foreground" : "text-muted-foreground"
                   )}
                 >
@@ -364,7 +365,7 @@ export default function CheckoutPage() {
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    "mx-4 h-0.5 w-12 sm:w-24",
+                    "mx-2 h-0.5 w-8 sm:mx-4 sm:w-24",
                     isCompleted ? "bg-primary" : "bg-border"
                   )}
                 />
@@ -381,7 +382,7 @@ export default function CheckoutPage() {
             <div className="space-y-6">
               {savedAddresses.length > 0 && (
                 <div className="rounded-lg border border-border bg-surface p-5 sm:p-6">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                     <h2 className="headline-md text-foreground">Saved Addresses</h2>
                     <button
                       type="button"
@@ -416,12 +417,12 @@ export default function CheckoutPage() {
                           )}
                         </div>
 
-                        <div className="mt-3 flex items-center gap-2">
+                        <div className="mt-3 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
                           <Button
                             type="button"
                             variant={selectedAddressId === address.id ? "default" : "outline"}
                             size="sm"
-                            className="label-md"
+                            className="label-md w-full sm:w-auto"
                             onClick={() => handleSelectSavedAddress(address)}
                           >
                             {selectedAddressId === address.id ? "Selected" : "Select"}
@@ -430,7 +431,7 @@ export default function CheckoutPage() {
                             <Button
                               type="button"
                               size="sm"
-                              className="label-md bg-primary text-primary-foreground hover:bg-primary-hover"
+                              className="label-md w-full bg-primary text-primary-foreground hover:bg-primary-hover sm:w-auto"
                               onClick={handleDeliverToSelectedAddress}
                             >
                               Deliver Here

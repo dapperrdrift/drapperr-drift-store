@@ -268,7 +268,7 @@ function AccountContent() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
+    <div className="mx-auto max-w-7xl overflow-x-hidden px-4 py-8 lg:px-8">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-8 border-b border-border">
         <div className="flex items-center gap-4">
@@ -291,7 +291,7 @@ function AccountContent() {
       {/* Tabs and Content */}
       <div className="mt-8 grid gap-8 lg:grid-cols-[240px_1fr]">
         {/* Sidebar Navigation */}
-        <nav className="space-y-1">
+        <nav className="no-scrollbar sticky top-header z-20 flex w-full gap-2 overflow-x-auto border-b border-border bg-background/95 px-1 pb-3 pt-1 backdrop-blur-sm md:top-header-offset lg:static lg:block lg:w-auto lg:space-y-1 lg:overflow-visible lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0 lg:backdrop-blur-none">
           {tabs.map((tab) => {
             const Icon = tab.icon
             return (
@@ -299,14 +299,14 @@ function AccountContent() {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "flex w-full items-center gap-3 rounded-md px-4 py-3 text-left transition-colors",
+                  "flex shrink-0 items-center gap-2 rounded-md px-3 py-2 text-left transition-colors lg:w-full lg:gap-3 lg:px-4 lg:py-3",
                   activeTab === tab.id
                     ? "bg-primary text-primary-foreground"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 )}
               >
-                <Icon className="h-5 w-5" />
-                <span className="title-md">{tab.label}</span>
+                <Icon className="h-4 w-4 lg:h-5 lg:w-5" />
+                <span className="whitespace-nowrap text-sm font-semibold uppercase tracking-wider lg:title-md lg:normal-case lg:tracking-normal">{tab.label}</span>
               </button>
             )
           })}
@@ -791,7 +791,7 @@ function AccountContent() {
                   </Dialog>
                 </div>
 
-                <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-6">
+                {/* <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-6">
                   <h3 className="title-lg text-destructive mb-2">Delete Account</h3>
                   <p className="body-md text-muted-foreground mb-4">
                     Permanently delete your account and all associated data. This action cannot be undone.
@@ -799,7 +799,7 @@ function AccountContent() {
                   <Button variant="outline" className="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground">
                     Delete Account
                   </Button>
-                </div>
+                </div> */}
               </div>
             </div>
           )}

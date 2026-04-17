@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from "react"
 import { ProductFilters } from "@/components/products/product-filters"
 import { ProductGrid } from "@/components/products/product-grid"
+import { MobileFilterDrawer } from "@/components/products/mobile-filter-drawer"
 import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = {
@@ -190,31 +191,6 @@ async function ProductsContent({ searchParams }: PageProps) {
 }
 
 /* ─────────────────────────────────────────────────────────────────── */
-/*  Mobile filter drawer (visible only on small screens)              */
-/* ─────────────────────────────────────────────────────────────────── */
-function MobileFilterDrawer({
-  initialCategory,
-  categories,
-}: {
-  initialCategory: string
-  categories: { slug: string; name: string; count: number }[]
-}) {
-  return (
-    <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
-      <a
-        href="#mobile-filters"
-        className="inline-flex items-center gap-2 px-6 py-3 bg-foreground text-background rounded-full shadow-2xl label-md"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-        </svg>
-        Filters
-      </a>
-    </div>
-  )
-}
-
-/* ─────────────────────────────────────────────────────────────────── */
 /*  Page export                                                        */
 /* ─────────────────────────────────────────────────────────────────── */
 export default function ProductsPage({ searchParams }: PageProps) {
@@ -242,7 +218,7 @@ export default function ProductsPage({ searchParams }: PageProps) {
             {/* Grid skeleton */}
             <div className="flex-1">
               <div className="h-8 w-32 bg-muted rounded animate-pulse mb-6" />
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div key={i} className="space-y-3">
                     <div className="aspect-3/4 bg-muted rounded-md animate-pulse" />

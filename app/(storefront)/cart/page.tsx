@@ -46,7 +46,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8 lg:py-12">
+    <div className="mx-auto max-w-7xl px-4 pb-34 pt-8 lg:px-8 lg:py-12">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="display-md text-foreground">Shopping Cart</h1>
@@ -77,6 +77,18 @@ export default function CartPage() {
         {/* Cart summary */}
         <div className="lg:sticky lg:top-header-offset lg:h-fit">
           <CartSummary subtotal={subtotal} itemCount={itemCount} />
+        </div>
+      </div>
+
+      <div className="fixed bottom-18 left-1/2 z-30 w-[calc(100%-1rem)] max-w-md -translate-x-1/2 rounded-xl border border-border bg-surface-container-low p-3 shadow-lg md:hidden">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Total</p>
+            <p className="title-md text-foreground">Rs. {subtotal.toLocaleString("en-IN")}</p>
+          </div>
+          <Button asChild className="bg-primary text-primary-foreground hover:bg-primary-hover">
+            <Link href="/checkout">Checkout</Link>
+          </Button>
         </div>
       </div>
     </div>

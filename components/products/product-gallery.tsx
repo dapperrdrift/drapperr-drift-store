@@ -13,15 +13,15 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0)
 
   return (
-    <div className="flex flex-col-reverse gap-4 lg:flex-row">
+    <div className="flex flex-col-reverse gap-3 sm:gap-4 lg:flex-row">
       {/* Thumbnails */}
-      <div className="flex gap-2 lg:flex-col">
+      <div className="no-scrollbar flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0">
         {images.map((image, index) => (
           <button
             key={index}
             onClick={() => setSelectedImage(index)}
             className={cn(
-              "relative h-20 w-20 flex-shrink-0 overflow-hidden border-2 transition-colors",
+              "relative h-16 w-16 shrink-0 overflow-hidden border-2 transition-colors sm:h-20 sm:w-20",
               selectedImage === index ? "border-foreground" : "border-transparent hover:border-muted-foreground"
             )}
           >
@@ -37,7 +37,7 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
       </div>
 
       {/* Main image */}
-      <div className="relative aspect-[3/4] flex-1 overflow-hidden bg-surface-container-low">
+      <div className="relative aspect-3/4 flex-1 overflow-hidden bg-surface-container-low">
         <Image
           src={images[selectedImage]}
           alt={productName}

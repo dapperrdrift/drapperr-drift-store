@@ -129,13 +129,13 @@ export function ShippingForm({ onSubmit, initialData }: ShippingFormProps) {
   }, [formData.pincode])
 
   const inputClasses = (field: keyof ShippingAddress) =>
-    `w-full rounded-md border bg-background px-3 py-3 body-md placeholder:text-muted-foreground focus:outline-none transition-colors ${
+    `w-full rounded-md border bg-background px-3 py-2.5 sm:py-3 body-md placeholder:text-muted-foreground focus:outline-none transition-colors ${
       errors[field] ? "border-destructive" : "border-input focus:border-foreground"
     }`
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 rounded-lg border border-border bg-surface p-5 sm:p-6">
-      <div className="space-y-1 border-b border-border pb-4">
+    <form onSubmit={handleSubmit} className="space-y-5 rounded-lg border border-border bg-surface p-4 sm:space-y-6 sm:p-6">
+      <div className="space-y-1 border-b border-border pb-3 sm:pb-4">
         <h2 className="headline-md text-foreground">Shipping Address</h2>
         <p className="body-md text-muted-foreground">Enter pincode first to auto-fill city and state.</p>
       </div>
@@ -162,7 +162,7 @@ export function ShippingForm({ onSubmit, initialData }: ShippingFormProps) {
         )}
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
         <div>
           <label className="label-md text-foreground" htmlFor="city">City</label>
           <input
@@ -198,7 +198,7 @@ export function ShippingForm({ onSubmit, initialData }: ShippingFormProps) {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
         <div>
           <input
             type="text"
@@ -225,7 +225,7 @@ export function ShippingForm({ onSubmit, initialData }: ShippingFormProps) {
         </div>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
         <div>
           <input
             type="email"
@@ -269,7 +269,7 @@ export function ShippingForm({ onSubmit, initialData }: ShippingFormProps) {
 
       <Button
         type="submit"
-        className="w-full py-6 label-md bg-primary text-primary-foreground hover:bg-primary-hover"
+        className="w-full py-5 sm:py-6 label-md bg-primary text-primary-foreground hover:bg-primary-hover"
       >
         Continue to Payment
       </Button>

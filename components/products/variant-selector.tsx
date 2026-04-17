@@ -154,7 +154,7 @@ export function VariantSelector({ variants, onVariantChange }: VariantSelectorPr
 
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-5 sm:space-y-6">
         {/* Color selector */}
         <div>
           <div className="flex items-center justify-between">
@@ -163,7 +163,7 @@ export function VariantSelector({ variants, onVariantChange }: VariantSelectorPr
               <span className="body-md text-muted-foreground capitalize">{selectedColor}</span>
             )}
           </div>
-          <div className="mt-3 flex flex-wrap gap-3">
+          <div className="mt-3 flex flex-wrap gap-2 sm:gap-3">
             {colors.map((color) => {
               const available = isColorAvailable(color.name)
               const isSelected = selectedColor === color.name
@@ -173,7 +173,7 @@ export function VariantSelector({ variants, onVariantChange }: VariantSelectorPr
                   onClick={() => available && handleColorChange(color.name)}
                   disabled={!available}
                   className={cn(
-                    "relative h-10 w-10 rounded-full border-2 transition-all",
+                    "relative h-9 w-9 rounded-full border-2 transition-all sm:h-10 sm:w-10",
                     isSelected
                       ? "border-primary ring-2 ring-primary ring-offset-2 scale-110"
                       : available
@@ -216,7 +216,7 @@ export function VariantSelector({ variants, onVariantChange }: VariantSelectorPr
                   onClick={() => available && handleSizeChange(size)}
                   disabled={!available}
                   className={cn(
-                    "min-w-13 px-4 py-3 border rounded-md label-md transition-all",
+                    "min-w-11 sm:min-w-13 px-3 sm:px-4 py-2.5 sm:py-3 border rounded-md label-md transition-all",
                     isSelected
                       ? "border-primary bg-primary text-primary-foreground shadow-sm"
                       : available

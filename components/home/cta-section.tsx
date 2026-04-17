@@ -12,9 +12,9 @@ export function CTASection() {
     : { href: "/signup", label: "Create Account" }
 
   return (
-    <section className="relative overflow-hidden bg-primary py-20 lg:py-28">
+    <section className="relative overflow-hidden bg-primary py-16 md:py-20 lg:py-28">
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="hidden md:block absolute inset-0 overflow-hidden">
         <motion.div
           className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-white/5"
           animate={{
@@ -52,21 +52,21 @@ export function CTASection() {
         />
       </div>
 
-      <div className="relative mx-auto max-w-4xl px-4 text-center">
+      <div className="relative mx-auto max-w-4xl px-3 sm:px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/90 label-md mb-6">
+          <span className="hidden md:inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/90 label-md mb-6">
             <Sparkles className="h-4 w-4" />
             Limited Time Offer
           </span>
         </motion.div>
 
         <motion.h2
-          className="display-lg text-white text-balance"
+          className="text-4xl md:display-lg font-black uppercase md:normal-case leading-tight text-white text-balance"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -76,18 +76,32 @@ export function CTASection() {
         </motion.h2>
 
         <motion.p
-          className="mt-6 body-lg text-white/80 max-w-2xl mx-auto text-pretty"
+          className="mt-4 md:mt-6 body-lg text-white/90 md:text-white/80 max-w-2xl mx-auto text-pretty"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          Join the Drapperr Drift community today and unlock exclusive access to new collections, 
-          special discounts, and style inspiration delivered straight to your inbox.
+          Join the collective. Elevate your aesthetic.
         </motion.p>
 
+        <form className="mt-8 md:hidden flex flex-col gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="email"
+            placeholder="EMAIL ADDRESS"
+            className="w-full bg-surface-container-lowest border border-outline px-4 py-4 text-sm font-bold tracking-widest uppercase text-on-surface placeholder:text-outline focus:outline-none focus:border-on-surface"
+            required
+          />
+          <button
+            type="submit"
+            className="w-full bg-surface text-on-surface px-8 py-4 text-sm font-black uppercase tracking-widest transition-colors hover:bg-surface-bright"
+          >
+            Subscribe
+          </button>
+        </form>
+
         <motion.div
-          className="mt-10 flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="hidden md:flex mt-10 flex-col sm:flex-row gap-4 justify-center items-center"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -109,7 +123,7 @@ export function CTASection() {
         </motion.div>
 
         <motion.p
-          className="mt-6 body-sm text-white/60"
+          className="hidden md:block mt-6 body-sm text-white/60"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

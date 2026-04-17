@@ -121,20 +121,35 @@ export default function OrderDetailPage() {
   ]
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 lg:px-8">
+    <div className="mx-auto max-w-4xl px-4 py-8 sm:py-12 lg:px-8">
       <Link 
-        href="/account"
+        href="/orders"
         className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 transition-colors"
       >
         <ChevronLeft className="h-4 w-4" />
-        Back to Account
+        Back to Orders
       </Link>
 
+      <div className="no-scrollbar mb-5 flex gap-2 overflow-x-auto md:hidden">
+        <Link
+          href="/orders"
+          className="shrink-0 rounded-md border border-border bg-surface px-3 py-2 text-xs font-semibold uppercase tracking-wider text-foreground"
+        >
+          Orders
+        </Link>
+        <Link
+          href="/account"
+          className="shrink-0 rounded-md border border-border bg-surface px-3 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground"
+        >
+          Account
+        </Link>
+      </div>
+
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-12">
+      <div className="mb-8 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="display-sm text-foreground mb-2">Order Detail</h1>
-          <p className="body-md text-muted-foreground">Order ID: {order.id}</p>
+          <p className="no-scrollbar overflow-x-auto whitespace-nowrap body-md text-muted-foreground">Order ID: {order.id}</p>
         </div>
         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-high border border-border">
           <ShieldCheck className="h-4 w-4 text-primary" />
@@ -146,12 +161,12 @@ export default function OrderDetailPage() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-8">
           {/* Items */}
-          <section className="rounded-lg border border-border p-6">
+          <section className="rounded-lg border border-border p-4 sm:p-6">
             <h2 className="headline-sm text-foreground mb-6">Order Items</h2>
             <div className="space-y-6">
               {order.order_items?.map((item: any) => (
-                <div key={item.id} className="flex gap-4">
-                  <div className="relative h-24 w-20 flex-shrink-0 overflow-hidden bg-surface-container-lowest border border-border rounded">
+                <div key={item.id} className="flex gap-3 sm:gap-4">
+                  <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded border border-border bg-surface-container-lowest sm:h-24 sm:w-20">
                     <Image
                       src={item.variants?.products?.images?.[0] || "/images/placeholder.jpg"}
                       alt={item.variants?.products?.name || "Product"}
@@ -160,7 +175,7 @@ export default function OrderDetailPage() {
                     />
                   </div>
                   <div className="flex flex-1 flex-col justify-center">
-                    <h3 className="title-md text-foreground">{item.variants?.products?.name || "Product"}</h3>
+                    <h3 className="title-md line-clamp-2 text-foreground">{item.variants?.products?.name || "Product"}</h3>
                     <p className="body-md text-muted-foreground">Size: {item.variants?.size || "-"} | Color: {item.variants?.color || "-"}</p>
                     <div className="mt-2 flex items-center justify-between">
                       <span className="body-md text-foreground">Qty: {item.quantity}</span>
@@ -173,7 +188,7 @@ export default function OrderDetailPage() {
           </section>
 
           {/* Tracking */}
-          <section className="rounded-lg border border-border p-6">
+          <section className="rounded-lg border border-border p-4 sm:p-6">
             <h2 className="headline-sm text-foreground mb-6">Order Timeline</h2>
             <div className="space-y-6">
               {trackingSteps.map((step, index) => {
@@ -210,7 +225,7 @@ export default function OrderDetailPage() {
         {/* Sidebar */}
         <div className="space-y-8">
           {/* Shipping Address */}
-          <section className="rounded-lg border border-border p-6">
+          <section className="rounded-lg border border-border p-4 sm:p-6">
             <h2 className="headline-sm text-foreground mb-4">Shipping Info</h2>
             <div className="space-y-2 body-md text-muted-foreground">
               <p className="text-foreground font-medium">{order.shipping_address?.firstName} {order.shipping_address?.lastName}</p>
@@ -221,7 +236,7 @@ export default function OrderDetailPage() {
           </section>
 
           {/* Payment Summary */}
-          <section className="rounded-lg border border-border p-6 bg-surface-container-low">
+          <section className="rounded-lg border border-border bg-surface-container-low p-4 sm:p-6">
             <h2 className="headline-sm text-foreground mb-4">Payment Summary</h2>
             <div className="space-y-3">
               <div className="flex justify-between body-md">
@@ -234,7 +249,7 @@ export default function OrderDetailPage() {
               </div>
               <div className="pt-3 border-t border-border flex justify-between title-md">
                 <span className="text-foreground">Total</span>
-                <span className="text-foreground text-primary">Rs. {order.total_amount.toLocaleString("en-IN")}</span>
+                <span className="text-primary">Rs. {order.total_amount.toLocaleString("en-IN")}</span>
               </div>
             </div>
             <div className="mt-6 p-3 rounded bg-surface text-center">

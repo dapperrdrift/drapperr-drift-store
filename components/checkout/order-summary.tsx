@@ -84,7 +84,7 @@ export function OrderSummary({
     <>
       {showConfetti && (
         <div
-          className={`fixed inset-0 z-[9999] pointer-events-none overflow-hidden transition-opacity duration-600 ${
+          className={`fixed inset-0 z-9999 pointer-events-none overflow-hidden transition-opacity duration-600 ${
             isConfettiFading ? "opacity-0" : "opacity-100"
           }`}
           aria-hidden="true"
@@ -110,7 +110,7 @@ export function OrderSummary({
       {/* Coupon code input */}
       <div className="mt-6 flex flex-col gap-2">
         <label htmlFor="coupon" className="label-md text-foreground">Coupon Code</label>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <input
             type="text"
             id="coupon"
@@ -123,7 +123,7 @@ export function OrderSummary({
           <button
             onClick={() => onApplyCoupon?.(couponCode.trim().toUpperCase())}
             disabled={!couponCode || !!appliedCouponCode}
-            className="bg-primary px-4 py-2 label-md text-primary-foreground hover:bg-primary-hover disabled:opacity-50"
+            className="w-full bg-primary px-4 py-2 label-md text-primary-foreground hover:bg-primary-hover disabled:opacity-50 sm:w-auto"
           >
             {appliedCouponCode ? "Applied" : "Apply"}
           </button>
@@ -136,8 +136,8 @@ export function OrderSummary({
       {/* Items */}
       <div className="mt-6 space-y-4">
         {items.map((item) => (
-          <div key={item.id} className="flex gap-4">
-            <div className="relative h-20 w-16 flex-shrink-0 overflow-hidden bg-surface-container-lowest">
+          <div key={item.id} className="flex gap-3 sm:gap-4">
+            <div className="relative h-16 w-14 shrink-0 overflow-hidden bg-surface-container-lowest sm:h-20 sm:w-16">
               <Image
                 src={item.image}
                 alt={item.name}
@@ -150,7 +150,7 @@ export function OrderSummary({
               </span>
             </div>
             <div className="flex flex-1 flex-col">
-              <span className="body-md text-foreground">{item.name}</span>
+              <span className="body-md line-clamp-2 text-foreground">{item.name}</span>
               <span className="body-md text-muted-foreground">
                 {item.color} / {item.size}
               </span>

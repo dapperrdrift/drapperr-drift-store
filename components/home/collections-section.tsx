@@ -17,9 +17,9 @@ function CategoryCard({ category }: { category: Category }) {
   return (
     <Link
       href={`/products?category=${category.slug}`}
-      className="group relative overflow-hidden rounded-sm"
+      className="group relative overflow-hidden rounded-none md:rounded-sm"
     >
-      <div className="aspect-3/4 relative">
+      <div className="aspect-square md:aspect-3/4 relative bg-surface-container">
         <Image
           src={imgSrc}
           alt={category.name}
@@ -32,9 +32,9 @@ function CategoryCard({ category }: { category: Category }) {
         <div className="absolute inset-0 bg-linear-to-t from-foreground/60 via-foreground/10 to-transparent transition-opacity group-hover:from-foreground/70" />
 
         {/* Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-end p-8 text-center">
-          <h3 className="headline-md text-background drop-shadow-sm">{category.name}</h3>
-          <span className="mt-3 inline-flex items-center gap-1 label-md text-background/90 underline underline-offset-4 transition-all group-hover:gap-2 drop-shadow-sm">
+        <div className="absolute inset-0 flex flex-col items-center justify-center md:justify-end p-4 md:p-8 text-center">
+          <h3 className="text-xl md:headline-md font-black uppercase tracking-widest text-background drop-shadow-sm">{category.name}</h3>
+          <span className="hidden md:inline-flex mt-3 items-center gap-1 label-md text-background/90 underline underline-offset-4 transition-all group-hover:gap-2 drop-shadow-sm">
             Shop Now
           </span>
         </div>
@@ -46,7 +46,7 @@ function CategoryCard({ category }: { category: Category }) {
 // Loading skeleton
 function CategorySkeleton() {
   return (
-    <div className="aspect-3/4 w-full animate-pulse rounded-sm bg-muted" />
+    <div className="aspect-square md:aspect-3/4 w-full animate-pulse rounded-none md:rounded-sm bg-muted" />
   )
 }
 
@@ -85,20 +85,20 @@ function CollectionsSectionUI({
   fallback?: boolean
 }) {
   // Responsive grid for any number of categories
-  const gridCols = 'sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+  const gridCols = 'grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
 
   return (
     <section className="bg-surface-container-low">
-      <div className="mx-auto max-w-7xl px-4 py-16 lg:px-8 lg:py-24">
-        <div className="text-center" data-aos="fade-up">
-          <span className="label-md text-primary">Collections</span>
-          <h2 className="mt-2 headline-lg text-foreground">Shop by Category</h2>
+      <div className="mx-auto max-w-7xl px-3 sm:px-4 py-16 lg:px-8 lg:py-24">
+        <div className="text-left md:text-center border-l-4 border-primary md:border-0 pl-3 md:pl-0" data-aos="fade-up">
+          <span className="hidden md:inline-block label-md text-primary">Collections</span>
+          <h2 className="mt-0 md:mt-2 text-[2rem] md:headline-lg font-bold uppercase tracking-wide text-foreground">Shop by Category</h2>
           {fallback && (
             <p className="mt-2 body-md text-muted-foreground">Showing default categories</p>
           )}
         </div>
 
-        <div className={`mt-12 grid gap-6 ${gridCols}`}>
+        <div className={`mt-12 grid gap-2 md:gap-6 ${gridCols}`}>
           {categories.map((category, index) => (
             <div key={category.id} data-aos="fade-up" data-aos-delay={String(index * 80)}>
               <CategoryCard category={category} />

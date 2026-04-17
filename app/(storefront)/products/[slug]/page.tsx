@@ -185,7 +185,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       />
       {/* Breadcrumb */}
       <nav data-aos="fade-down" className="mx-auto max-w-7xl px-4 pt-6 pb-4 lg:px-8">
-        <ol className="flex items-center gap-2 body-md text-muted-foreground">
+        <ol className="no-scrollbar flex items-center gap-2 overflow-x-auto whitespace-nowrap body-md text-muted-foreground">
           <li>
             <Link href="/" className="hover:text-primary transition-colors">Home</Link>
           </li>
@@ -205,8 +205,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
       </nav>
 
       {/* Product details */}
-      <div className="mx-auto max-w-7xl px-4 py-8 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 items-start">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:py-8 lg:px-8">
+        <div className="grid items-start gap-6 sm:gap-8 lg:grid-cols-2 lg:gap-12">
           {/* Gallery */}
           <div data-aos="fade-right" className="lg:sticky lg:top-32">
             <ProductGallery
@@ -221,8 +221,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <Link href={`/products?category=${categorySlug}`} className="label-md text-primary hover:underline">
                 {category}
               </Link>
-              <h1 className="mt-2 display-md text-foreground">{product.name}</h1>
-              <p className="mt-4 headline-md text-foreground">
+              <h1 className="mt-2 text-3xl font-bold leading-tight text-foreground sm:display-md">{product.name}</h1>
+              <p className="mt-3 sm:mt-4 headline-md text-foreground">
                 ₹{price.toLocaleString('en-IN')}
               </p>
               <p className="mt-1 body-md text-muted-foreground">Inclusive of all taxes</p>
@@ -235,18 +235,18 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <ProductInfo productName={product.name} variants={variants} />
 
             {/* Trust badges */}
-            <div data-aos="fade-up" className="grid grid-cols-3 gap-4 py-6 border-t border-b border-border">
+            <div data-aos="fade-up" className="grid grid-cols-3 gap-2 border-y border-border py-5 sm:gap-4 sm:py-6">
               <div className="flex flex-col items-center text-center gap-2">
                 <Truck className="h-5 w-5 text-primary" />
-                <span className="body-md text-muted-foreground">Free Shipping</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:body-md sm:normal-case sm:tracking-normal">Free Shipping</span>
               </div>
               <div className="flex flex-col items-center text-center gap-2">
                 <RotateCcw className="h-5 w-5 text-primary" />
-                <span className="body-md text-muted-foreground">30-Day Returns</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:body-md sm:normal-case sm:tracking-normal">30-Day Returns</span>
               </div>
               <div className="flex flex-col items-center text-center gap-2">
                 <Shield className="h-5 w-5 text-primary" />
-                <span className="body-md text-muted-foreground">Secure Payment</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:body-md sm:normal-case sm:tracking-normal">Secure Payment</span>
               </div>
             </div>
 
@@ -261,15 +261,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
       {/* Related products */}
       {relatedProducts.length > 0 && (
         <section className="bg-surface-container-highest border-t border-border">
-          <div className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
-            <div data-aos="fade-up" className="flex flex-col items-center text-center space-y-4 mb-12">
+          <div className="mx-auto max-w-7xl px-4 py-14 sm:py-20 lg:px-8">
+            <div data-aos="fade-up" className="mb-8 flex flex-col items-center space-y-3 text-center sm:mb-12 sm:space-y-4">
               <h2 className="display-sm text-foreground font-serif tracking-tight">Our Personal Recommendation</h2>
               <p className="body-lg text-muted-foreground max-w-2xl">
                 Specially curated pieces from our {category} collection that pair perfectly with this item.
               </p>
             </div>
             
-            <div className="relative bg-surface rounded-2xl p-6 sm:p-8 shadow-sm border border-border/50">
+            <div className="relative rounded-2xl border border-border/50 bg-surface p-4 shadow-sm sm:p-8">
               <div className="absolute inset-0 bg-linear-to-tr from-primary/5 to-transparent blur-2xl -z-10 rounded-[3rem]" />
               <ProductGrid products={relatedProducts} />
             </div>
