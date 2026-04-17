@@ -85,18 +85,18 @@ export function CTASection() {
           Join the collective. Elevate your aesthetic.
         </motion.p>
 
-        <form className="mt-8 md:hidden flex flex-col gap-3 max-w-md mx-auto" onSubmit={(e) => e.preventDefault()}>
+        <form className="mt-8 md:hidden flex items-stretch max-w-sm mx-auto" onSubmit={(e) => e.preventDefault()}>
           <input
             type="email"
-            placeholder="EMAIL ADDRESS"
-            className="w-full bg-surface-container-lowest border border-outline px-4 py-4 text-sm font-bold tracking-widest uppercase text-on-surface placeholder:text-outline focus:outline-none focus:border-on-surface"
+            placeholder="Your email"
+            className="min-w-0 flex-1 bg-white/10 border border-white/30 px-4 py-3 text-sm text-white placeholder:text-white/50 focus:outline-none focus:border-white/60 rounded-l-md"
             required
           />
           <button
             type="submit"
-            className="w-full bg-surface text-on-surface px-8 py-4 text-sm font-black uppercase tracking-widest transition-colors hover:bg-surface-bright"
+            className="shrink-0 bg-white text-primary px-5 py-3 text-sm font-black uppercase tracking-wider transition-colors hover:bg-white/90 rounded-r-md"
           >
-            Subscribe
+            Join
           </button>
         </form>
 

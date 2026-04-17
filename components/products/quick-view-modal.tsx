@@ -81,19 +81,19 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
   // Ensure accessible title for screen readers
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-4xl p-0 overflow-hidden sm:rounded-2xl border-none">
+      <DialogContent className="max-w-4xl p-0 overflow-hidden rounded-xl sm:rounded-2xl border-none w-[95vw] sm:w-auto">
         <DialogTitle className="sr-only">Quick view for {productBase.name}</DialogTitle>
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 z-50 rounded-full p-2 bg-white/80 hover:bg-white text-foreground shadow-sm backdrop-blur-sm transition-all focus:outline-none"
+          className="absolute right-3 top-3 z-50 rounded-full p-1.5 bg-white/80 hover:bg-white text-foreground shadow-sm backdrop-blur-sm transition-all focus:outline-none"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
           <span className="sr-only">Close</span>
         </button>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 max-h-[90vh] md:max-h-150 overflow-y-auto custom-scrollbar">
+        <div className="grid grid-cols-1 md:grid-cols-2 max-h-[88dvh] overflow-y-auto custom-scrollbar">
           {/* Left: Image */}
-          <div className="relative aspect-3/4 md:aspect-auto w-full h-full min-h-75 bg-surface-container-low">
+          <div className="relative h-52 sm:h-64 md:h-auto md:aspect-auto w-full md:min-h-75 bg-surface-container-low shrink-0">
             {product?.images?.[0] || productBase.image ? (
               <Image
                 src={product?.images?.[0] || productBase.image}

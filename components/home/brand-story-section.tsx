@@ -41,7 +41,7 @@ export function BrandStorySection() {
             <div className="hidden lg:block relative min-h-100 lg:min-h-full" data-aos="fade-right">
               <Image
                 src="/images/brand-story.jpg"
-                alt="Drapperr behind the scenes"
+                alt="Dapperr behind the scenes"
                 fill
                 className="object-cover opacity-80"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -65,7 +65,7 @@ export function BrandStorySection() {
               </span>
 
               <h2 data-aos="fade-left" data-aos-delay="80" className="text-[2.1rem] lg:headline-lg font-black uppercase lg:normal-case text-white text-balance leading-tight">
-                Drapperr wasn&apos;t designed in a boardroom...
+                Dapperr wasn&apos;t designed in a boardroom...
               </h2>
 
               <p data-aos="fade-left" data-aos-delay="120" className="mt-6 body-lg text-white/80 lg:text-white/60 text-pretty leading-relaxed max-w-2xl mx-auto lg:mx-0">

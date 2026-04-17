@@ -14,7 +14,7 @@ export default function AuthLayout({
       <div className="relative hidden lg:block lg:w-1/2">
         <Image
           src="/images/signup%20image.png"
-          alt="Drapperr Drift auth"
+          alt="Dapperr Drift auth"
           fill
           priority
           className="object-cover object-top"

@@ -118,7 +118,7 @@ export default function SignupPage() {
 
       <h1 className="mt-2 headline-lg text-foreground">Create an account</h1>
       <p className="mt-2 body-lg text-muted-foreground">
-        Join Drapperr Drift and discover curated fashion
+        Join Dapperr Drift and discover curated fashion
       </p>
 
       {error && (

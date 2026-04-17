@@ -13,7 +13,7 @@ const AnimatedTestimonials = dynamic(
 const testimonials = [
   {
     quote:
-      "Drapperr Drift has completely transformed my wardrobe. The quality is unmatched and every piece feels like it was made just for me. I get compliments everywhere I go!",
+      "Dapperr Drift has completely transformed my wardrobe. The quality is unmatched and every piece feels like it was made just for me. I get compliments everywhere I go!",
     name: "Priya Sharma",
     designation: "Fashion Blogger, Mumbai",
     src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=3387&auto=format&fit=crop",
@@ -27,14 +27,14 @@ const testimonials = [
   },
   {
     quote:
-      "I've been shopping with Drapperr Drift for over a year now. Their attention to detail and customer service is exceptional. Truly a premium experience.",
+      "I've been shopping with Dapperr Drift for over a year now. Their attention to detail and customer service is exceptional. Truly a premium experience.",
     name: "Ananya Patel",
     designation: "Entrepreneur, Bangalore",
     src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop",
   },
   {
     quote:
-      "The sustainable approach combined with cutting-edge design makes Drapperr Drift my go-to for all occasions. From casual to formal, they've got it all.",
+      "The sustainable approach combined with cutting-edge design makes Dapperr Drift my go-to for all occasions. From casual to formal, they've got it all.",
     name: "Vikram Singh",
     designation: "Tech Executive, Hyderabad",
     src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=3540&auto=format&fit=crop",
@@ -51,7 +51,7 @@ export function TestimonialsSection() {
             Loved by Fashion Enthusiasts
           </h2>
           <p className="mt-4 body-lg text-muted-foreground max-w-2xl mx-auto">
-            Join thousands of satisfied customers who have elevated their style with Drapperr Drift
+            Join thousands of satisfied customers who have elevated their style with Dapperr Drift
           </p>
         </div>
         <AnimatedTestimonials testimonials={testimonials} autoplay />

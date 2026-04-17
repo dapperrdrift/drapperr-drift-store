@@ -23,7 +23,7 @@ export default function CookiePolicyPage() {
         <section>
           <h2 className="headline-sm text-foreground mb-4">How We Use Cookies</h2>
           <p className="body-md text-muted-foreground leading-relaxed mb-4">
-            Drapperr uses cookies and similar technologies for several purposes:
+            Dapperr uses cookies and similar technologies for several purposes:
           </p>
           <ul className="space-y-2 ml-4">
             <li className="flex items-start gap-3 body-md text-muted-foreground">
@@ -238,7 +238,7 @@ export default function CookiePolicyPage() {
             If you have questions about our use of cookies, please contact us:
           </p>
           <div className="rounded-lg border border-border p-6 bg-surface-container-low">
-            <p className="body-md text-foreground font-medium mb-2">Drapperr Drift Private Limited</p>
+            <p className="body-md text-foreground font-medium mb-2">Dapperr Drift Private Limited</p>
             <p className="body-md text-muted-foreground">
               123 Fashion Street, Mumbai<br />
               Maharashtra, India 400001<br />

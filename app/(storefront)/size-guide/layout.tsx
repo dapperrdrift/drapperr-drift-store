@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Size Guide | Drapperr Drift – Clothing Store Kota',
+  title: 'Size Guide | Dapperr Drift – Clothing Store Kota',
   description:
-    'Find your perfect fit with the Drapperr Drift size guide. Measurements for T-shirts, hoodies, denim, and more. Shop confidently online or visit our store in Kota, Rajasthan.',
+    'Find your perfect fit with the Dapperr Drift size guide. Measurements for T-shirts, hoodies, denim, and more. Shop confidently online or visit our store in Kota, Rajasthan.',
   keywords: [
-    'Drapperr Drift size guide',
+    'Dapperr Drift size guide',
     'clothing size chart Kota',
     'T-shirt size guide India',
-    'hoodie sizing Drapperr Drift',
+    'hoodie sizing Dapperr Drift',
     'fashion fit guide Kota',
   ],
   alternates: {

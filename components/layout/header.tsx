@@ -17,6 +17,7 @@ import {
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SearchModal } from "@/components/layout/search-modal"
+import { AnnouncementBar } from "@/components/layout/announcement-bar"
 import { cn } from "@/lib/utils"
 import { useCart } from "@/contexts/cart-context"
 import { useAuth } from "@/contexts/auth-context"
@@ -260,18 +261,14 @@ export function Header() {
             : "bg-transparent"
         )}
       >
-        {/* Announcement bar */}
+        {/* Rotating announcement bar — shown until dismissed, collapses on scroll on desktop */}
         <div
           className={cn(
-            "hidden md:block bg-primary text-primary-foreground overflow-hidden transition-all duration-500 ease-in-out",
-            scrolled ? "max-h-0 py-0" : "max-h-10 py-2"
+            "overflow-hidden transition-all duration-500 ease-in-out",
+            scrolled ? "md:max-h-0" : "max-h-10"
           )}
         >
-          <div className="mx-auto max-w-7xl px-4">
-            <p className="text-center label-md">
-              Complimentary shipping on orders over Rs. 5,000
-            </p>
-          </div>
+          <AnnouncementBar />
         </div>
 
         {/* Main header */}
@@ -326,7 +323,7 @@ export function Header() {
             <Link href="/" className="shrink-0 transition-opacity hover:opacity-80">
               <img
                 src="/images/logo-black.svg"
-                alt="Drapperr Drift"
+                alt="Dapperr Drift"
                 className={cn(
                   "h-8 w-auto transition-all duration-300",
                   (isHomePage || !isSolid) ? "brightness-0 invert drop-shadow-md" : "brightness-100"

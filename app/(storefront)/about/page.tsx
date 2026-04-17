@@ -4,23 +4,23 @@ import Link from "next/link"
 import { Heart, Leaf, Award, Users } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: 'About Us | Drapperr Drift – Clothing Store in Kota',
+  title: 'About Us | Dapperr Drift – Clothing Store in Kota',
   description:
-    'Drapperr Drift was born in Kota, Rajasthan. We bring trendy T-shirts, hoodies, denim, and streetwear to the youth of Kota and across India. Visit our store at Shubh Affinity, Swami Vivekananda Nagar.',
+    'Dapperr Drift was born in Kota, Rajasthan. We bring trendy T-shirts, hoodies, denim, and streetwear to the youth of Kota and across India. Visit our store at Shubh Affinity, Swami Vivekananda Nagar.',
   keywords: [
-    'about Drapperr Drift Kota',
+    'about Dapperr Drift Kota',
     'clothing brand Kota Rajasthan',
     'fashion store Kota story',
     'men fashion brand Kota',
-    'Drapperr Drift about',
+    'Dapperr Drift about',
   ],
   alternates: {
     canonical: 'https://dapperrdrift.com/about',
   },
   openGraph: {
-    title: 'About Drapperr Drift | Kota\'s Favourite Clothing Store',
+    title: 'About Dapperr Drift | Kota\'s Favourite Clothing Store',
     description:
-      'Learn about Drapperr Drift, Kota\'s go-to clothing destination. We bring bold, affordable streetwear and fashion to the youth of Rajasthan and beyond.',
+      'Learn about Dapperr Drift, Kota\'s go-to clothing destination. We bring bold, affordable streetwear and fashion to the youth of Rajasthan and beyond.',
     url: 'https://dapperrdrift.com/about',
     type: 'website',
   },
@@ -55,7 +55,7 @@ export default function AboutPage() {
   ]
 
   const milestones = [
-    { year: "2022", event: "Drapperr Drift founded in Kota, Rajasthan with a vision to bring big-city fashion to local youth" },
+    { year: "2022", event: "Dapperr Drift founded in Kota, Rajasthan with a vision to bring big-city fashion to local youth" },
     { year: "2023", event: "Opened our flagship store at Shubh Affinity, Swami Vivekananda Nagar, Kota" },
     { year: "2023", event: "Launched online store, delivering fashion to customers across Rajasthan and India" },
     { year: "2024", event: "Expanded product range — T-shirts, hoodies, denim, and premium streetwear" },
@@ -74,7 +74,7 @@ export default function AboutPage() {
                 Kota's Go-To Clothing Store, Since Day One
               </h1>
               <p className="body-lg text-muted-foreground mb-8 leading-relaxed">
-                Drapperr Drift was born in Kota, Rajasthan — built for the bold, the stylish, and the young at heart.
+                Dapperr Drift was born in Kota, Rajasthan — built for the bold, the stylish, and the young at heart.
                 We bring premium streetwear, trendy T-shirts, hoodies, and denim to the youth of Kota and ship across India.
                 Walk into our store at Shubh Affinity, Swami Vivekananda Nagar, or shop from anywhere in the country.
               </p>
@@ -88,7 +88,7 @@ export default function AboutPage() {
             <div className="relative aspect-4/3 rounded-lg overflow-hidden bg-secondary">
               <Image
                 src="/images/about-hero.jpg"
-                alt="Drapperr Drift store interior in Kota, Rajasthan"
+                alt="Dapperr Drift store interior in Kota, Rajasthan"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -104,7 +104,7 @@ export default function AboutPage() {
           <h2 className="display-sm text-foreground mb-8">Our Story</h2>
           <div className="space-y-6 body-lg text-muted-foreground leading-relaxed">
             <p>
-              Drapperr Drift started with a simple idea: why should the youth of Kota, Rajasthan have to travel to metro cities
+              Dapperr Drift started with a simple idea: why should the youth of Kota, Rajasthan have to travel to metro cities
               just to find fashion that actually speaks to them? We set up shop in Kota's Swami Vivekananda Nagar to bring
               bold, contemporary clothing right to the doorstep of Rajasthan's most dynamic city.
             </p>
@@ -115,7 +115,7 @@ export default function AboutPage() {
             </p>
             <p>
               We curate every piece with care — from graphic tees to premium hoodies, from relaxed denim to streetwear essentials —
-              because great style should be accessible, not exclusive. That's the Drapperr Drift promise.
+              because great style should be accessible, not exclusive. That's the Dapperr Drift promise.
             </p>
           </div>
         </div>
@@ -153,7 +153,7 @@ export default function AboutPage() {
           <div className="text-center mb-16">
             <h2 className="display-sm text-foreground mb-4">Our Journey</h2>
             <p className="body-lg text-muted-foreground">
-              Key milestones in the Drapperr Drift story
+              Key milestones in the Dapperr Drift story
             </p>
           </div>
           <div className="relative">
@@ -196,7 +196,7 @@ export default function AboutPage() {
       {/* CTA Section */}
       <section className="bg-primary text-primary-foreground py-20">
         <div className="mx-auto max-w-4xl px-4 lg:px-8 text-center">
-          <h2 className="display-sm mb-4">Join the Drapperr Drift Family</h2>
+          <h2 className="display-sm mb-4">Join the Dapperr Drift Family</h2>
           <p className="body-lg opacity-90 mb-8 max-w-2xl mx-auto">
             Whether you're in Kota, Rajasthan or anywhere across India — discover clothing that speaks
             before you do. Bold pieces, fair prices, fast delivery.

@@ -56,24 +56,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${product.name} | Drapperr Drift – Clothing Store Kota`,
+    title: `${product.name} | Dapperr Drift – Clothing Store Kota`,
     description: product.description
-      ? `${product.description} Shop ${product.name} at Drapperr Drift, Kota's best clothing store. Visit us in Swami Vivekananda Nagar, Kota or order online across India.`
-      : `Shop ${product.name} at Drapperr Drift — Kota's trendiest clothing store. Located at Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan. Pan-India delivery available.`,
+      ? `${product.description} Shop ${product.name} at Dapperr Drift, Kota's best clothing store. Visit us in Swami Vivekananda Nagar, Kota or order online across India.`
+      : `Shop ${product.name} at Dapperr Drift — Kota's trendiest clothing store. Located at Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan. Pan-India delivery available.`,
     keywords: [
       product.name,
       `${product.name} Kota`,
       `buy ${product.name} online India`,
       'clothing store Kota',
       'fashion store Kota Rajasthan',
-      'Drapperr Drift',
+      'Dapperr Drift',
     ],
     alternates: {
       canonical: `https://dapperrdrift.com/products/${slug}`,
     },
     openGraph: {
-      title: `${product.name} | Drapperr Drift`,
-      description: product.description ?? `Shop ${product.name} at Drapperr Drift, Kota's best clothing store.`,
+      title: `${product.name} | Dapperr Drift`,
+      description: product.description ?? `Shop ${product.name} at Dapperr Drift, Kota's best clothing store.`,
       url: `https://dapperrdrift.com/products/${slug}`,
       type: 'website',
     },
@@ -145,7 +145,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
     name: product.name,
     description: product.description ?? undefined,
     image: images.map((img) => img),
-    brand: { '@type': 'Brand', name: 'Drapperr Drift' },
+    brand: { '@type': 'Brand', name: 'Dapperr Drift' },
     offers: {
       '@type': 'Offer',
       priceCurrency: 'INR',
@@ -153,7 +153,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       availability: 'https://schema.org/InStock',
       seller: {
         '@type': 'Organization',
-        name: 'Drapperr Drift',
+        name: 'Dapperr Drift',
         url: 'https://dapperrdrift.com',
       },
       url: `https://dapperrdrift.com/products/${product.slug}`,

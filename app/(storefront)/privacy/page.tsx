@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
           <section>
             <h2 className="headline-sm text-foreground mb-4">Introduction</h2>
             <p className="body-md text-muted-foreground leading-relaxed">
-              Drapperr Drift Private Limited (&quot;Drapperr,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) respects your privacy and is committed to protecting your personal data. This privacy policy explains how we collect, use, disclose, and safeguard your information when you visit our website or make a purchase from us.
+              Dapperr Drift Private Limited (&quot;Dapperr,&quot; &quot;we,&quot; &quot;us,&quot; or &quot;our&quot;) respects your privacy and is committed to protecting your personal data. This privacy policy explains how we collect, use, disclose, and safeguard your information when you visit our website or make a purchase from us.
             </p>
           </section>
 
@@ -188,7 +188,7 @@ export default function PrivacyPolicyPage() {
               If you have questions about this privacy policy or our data practices, please contact us:
             </p>
             <div className="rounded-lg border border-border p-6 bg-surface-container-low">
-              <p className="body-md text-foreground font-medium mb-2">Drapperr Drift Private Limited</p>
+              <p className="body-md text-foreground font-medium mb-2">Dapperr Drift Private Limited</p>
               <p className="body-md text-muted-foreground">
                 123 Fashion Street, Mumbai<br />
                 Maharashtra, India 400001<br />

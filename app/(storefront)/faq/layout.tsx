@@ -1,15 +1,16 @@
 import type { Metadata } from 'next'
+import { faqCategories, buildFAQSchema } from '@/lib/faq-data'
 
 export const metadata: Metadata = {
-  title: 'FAQ | Drapperr Drift – Clothing Store Kota, Rajasthan',
+  title: 'FAQ | Dapperr Drift – Clothing Store Kota, Rajasthan',
   description:
-    'Frequently asked questions about Drapperr Drift — Kota\'s best clothing store. Get answers about orders, shipping across India, returns, sizing, and visiting our store in Swami Vivekananda Nagar, Kota.',
+    'Frequently asked questions about Dapperr Drift — Kota\'s best clothing store. Get answers about orders, shipping across India, returns, sizing, and visiting our store in Swami Vivekananda Nagar, Kota.',
   keywords: [
-    'Drapperr Drift FAQ',
+    'Dapperr Drift FAQ',
     'clothing store Kota FAQ',
     'fashion store returns policy Kota',
     'shipping Rajasthan clothing',
-    'Drapperr Drift help',
+    'Dapperr Drift help',
   ],
   alternates: {
     canonical: 'https://dapperrdrift.com/faq',
@@ -17,5 +18,16 @@ export const metadata: Metadata = {
 }
 
 export default function FAQLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  const allFaqs = faqCategories.flatMap((c) => c.faqs)
+  const faqSchema = buildFAQSchema(allFaqs)
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      {children}
+    </>
+  )
 }

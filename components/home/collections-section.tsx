@@ -22,7 +22,7 @@ function CategoryCard({ category }: { category: Category }) {
       <div className="aspect-square md:aspect-3/4 relative bg-surface-container">
         <Image
           src={imgSrc}
-          alt={category.name}
+          alt={`Shop ${category.name} — Dapperr Drift streetwear collection, India`}
           fill
           loading="lazy"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -92,7 +92,16 @@ function CollectionsSectionUI({
       <div className="mx-auto max-w-7xl px-3 sm:px-4 py-16 lg:px-8 lg:py-24">
         <div className="text-left md:text-center border-l-4 border-primary md:border-0 pl-3 md:pl-0" data-aos="fade-up">
           <span className="hidden md:inline-block label-md text-primary">Collections</span>
-          <h2 className="mt-0 md:mt-2 text-[2rem] md:headline-lg font-bold uppercase tracking-wide text-foreground">Shop by Category</h2>
+          <h2 className="mt-0 md:mt-2 text-[2rem] md:headline-lg font-bold uppercase tracking-wide text-foreground">
+            Shop Streetwear by Category
+          </h2>
+          <p className="mt-4 md:mt-6 body-lg text-muted-foreground max-w-3xl md:mx-auto text-pretty">
+            Explore the full Dapperr Drift collection — oversized T-shirts, streetwear hoodies,
+            premium denim, matching co-ord sets, and outerwear for men across India. Every piece
+            is designed in Kota, Rajasthan with original in-house artwork — no fast-fashion
+            templates, no mass-produced prints. Shop the category that fits your vibe, ship
+            pan-India in 48 hours, and wear the streets with Dapperr Drift.
+          </p>
           {fallback && (
             <p className="mt-2 body-md text-muted-foreground">Showing default categories</p>
           )}

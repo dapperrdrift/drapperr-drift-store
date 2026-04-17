@@ -3,24 +3,24 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react"
 import { ContactForm } from "./contact-form"
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Drapperr Drift – Clothing Store in Kota',
+  title: 'Contact Us | Dapperr Drift – Clothing Store in Kota',
   description:
-    'Visit Drapperr Drift at Shop No. F6, Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan 324010 (next to DMART). Call us or send a message. Open Mon–Sat, 9am–6pm.',
+    'Visit Dapperr Drift at Shop No. F6, Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan 324010 (next to DMART). Call us or send a message. Open Mon–Sat, 9am–6pm.',
   keywords: [
-    'Drapperr Drift contact',
+    'Dapperr Drift contact',
     'clothing store Kota address',
     'fashion store Swami Vivekananda Nagar Kota',
     'Shubh Affinity Kota clothing',
     'clothing store near DMART Kota',
-    'Drapperr Drift phone number',
-    'Drapperr Drift location Kota',
+    'Dapperr Drift phone number',
+    'Dapperr Drift location Kota',
     'fashion store Kota Rajasthan contact',
   ],
   alternates: {
     canonical: 'https://dapperrdrift.com/contact',
   },
   openGraph: {
-    title: 'Contact Drapperr Drift | Kota\'s Best Clothing Store',
+    title: 'Contact Dapperr Drift | Kota\'s Best Clothing Store',
     description:
       'Find us at Shop F6, Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan. Mon–Sat 9am–6pm. Call, email, or drop by.',
     url: 'https://dapperrdrift.com/contact',
@@ -106,7 +106,7 @@ export default function ContactPage() {
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
-            title="Drapperr Drift Store Location – Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan"
+            title="Dapperr Drift Store Location – Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan"
             className="w-full h-full"
           />
         </div>
@@ -116,7 +116,7 @@ export default function ContactPage() {
       <div className="mt-12 rounded-lg bg-surface-container-low border border-border p-6">
         <h2 className="title-lg text-foreground mb-3">How to Find Us</h2>
         <p className="body-md text-muted-foreground">
-          Drapperr Drift is located on the <strong>First Floor of Shubh Affinity Mall, next to DMART</strong> in Swami Vivekananda Nagar, Kota, Rajasthan.
+          Dapperr Drift is located on the <strong>First Floor of Shubh Affinity Mall, next to DMART</strong> in Swami Vivekananda Nagar, Kota, Rajasthan.
           We are easily accessible from Vigyan Nagar, Talwandi, Mahaveer Nagar, DCM, Landmark City, Shreenathpuram, Gumanpura, and Kota City Centre.
           Ample parking is available in the Shubh Affinity complex.
         </p>

@@ -12,22 +12,25 @@ const slides = [
   {
     id: 1,
     image: "/images/hero-funky.jpg",
+    alt: "Dapperr Drift oversized streetwear tee — original Indian streetwear from Kota, Rajasthan",
   },
   {
     id: 2,
     image: "/images/hero-2.jpg",
+    alt: "Dapperr Drift hoodie collection — bold streetwear designed in Kota and shipped across India",
   },
   {
     id: 3,
     image: "/images/hero-3.jpg",
+    alt: "Dapperr Drift streetwear lookbook — Kota, Rajasthan's home-grown fashion brand",
   },
 ]
 
 const staticContent = {
-  badge: "New Season Drop",
-  headline1: "Bold Moves.",
-  headline2: "Bolder Style.",
-  body: "Fashion isn't just what you wear — it's how you own the room. Discover pieces that speak before you do.",
+  badge: "New Season Drop · Ships Across India",
+  headline1: "Bold Streetwear.",
+  headline2: "Born in Kota.",
+  body: "Original Indian streetwear — oversized tees, hoodies, denim & co-ords designed in Kota, shipped pan-India in 48 hours. No fast fashion. No compromises.",
   ctaPrimary: { label: "Explore Collection", href: "/products" },
   ctaSecondary: { label: "New Arrivals", href: "/products?filter=new" },
 }
@@ -82,10 +85,10 @@ export function HeroSection() {
         >
           <Image
             src={slides[current].image}
-            alt="Hero background"
+            alt={slides[current].alt}
             fill
             className="object-cover"
-            priority
+            priority={current === 0}
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/45 to-transparent" />
@@ -164,8 +167,8 @@ export function HeroSection() {
               ))}
             </div>
             <div>
-              <p className="title-md text-white">10,000+ Happy Customers</p>
-              <p className="body-sm text-white/60">Join the movement</p>
+              <p className="title-md text-white">10,000+ Happy Customers across India</p>
+              <p className="body-sm text-white/60">Join the Kota streetwear movement</p>
             </div>
           </div>
 

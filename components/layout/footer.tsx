@@ -70,7 +70,7 @@ export function Footer() {
       )}
 
       <div className="md:hidden bg-surface-container-lowest px-6 pt-12 pb-8 text-center">
-        <div className="text-xl font-bold uppercase tracking-wider text-foreground">Drapperr</div>
+        <div className="text-xl font-bold uppercase tracking-wider text-foreground">Dapperr</div>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">
           <Link href="/privacy" className="transition-colors hover:text-foreground">Privacy</Link>
           <Link href="/terms" className="transition-colors hover:text-foreground">Terms</Link>
@@ -78,7 +78,7 @@ export function Footer() {
           <Link href="https://www.instagram.com/dapperr.drift" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-foreground">Instagram</Link>
         </div>
         <p className="mt-6 text-[0.6875rem] uppercase tracking-widest text-on-surface-variant">
-          &copy; {new Date().getFullYear()} Drapperr. Est 2021.
+          &copy; {new Date().getFullYear()} Dapperr. Est 2021.
         </p>
       </div>
 
@@ -89,7 +89,7 @@ export function Footer() {
             <Link href="/" className="inline-block transition-opacity hover:opacity-80">
               <img
                 src="/images/logo-black.svg"
-                alt="Drapper Drift"
+                alt="Dapperr Drift — Streetwear Brand in Kota, Rajasthan"
                 className="h-8 w-auto grayscale brightness-0 opacity-80"
               />
             </Link>
@@ -172,14 +172,14 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-muted-foreground transition-colors hover:text-primary"
-                  aria-label={`Follow Drapperr Drift on ${social.name}`}
+                  aria-label={`Follow Dapperr Drift on ${social.name}`}
                 >
                   <social.icon className="h-5 w-5" />
                 </Link>
               ))}
             </div>
             <p className="body-md text-muted-foreground">
-              &copy; {new Date().getFullYear()} Drapperr Drift. All rights reserved.
+              &copy; {new Date().getFullYear()} Dapperr Drift. All rights reserved.
             </p>
           </div>
         </div>

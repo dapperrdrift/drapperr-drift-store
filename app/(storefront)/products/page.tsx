@@ -3,12 +3,13 @@ import { Suspense } from "react"
 import { ProductFilters } from "@/components/products/product-filters"
 import { ProductGrid } from "@/components/products/product-grid"
 import { MobileFilterDrawer } from "@/components/products/mobile-filter-drawer"
+import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema"
 import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = {
-  title: 'Shop All Clothing | Drapperr Drift – Kota, Rajasthan',
+  title: 'Shop All Clothing | Dapperr Drift – Kota, Rajasthan',
   description:
-    'Browse Drapperr Drift\'s full collection of T-shirts, hoodies, denim, and streetwear. Kota\'s best fashion store — shop in-store at Swami Vivekananda Nagar or order online across India.',
+    'Browse Dapperr Drift\'s full collection of T-shirts, hoodies, denim, and streetwear. Kota\'s best fashion store — shop in-store at Swami Vivekananda Nagar or order online across India.',
   keywords: [
     'buy clothes online Kota',
     'men T-shirts Kota',
@@ -18,13 +19,13 @@ export const metadata: Metadata = {
     'fashion online Rajasthan',
     'affordable clothing India',
     'shop clothing Kota',
-    'Drapperr Drift collection',
+    'Dapperr Drift collection',
   ],
   alternates: {
     canonical: 'https://dapperrdrift.com/products',
   },
   openGraph: {
-    title: 'Shop All Clothing | Drapperr Drift – Kota, Rajasthan',
+    title: 'Shop All Clothing | Dapperr Drift – Kota, Rajasthan',
     description:
       'T-shirts, hoodies, denim & streetwear from Kota\'s trendiest clothing store. Shop online or visit us in Swami Vivekananda Nagar, Kota.',
     url: 'https://dapperrdrift.com/products',
@@ -146,8 +147,21 @@ async function ProductsContent({ searchParams }: PageProps) {
       category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ')
       : 'Shop All'
 
+  const breadcrumbItems = [
+    { name: 'Home', url: 'https://dapperrdrift.com' },
+    { name: 'Shop', url: 'https://dapperrdrift.com/products' },
+  ]
+  if (category && category !== 'all') {
+    const catName = categoriesWithCount.find((c) => c.slug === category)?.name || category
+    breadcrumbItems.push({
+      name: catName,
+      url: `https://dapperrdrift.com/products?category=${category}`,
+    })
+  }
+
   return (
     <div className="mx-auto max-w-full px-4 py-8 lg:px-8 lg:py-12">
+      <BreadcrumbSchema items={breadcrumbItems} />
       {/* Page header */}
       <div className="mb-8">
         <h1 data-aos="fade-down" className="display-md text-foreground">{pageTitle}</h1>

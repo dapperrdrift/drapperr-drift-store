@@ -19,11 +19,11 @@ const SITE_URL = 'https://dapperrdrift.com'
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Drapperr Drift | Best Clothing Store in Kota, Rajasthan',
-    template: '%s | Drapperr Drift – Clothing Store in Kota',
+    default: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
+    template: '%s | Dapperr Drift – Clothing Store in Kota',
   },
   description:
-    'Drapperr Drift is Kota\'s top clothing store, located at Shubh Affinity, Swami Vivekananda Nagar. Shop trendy men\'s T-shirts, hoodies, denim & streetwear. Serving Kota, Rajasthan & shipping across India.',
+    'Dapperr Drift is Kota\'s top clothing store, located at Shubh Affinity, Swami Vivekananda Nagar. Shop trendy men\'s T-shirts, hoodies, denim & streetwear. Serving Kota, Rajasthan & shipping across India.',
   keywords: [
     // Hyper-local Kota keywords
     'clothing store in Kota',
@@ -65,15 +65,15 @@ export const metadata: Metadata = {
     'casual wear India',
     'affordable fashion India',
     // Brand
-    'Drapperr Drift',
+    'Dapperr Drift',
     'Dapperr Drift Kota',
-    'Drapperr Drift Kota',
+    'Dapperr Drift Kota',
   ],
-  authors: [{ name: 'Drapperr Drift', url: SITE_URL }],
-  creator: 'Drapperr Drift',
-  publisher: 'Drapperr Drift',
+  authors: [{ name: 'Dapperr Drift', url: SITE_URL }],
+  creator: 'Dapperr Drift',
+  publisher: 'Dapperr Drift',
   generator: 'Next.js',
-  applicationName: 'Drapperr Drift',
+  applicationName: 'Dapperr Drift',
   referrer: 'origin-when-cross-origin',
   robots: {
     index: true,
@@ -90,22 +90,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_IN',
     url: SITE_URL,
-    siteName: 'Drapperr Drift',
-    title: 'Drapperr Drift | Best Clothing Store in Kota, Rajasthan',
+    siteName: 'Dapperr Drift',
+    title: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
     description:
-      'Shop Kota\'s trendiest clothing at Drapperr Drift — T-shirts, hoodies, denim & streetwear. Located at Shubh Affinity, Swami Vivekananda Nagar, Kota. Fast shipping across India.',
+      'Shop Kota\'s trendiest clothing at Dapperr Drift — T-shirts, hoodies, denim & streetwear. Located at Shubh Affinity, Swami Vivekananda Nagar, Kota. Fast shipping across India.',
     images: [
       {
         url: '/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Drapperr Drift – Clothing Store in Kota, Rajasthan',
+        alt: 'Dapperr Drift – Clothing Store in Kota, Rajasthan',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Drapperr Drift | Best Clothing Store in Kota, Rajasthan',
+    title: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
     description:
       'Kota\'s trendiest clothing store. T-shirts, hoodies, denim & more. Shop online or visit us at Shubh Affinity, Swami Vivekananda Nagar, Kota.',
     images: ['/images/og-image.jpg'],
@@ -130,10 +130,10 @@ export const viewport: Viewport = {
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'ClothingStore',
-  name: 'Drapperr Drift',
-  alternateName: ['Dapperr Drift', 'Drapper Drift'],
+  name: 'Dapperr Drift',
+  alternateName: ['Dapperr Drift'],
   description:
-    'Drapperr Drift is a premium clothing store in Kota, Rajasthan, offering trendy T-shirts, hoodies, denim, and streetwear for men. Located at Shubh Affinity, Swami Vivekananda Nagar.',
+    'Dapperr Drift is a premium clothing store in Kota, Rajasthan, offering trendy T-shirts, hoodies, denim, and streetwear for men. Located at Shubh Affinity, Swami Vivekananda Nagar.',
   url: SITE_URL,
   telephone: '+91-1800-123-4567',
   email: 'support@dapperr.com',
@@ -167,7 +167,7 @@ const localBusinessSchema = {
     'https://www.instagram.com/dapperr.drift',
     // 'https://www.facebook.com/drapperrdrift',
   ],
-  hasMap: 'https://maps.google.com/?q=Drapperr+Drift+Kota+Rajasthan',
+  hasMap: 'https://maps.google.com/?q=Dapperr+Drift+Kota+Rajasthan',
   areaServed: [
     { '@type': 'City', name: 'Kota', containedInPlace: { '@type': 'State', name: 'Rajasthan' } },
     { '@type': 'State', name: 'Rajasthan' },
@@ -181,7 +181,7 @@ const localBusinessSchema = {
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Drapperr Drift',
+  name: 'Dapperr Drift',
   url: SITE_URL,
   logo: `${SITE_URL}/images/logo-black.svg`,
   contactPoint: {

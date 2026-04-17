@@ -249,7 +249,7 @@ export default function CheckoutPage() {
         key: keyId,
         amount: orderAmount, // in paise
         currency,
-        name: "Drapperr Drift",
+        name: "Dapperr Drift",
         description: `Order #DD${Date.now().toString().slice(-8)}`,
         order_id: orderId,
         prefill: {

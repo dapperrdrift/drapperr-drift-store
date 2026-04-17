@@ -16,7 +16,7 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="headline-sm text-foreground mb-4">1. Acceptance of Terms</h2>
           <p className="body-md text-muted-foreground leading-relaxed">
-            Welcome to Drapperr. By accessing or using our website (www.dapperr.com), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any part of these terms, you may not use our services. These terms apply to all visitors, users, and customers of the website.
+            Welcome to Dapperr. By accessing or using our website (www.dapperr.com), you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any part of these terms, you may not use our services. These terms apply to all visitors, users, and customers of the website.
           </p>
         </section>
 
@@ -126,7 +126,7 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="headline-sm text-foreground mb-4">8. Intellectual Property</h2>
           <p className="body-md text-muted-foreground leading-relaxed">
-            All content on this website, including but not limited to text, graphics, logos, images, product designs, and software, is the property of Drapperr or its licensors and is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, modify, or create derivative works without our express written permission.
+            All content on this website, including but not limited to text, graphics, logos, images, product designs, and software, is the property of Dapperr or its licensors and is protected by copyright, trademark, and other intellectual property laws. You may not reproduce, distribute, modify, or create derivative works without our express written permission.
           </p>
         </section>
 
@@ -166,14 +166,14 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="headline-sm text-foreground mb-4">10. Limitation of Liability</h2>
           <p className="body-md text-muted-foreground leading-relaxed">
-            To the maximum extent permitted by law, Drapperr shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or goodwill, arising from your use of the website or products. Our total liability shall not exceed the amount you paid for the product giving rise to the claim.
+            To the maximum extent permitted by law, Dapperr shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or goodwill, arising from your use of the website or products. Our total liability shall not exceed the amount you paid for the product giving rise to the claim.
           </p>
         </section>
 
         <section>
           <h2 className="headline-sm text-foreground mb-4">11. Indemnification</h2>
           <p className="body-md text-muted-foreground leading-relaxed">
-            You agree to indemnify, defend, and hold harmless Drapperr, its officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from your violation of these terms or your use of the website.
+            You agree to indemnify, defend, and hold harmless Dapperr, its officers, directors, employees, and agents from any claims, damages, losses, or expenses arising from your violation of these terms or your use of the website.
           </p>
         </section>
 
@@ -197,7 +197,7 @@ export default function TermsOfServicePage() {
             For questions about these Terms of Service, please contact us:
           </p>
           <div className="rounded-lg border border-border p-6 bg-surface-container-low">
-            <p className="body-md text-foreground font-medium mb-2">Drapperr Drift Private Limited</p>
+            <p className="body-md text-foreground font-medium mb-2">Dapperr Drift Private Limited</p>
             <p className="body-md text-muted-foreground">
               123 Fashion Street, Mumbai<br />
               Maharashtra, India 400001<br />
