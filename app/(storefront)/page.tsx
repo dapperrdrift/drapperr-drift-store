@@ -10,6 +10,7 @@ import { CategoryCarousels } from "@/components/home/category-carousels"
 import { LookbookSection } from "@/components/home/lookbook-section"
 import { PressStrip } from "@/components/home/press-strip"
 import { HomeFaq } from "@/components/home/home-faq"
+import { VisitStoreCta } from "@/components/home/visit-store-cta"
 
 export const metadata: Metadata = {
   title: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
@@ -60,6 +61,7 @@ export default function HomePage() {
       <PressStrip />
       <TestimonialsSection />
       <HomeFaq />
+      <VisitStoreCta />
       <CTASection />
     </>
   )
