@@ -288,7 +288,7 @@ export function Header() {
                 aria-label="Toggle menu"
                 className={cn(
                   "transition-colors duration-300",
-                  (isHomePage || !isSolid) && !mobileMenuOpen
+                  !isSolid && !mobileMenuOpen
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:text-primary"
                 )}
@@ -322,11 +322,11 @@ export function Header() {
             {/* Logo */}
             <Link href="/" className="shrink-0 transition-opacity hover:opacity-80">
               <img
-                src="/images/logo-black.svg"
+                src={"/images/logo-black.svg"}
                 alt="Dapperr Drift"
                 className={cn(
-                  "h-8 w-auto transition-all duration-300",
-                  (isHomePage || !isSolid) ? "brightness-0 invert drop-shadow-md" : "brightness-100"
+                  "h-10 md:h-12 w-auto transition-all duration-300",
+                  !isSolid ? "brightness-0 invert drop-shadow-md" : "brightness-100"
                 )}
               />
             </Link>
@@ -341,7 +341,7 @@ export function Header() {
                 aria-label="Search"
                 className={cn(
                   "hidden md:inline-flex transition-all duration-300",
-                  isHomePage || !isSolid
+                  !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:bg-primary hover:text-white"
                 )}
@@ -355,7 +355,7 @@ export function Header() {
                 size="icon"
                 className={cn(
                   "relative transition-all duration-300",
-                  isHomePage || !isSolid
+                  !isSolid
                     ? "text-white hover:text-white hover:bg-white/20"
                     : "text-foreground hover:bg-primary hover:text-white"
                 )}
@@ -366,7 +366,7 @@ export function Header() {
                   {count > 0 && (
                     <span className={cn(
                       "absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold shadow-sm",
-                      isHomePage || !isSolid ? "bg-white text-primary" : "bg-primary text-white"
+                      !isSolid ? "bg-white text-primary" : "bg-primary text-white"
                     )}>
                       {count}
                     </span>

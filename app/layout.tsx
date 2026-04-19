@@ -116,8 +116,8 @@ export const metadata: Metadata = {
   },
   category: 'fashion',
   icons: {
-    icon: '/images/google-icon.png?v=3',
-    apple: '/images/google-icon.png',
+    icon: '/favicon.png?v=3',
+    apple: '/favicon.png',
   },
 }
 
