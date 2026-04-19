@@ -13,9 +13,9 @@ import { HomeFaq } from "@/components/home/home-faq"
 import { VisitStoreCta } from "@/components/home/visit-store-cta"
 
 export const metadata: Metadata = {
-  title: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
+  title: 'Dapperr Drift | Find Best Streetwear in Kota',
   description:
-    'Dapperr Drift is Kota\'s most popular clothing store. Shop trendy T-shirts, hoodies, denim, and streetwear for men. Visit us at Shubh Affinity, Swami Vivekananda Nagar, Kota or order online across India.',
+    'Discover premium streetwear for GenZ at Dapperr Drift. Find the best streetwear in Kota or shop our trendy, high-quality collection online across India.',
   keywords: [
     'clothing store in Kota',
     'fashion store Kota Rajasthan',
@@ -40,9 +40,9 @@ export const metadata: Metadata = {
     canonical: 'https://dapperrdrift.com',
   },
   openGraph: {
-    title: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
+    title: 'Dapperr Drift | Find Best Streetwear in Kota',
     description:
-      'Kota\'s trendiest clothing store. T-shirts, hoodies, denim & streetwear. Located at Shubh Affinity, Swami Vivekananda Nagar, Kota. Fast shipping pan-India.',
+      'Shop trendy, premium GenZ streetwear at Dapperr Drift. Located at Shubh Affinity, Kota. Fast shipping PAN-India.',
     url: 'https://dapperrdrift.com',
     type: 'website',
   },

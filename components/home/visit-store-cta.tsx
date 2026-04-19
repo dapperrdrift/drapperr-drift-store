@@ -20,7 +20,7 @@ export function VisitStoreCta() {
         <div className="absolute inset-0 bg-black/50 transition-colors duration-300 group-hover:bg-black/60" />
 
         {/* Content */}
-        <div className="relative relative z-10 flex flex-col items-center justify-center py-16 md:py-24 px-6 text-center text-white">
+        <div className="relative z-10 flex flex-col items-center justify-center py-16 md:py-24 px-6 text-center text-white">
           <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm ring-1 ring-white/30">
             <MapPin className="h-6 w-6" />
           </div>

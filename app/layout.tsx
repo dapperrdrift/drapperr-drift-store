@@ -20,11 +20,11 @@ const SITE_URL = 'https://dapperrdrift.com'
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
-    template: '%s | Dapperr Drift – Clothing Store in Kota',
+    default: 'Dapperr Drift | Find Best Streetwear in Kota',
+    template: '%s | Dapperr Drift – Premium Streetwear',
   },
   description:
-    'Dapperr Drift is Kota\'s top clothing store, located at Shubh Affinity, Swami Vivekananda Nagar. Shop trendy men\'s T-shirts, hoodies, denim & streetwear. Serving Kota, Rajasthan & shipping across India.',
+    'Discover premium streetwear for GenZ at Dapperr Drift. Shop the latest trendy, high-quality men\'s streetwear online across India or visit our store in Kota. Find the best streetwear in Kota.',
   keywords: [
     // Hyper-local Kota keywords
     'clothing store in Kota',
@@ -92,9 +92,9 @@ export const metadata: Metadata = {
     locale: 'en_IN',
     url: SITE_URL,
     siteName: 'Dapperr Drift',
-    title: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
+    title: 'Dapperr Drift | Find Best Streetwear in Kota',
     description:
-      'Shop Kota\'s trendiest clothing at Dapperr Drift — T-shirts, hoodies, denim & streetwear. Located at Shubh Affinity, Swami Vivekananda Nagar, Kota. Fast shipping across India.',
+      'Shop Kota\'s trendiest premium streetwear at Dapperr Drift. Fast shipping across PAN India.',
     images: [
       {
         url: '/images/og-image.jpg',
@@ -106,9 +106,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Dapperr Drift | Best Clothing Store in Kota, Rajasthan',
+    title: 'Dapperr Drift | Find Best Streetwear in Kota',
     description:
-      'Kota\'s trendiest clothing store. T-shirts, hoodies, denim & more. Shop online or visit us at Shubh Affinity, Swami Vivekananda Nagar, Kota.',
+      'Discover premium GenZ streetwear at Dapperr Drift. Find the best streetwear in Kota or shop online across PAN India.',
     images: ['/images/og-image.jpg'],
   },
   alternates: {
@@ -116,8 +116,8 @@ export const metadata: Metadata = {
   },
   category: 'fashion',
   icons: {
-    icon: '/favicon.png?v=2',
-    apple: '/apple-icon.png',
+    icon: '/images/google-icon.png?v=3',
+    apple: '/images/google-icon.png',
   },
 }
 

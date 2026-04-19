@@ -4,9 +4,9 @@ import Link from "next/link"
 import { Heart, Leaf, Award, Users } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: 'About Us | Dapperr Drift – Clothing Store in Kota',
+  title: 'About Us | Dapperr Drift – Premium Streetwear in Kota',
   description:
-    'Dapperr Drift was born in Kota, Rajasthan. We bring trendy T-shirts, hoodies, denim, and streetwear to the youth of Kota and across India. Visit our store at Shubh Affinity, Swami Vivekananda Nagar.',
+    'Dapperr Drift was born in Kota, Rajasthan. We bring premium GenZ streetwear, trendy T-shirts, and hoodies to the youth of Kota and across PAN India. Find the best streetwear with us.',
   keywords: [
     'about Dapperr Drift Kota',
     'clothing brand Kota Rajasthan',
@@ -18,9 +18,9 @@ export const metadata: Metadata = {
     canonical: 'https://dapperrdrift.com/about',
   },
   openGraph: {
-    title: 'About Dapperr Drift | Kota\'s Favourite Clothing Store',
+    title: 'About Dapperr Drift | Find Best Streetwear in Kota',
     description:
-      'Learn about Dapperr Drift, Kota\'s go-to clothing destination. We bring bold, affordable streetwear and fashion to the youth of Rajasthan and beyond.',
+      'Learn about Dapperr Drift. We bring bold, premium streetwear and modern fashion to GenZ in Rajasthan and all over India.',
     url: 'https://dapperrdrift.com/about',
     type: 'website',
   },
