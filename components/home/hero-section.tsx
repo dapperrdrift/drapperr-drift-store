@@ -154,20 +154,14 @@ export function HeroSection() {
               {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
-                  className="w-10 h-10 rounded-full border-2 border-white/20 bg-white/10 backdrop-blur-sm overflow-hidden"
+                  className="w-10 h-10 rounded-full border-2 border-white/20 bg-primary/60 backdrop-blur-sm overflow-hidden flex items-center justify-center"
                 >
-                  <Image
-                    src={`https://i.pravatar.cc/100?img=${i + 10}`}
-                    alt={`Customer ${i}`}
-                    width={40}
-                    height={40}
-                    className="object-cover"
-                  />
+                  <span className="text-white text-xs font-bold">DD</span>
                 </div>
               ))}
             </div>
             <div>
-              <p className="title-md text-white">10,000+ Happy Customers across India</p>
+              <p className="title-md text-white">Growing community across India</p>
               <p className="body-sm text-white/60">Join the Kota streetwear movement</p>
             </div>
           </div>

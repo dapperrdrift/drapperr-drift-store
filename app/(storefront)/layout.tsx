@@ -5,6 +5,7 @@ import { AOSInit } from "@/components/layout/aos-init"
 import { CartProvider } from "@/contexts/cart-context"
 import { AuthProvider } from "@/contexts/auth-context"
 import { WishlistProvider } from "@/contexts/wishlist-context"
+import { Toaster } from "@/components/ui/toaster"
 
 export default function StorefrontLayout({
   children,
@@ -21,6 +22,7 @@ export default function StorefrontLayout({
             <main className="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom))] pt-header md:pb-0">{children}</main>
             <MobileBottomNav />
             <Footer />
+            <Toaster />
           </div>
         </CartProvider>
       </WishlistProvider>

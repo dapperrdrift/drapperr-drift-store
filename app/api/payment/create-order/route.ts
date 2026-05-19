@@ -3,9 +3,14 @@ import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
 import crypto from "crypto"
 
+interface CartItem {
+  variant_id: string
+  quantity: number
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { items, shippingAddress, couponId } = await req.json()
+    const { items, shippingAddress, couponId }: { items: CartItem[]; shippingAddress: Record<string, string>; couponId?: string } = await req.json()
 
     if (!items || !items.length || !shippingAddress) {
       return NextResponse.json({ error: "Invalid order data" }, { status: 400 })
@@ -29,11 +34,27 @@ export async function POST(req: NextRequest) {
 
     const adminDb = createAdminClient()
 
-    // 1. Calculate totals server-side
+    // 1. Re-fetch prices from DB to prevent client-side price manipulation
+    const variantIds: string[] = items.map((item) => item.variant_id)
+    const { data: variants, error: variantsError } = await adminDb
+      .from("variants")
+      .select("id, price")
+      .in("id", variantIds)
+
+    if (variantsError || !variants) {
+      return NextResponse.json({ error: "Failed to fetch product prices" }, { status: 500 })
+    }
+
+    const priceMap = new Map(variants.map((v: { id: string; price: number }) => [v.id, v.price]))
+
     let subtotal = 0
-    items.forEach((item: any) => {
-      subtotal += item.price * item.quantity
-    })
+    for (const item of items) {
+      const serverPrice = priceMap.get(item.variant_id)
+      if (!serverPrice) {
+        return NextResponse.json({ error: `Product variant ${item.variant_id} not found` }, { status: 400 })
+      }
+      subtotal += serverPrice * item.quantity
+    }
 
     let discountAmount = 0
     if (couponId) {
@@ -76,14 +97,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to create order record" }, { status: 500 })
     }
 
-    // 3. Create order items
-    const orderItems = items.map((item: any) => ({
-      order_id: order.id,
-      variant_id: item.variant_id,
-      quantity: item.quantity,
-      unit_price: item.price,
-      line_total: item.price * item.quantity
-    }))
+    // 3. Create order items using server-side prices
+    const orderItems = items.map((item) => {
+      const serverPrice = priceMap.get(item.variant_id) as number
+      return {
+        order_id: order.id,
+        variant_id: item.variant_id,
+        quantity: item.quantity,
+        unit_price: serverPrice,
+        line_total: serverPrice * item.quantity,
+      }
+    })
 
     const { error: itemsError } = await adminDb
       .from("order_items")

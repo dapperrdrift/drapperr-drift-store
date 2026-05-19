@@ -130,9 +130,10 @@ export async function POST(req: NextRequest) {
           .replace("T", " ")
           .slice(0, 16) // "YYYY-MM-DD HH:MM"
 
-        const srItems = (fullOrder.order_items as any[]).map((item) => ({
-          name: item.variants.products.name as string,
-          sku: item.variants.sku as string,
+        type OrderItemRow = { quantity: number; unit_price: number; variants: { sku: string; products: { name: string } } }
+        const srItems = (fullOrder.order_items as OrderItemRow[]).map((item) => ({
+          name: item.variants.products.name,
+          sku: item.variants.sku,
           units: item.quantity,
           selling_price: item.unit_price,
         }))
@@ -165,7 +166,8 @@ export async function POST(req: NextRequest) {
           .update({
             shiprocket_order_id: String(srResult.order_id),
             shiprocket_shipment_id: String(srResult.shipment_id),
-          } as any)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any) // shiprocket columns not in generated types yet
           .eq("id", fullOrder.id)
       }
     } catch (srError) {

@@ -68,7 +68,6 @@ export const metadata: Metadata = {
     // Brand
     'Dapperr Drift',
     'Dapperr Drift Kota',
-    'Dapperr Drift Kota',
   ],
   authors: [{ name: 'Dapperr Drift', url: SITE_URL }],
   creator: 'Dapperr Drift',
@@ -136,7 +135,7 @@ const localBusinessSchema = {
   description:
     'Dapperr Drift is a premium clothing store in Kota, Rajasthan, offering trendy T-shirts, hoodies, denim, and streetwear for men. Located at Shubh Affinity, Swami Vivekananda Nagar.',
   url: SITE_URL,
-  telephone: '+91-1800-123-4567',
+  telephone: '',
   email: 'support@dapperr.com',
   priceRange: '₹₹',
   currenciesAccepted: 'INR',
@@ -174,7 +173,6 @@ const localBusinessSchema = {
     { '@type': 'State', name: 'Rajasthan' },
     { '@type': 'Country', name: 'India' },
   ],
-  servesCuisine: undefined,
   knowsAbout: ['Men\'s Fashion', 'Streetwear', 'Casual Wear', 'T-Shirts', 'Hoodies', 'Denim'],
 }
 
@@ -185,10 +183,14 @@ const organizationSchema = {
   name: 'Dapperr Drift',
   url: SITE_URL,
   logo: `${SITE_URL}/images/logo-black.svg`,
+  foundingDate: '2021',
+  sameAs: [
+    'https://www.instagram.com/dapperr.drift',
+  ],
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+91-1800-123-4567',
     contactType: 'customer service',
+    email: 'support@dapperr.com',
     areaServed: 'IN',
     availableLanguage: ['English', 'Hindi'],
   },

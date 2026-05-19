@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@/lib/supabase/server"
+import { createAdminClient } from "@/lib/supabase/admin"
 import crypto from "crypto"
 
-// We use the same business logic as the verify route for paid orders
+// Webhooks have no user session — must use the admin client to bypass RLS
 async function handleOrderPaid(order_id: string, payment_id: string) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
 
   // 1. Find the order through the payment record
   const { data: payment } = await supabase

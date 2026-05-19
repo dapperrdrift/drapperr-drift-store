@@ -2,7 +2,10 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { useState } from "react"
 import { Instagram } from "lucide-react"
+import { createClient } from "@/lib/supabase/client"
+import { useToast } from "@/hooks/use-toast"
 
 const footerNavigation = {
   shop: [
@@ -39,6 +42,33 @@ const socialLinks = [
 export function Footer() {
   const pathname = usePathname()
   const showNewsletter = pathname === "/"
+  const [email, setEmail] = useState("")
+  const [subscribing, setSubscribing] = useState(false)
+  const { toast } = useToast()
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+    setSubscribing(true)
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from("newsletter_subscribers").insert({ email })
+      if (error) {
+        if (error.code === "23505") {
+          toast({ title: "Already subscribed", description: "This email is already on the list." })
+        } else {
+          throw error
+        }
+      } else {
+        toast({ title: "You're in!", description: "Thanks for subscribing to Dapperr Drift." })
+        setEmail("")
+      }
+    } catch {
+      toast({ title: "Something went wrong", description: "Please try again later.", variant: "destructive" })
+    } finally {
+      setSubscribing(false)
+    }
+  }
 
   return (
     <footer className="bg-surface-container-low">
@@ -50,18 +80,21 @@ export function Footer() {
               <p className="mt-2 body-lg text-muted-foreground max-w-md">
                 Be the first to know about new collections, exclusive offers, and style inspiration.
               </p>
-              <form className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row">
+              <form onSubmit={handleNewsletterSubmit} className="mt-6 flex w-full max-w-md flex-col gap-3 sm:flex-row">
                 <input
                   type="email"
                   placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="flex-1 border border-input bg-transparent px-4 py-3 rounded-md body-md placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-colors"
                   required
                 />
                 <button
                   type="submit"
-                  className="bg-primary px-8 py-3 rounded-md label-md text-primary-foreground transition-colors hover:bg-primary-hover"
+                  disabled={subscribing}
+                  className="bg-primary px-8 py-3 rounded-md label-md text-primary-foreground transition-colors hover:bg-primary-hover disabled:opacity-60"
                 >
-                  Subscribe
+                  {subscribing ? "Subscribing…" : "Subscribe"}
                 </button>
               </form>
             </div>
@@ -70,7 +103,7 @@ export function Footer() {
       )}
 
       <div className="md:hidden bg-surface-container-lowest px-6 pt-12 pb-8 text-center">
-        <div className="text-xl font-bold uppercase tracking-wider text-foreground">Dapperr</div>
+        <div className="text-xl font-bold uppercase tracking-wider text-foreground">Dapperr Drift</div>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-5 text-[0.6875rem] font-bold uppercase tracking-widest text-on-surface-variant">
           <Link href="/privacy" className="transition-colors hover:text-foreground">Privacy</Link>
           <Link href="/terms" className="transition-colors hover:text-foreground">Terms</Link>

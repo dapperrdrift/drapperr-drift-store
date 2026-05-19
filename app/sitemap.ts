@@ -62,6 +62,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
+  // Category pages
+  const categoryPages: MetadataRoute.Sitemap = [
+    { url: `${SITE_URL}/products?category=t-shirts`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/products?category=hoodies`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/products?category=denim`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE_URL}/products?category=accessories`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+  ]
+
   // Dynamic product pages — use a cookieless client (sitemaps have no request context)
   let productPages: MetadataRoute.Sitemap = []
   try {
@@ -71,12 +79,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     )
     const { data: products } = await supabase
       .from('products')
-      .select('slug, updated_at')
+      .select('id, slug, updated_at')
       .eq('is_active', true)
 
     if (products) {
       productPages = products.map((product) => ({
-        url: `${SITE_URL}/products/${product.slug}`,
+        url: `${SITE_URL}/products/${product.slug ?? product.id}`,
         lastModified: product.updated_at ? new Date(product.updated_at) : new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.7,
@@ -86,5 +94,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Sitemap still works without product pages if DB is unavailable
   }
 
-  return [...staticPages, ...productPages]
+  return [...staticPages, ...categoryPages, ...productPages]
 }

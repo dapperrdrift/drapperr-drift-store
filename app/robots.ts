@@ -9,7 +9,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin/', '/api/', '/account/', '/checkout/', '/cart/'],
       },
     ],
-    sitemap: 'https://dapperrdrift.com/sitemap.xml',
-    host: 'https://dapperrdrift.com',
+    sitemap: 'https://www.dapperrdrift.com/sitemap.xml',
+    host: 'https://www.dapperrdrift.com',
   }
 }

@@ -15,7 +15,7 @@ const testimonials = [
     quote:
       "Dapperr Drift has completely transformed my wardrobe. The quality is unmatched and every piece feels like it was made just for me. I get compliments everywhere I go!",
     name: "Priya Sharma",
-    designation: "Fashion Blogger, Mumbai",
+    designation: "Fashion Blogger, Kota",
     src: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=3387&auto=format&fit=crop",
   },
   {

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { ArrowLeft, Check, CreditCard, MapPin, Shield } from "lucide-react"
 import { ShippingForm } from "@/components/checkout/shipping-form"
 import { OrderSummary } from "@/components/checkout/order-summary"
@@ -9,6 +9,7 @@ import { useCart } from "@/contexts/cart-context"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase/client"
+import { useToast } from "@/hooks/use-toast"
 
 // Declare the Razorpay global injected by the script
 declare global {
@@ -60,8 +61,9 @@ function loadRazorpayScript(): Promise<boolean> {
 
 export default function CheckoutPage() {
   const { items: cartItems, total: cartTotal, loading: cartLoading } = useCart()
-  const supabase = createClient()
-  
+  const supabase = useMemo(() => createClient(), [])
+  const { toast } = useToast()
+
   const [currentStep, setCurrentStep] = useState<CheckoutStep>("shipping")
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -140,8 +142,9 @@ export default function CheckoutPage() {
         couponId: data.couponId,
         discountAmount: data.discountAmount
       })
-    } catch (err: any) {
-      alert(err.message)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Invalid coupon code"
+      toast({ title: "Invalid coupon", description: message, variant: "destructive" })
     }
   }
 
@@ -218,7 +221,7 @@ export default function CheckoutPage() {
       // 1. Load the Razorpay SDK
       const sdkLoaded = await loadRazorpayScript()
       if (!sdkLoaded) {
-        alert("Failed to load Razorpay. Please check your internet connection and try again.")
+        toast({ title: "Payment unavailable", description: "Failed to load Razorpay. Please check your internet connection and try again.", variant: "destructive" })
         setIsProcessing(false)
         return
       }
@@ -236,7 +239,7 @@ export default function CheckoutPage() {
 
       if (!orderRes.ok) {
         const errData = await orderRes.json()
-        alert(errData.error || "Could not initiate payment. Please try again.")
+        toast({ title: "Payment error", description: errData.error || "Could not initiate payment. Please try again.", variant: "destructive" })
         setIsProcessing(false)
         return
       }
@@ -283,7 +286,7 @@ export default function CheckoutPage() {
             setCurrentStep("confirmation")
           } else {
             const errData = await verifyRes.json()
-            alert(errData.error || "Payment verification failed. Please contact support.")
+            toast({ title: "Payment verification failed", description: errData.error || "Please contact support.", variant: "destructive" })
           }
           setIsProcessing(false)
         },
@@ -295,10 +298,18 @@ export default function CheckoutPage() {
       }
 
       const rzp = new window.Razorpay(options)
+      rzp.on("payment.failed", (response: { error: { description: string; reason: string } }) => {
+        toast({
+          title: "Payment failed",
+          description: response.error.description || response.error.reason || "Your payment could not be processed. Please try again.",
+          variant: "destructive",
+        })
+        setIsProcessing(false)
+      })
       rzp.open()
     } catch (err) {
       console.error("Payment error:", err)
-      alert("An unexpected error occurred. Please try again.")
+      toast({ title: "Unexpected error", description: "An unexpected error occurred. Please try again.", variant: "destructive" })
       setIsProcessing(false)
     }
   }
@@ -314,7 +325,7 @@ export default function CheckoutPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <Link href="/" className="text-2xl font-bold tracking-wide text-foreground sm:display-md">
-          DRAPPERR
+          DAPPERR DRIFT
         </Link>
         <Link
           href="/cart"
@@ -515,7 +526,7 @@ export default function CheckoutPage() {
                 Thank you for your order. We&apos;ll send you an email confirmation shortly.
               </p>
               <p className="mt-4 title-md text-foreground">
-                Order ID: {confirmedOrderId || "Processing..."}
+                Order ID: {confirmedOrderId ? `DD-${confirmedOrderId.replace(/-/g, "").slice(-8).toUpperCase()}` : "Processing..."}
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:justify-center">
                 <Button asChild className="bg-primary text-primary-foreground hover:bg-primary-hover">
