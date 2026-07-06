@@ -1,15 +1,15 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Size Guide | Dapperr Drift – Clothing Store Kota',
+  title: 'Size Guide | Dapperr Drift – Find Your Perfect Fit',
   description:
-    'Find your perfect fit with the Dapperr Drift size guide. Measurements for T-shirts, hoodies, denim, and more. Shop confidently online or visit our store in Kota, Rajasthan.',
+    'Find your perfect fit with the Dapperr Drift size guide. Accurate measurements for oversized T-shirts, graphic tees, hoodies, and denim. Shop premium streetwear online with confidence.',
   keywords: [
     'Dapperr Drift size guide',
-    'clothing size chart Kota',
-    'T-shirt size guide India',
+    'oversized t-shirt size chart',
+    'streetwear size guide India',
     'hoodie sizing Dapperr Drift',
-    'fashion fit guide Kota',
+    'oversized hoodie fit guide',
   ],
   alternates: {
     canonical: 'https://dapperrdrift.com/size-guide',

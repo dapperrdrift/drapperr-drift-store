@@ -138,9 +138,9 @@ export const faqCategories: FAQCategory[] = [
 
 export const homeFAQs: FAQ[] = [
   {
-    question: "Is Dapperr Drift a Kota-based brand?",
+    question: "Where is Dapperr Drift based?",
     answer:
-      "Yes — Dapperr Drift is proudly based in Kota, Rajasthan. Our flagship store is at Shop No. F6, First Floor, Shubh Affinity, Next to DMART, Swami Vivekananda Nagar, Kota. We ship across India.",
+      "Dapperr Drift is a premium streetwear brand based in India. Our flagship retail store is located in Kota, Rajasthan (Shop No. F6, First Floor, Shubh Affinity, Next to DMART, Swami Vivekananda Nagar), and we ship to customers all across India through our online store.",
   },
   {
     question: "What kind of clothes does Dapperr Drift sell?",
@@ -150,12 +150,12 @@ export const homeFAQs: FAQ[] = [
   {
     question: "Does Dapperr Drift ship across India?",
     answer:
-      "Yes. We ship pan-India with 48-hour dispatch from Kota. Free shipping on orders above ₹5,000. Cash on Delivery is available in most cities.",
+      "Yes. We ship pan-India with 48-hour dispatch. Free shipping on orders above ₹5,000. Cash on Delivery is available in most cities.",
   },
   {
     question: "How is Dapperr Drift different from other Indian streetwear brands?",
     answer:
-      "Every Dapperr Drift piece is 100% original — no fast-fashion templates, no mass-produced prints. We're a Kota-born brand built for India's new generation of street-aware fashion lovers.",
+      "Every Dapperr Drift piece is 100% original — no fast-fashion templates, no mass-produced prints. We're a street-first brand built for India's new generation of fashion lovers.",
   },
 ]
 

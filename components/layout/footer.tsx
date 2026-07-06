@@ -122,7 +122,7 @@ export function Footer() {
             <Link href="/" className="inline-block transition-opacity hover:opacity-80">
               <img
                 src="/images/logo-black.svg"
-                alt="Dapperr Drift — Streetwear Brand in Kota, Rajasthan"
+                alt="Dapperr Drift — Premium Streetwear Brand India"
                 className="h-8 w-auto grayscale brightness-0 opacity-80"
               />
             </Link>

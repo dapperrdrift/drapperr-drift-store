@@ -3,14 +3,14 @@ import { Truck, RotateCcw, Clock, MapPin, Package, CreditCard } from "lucide-rea
 import Link from "next/link"
 
 export const metadata: Metadata = {
-  title: 'Shipping & Returns | Dapperr Drift – Kota, Rajasthan',
+  title: 'Shipping & Returns | Dapperr Drift',
   description:
-    'Dapperr Drift ships pan-India from our store in Kota, Rajasthan. Free shipping on eligible orders. Easy 30-day returns. Learn about our shipping policy and hassle-free returns.',
+    'Dapperr Drift offers fast shipping across India with easy returns. Learn more about our delivery options, standard/express times, and refund policies for premium streetwear.',
   keywords: [
     'Dapperr Drift shipping policy',
-    'clothing store Kota shipping',
-    'fashion store returns Rajasthan',
-    'free shipping India clothing',
+    'streetwear shipping India',
+    'online shopping returns India',
+    'free shipping clothes India',
     'Dapperr Drift returns policy',
   ],
   alternates: {

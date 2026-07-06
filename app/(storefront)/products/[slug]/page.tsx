@@ -56,24 +56,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return {
-    title: `${product.name} | Dapperr Drift – Clothing Store Kota`,
+    title: `${product.name} | Dapperr Drift Premium Streetwear`,
     description: product.description
-      ? `${product.description} Shop ${product.name} at Dapperr Drift, Kota's best clothing store. Visit us in Swami Vivekananda Nagar, Kota or order online across India.`
-      : `Shop ${product.name} at Dapperr Drift — Kota's trendiest clothing store. Located at Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan. Pan-India delivery available.`,
+      ? `${product.description} Shop ${product.name} at Dapperr Drift, India's premium streetwear brand. High quality, bold fits, and fast shipping nationwide.`
+      : `Shop ${product.name} at Dapperr Drift — premium streetwear designed in India. High-quality materials, bold oversized cuts, and fast PAN-India shipping.`,
     keywords: [
       product.name,
-      `${product.name} Kota`,
-      `buy ${product.name} online India`,
-      'clothing store Kota',
-      'fashion store Kota Rajasthan',
       'Dapperr Drift',
+      'premium streetwear India',
+      `buy ${product.name} online`,
+      'streetwear clothing brand India',
     ],
     alternates: {
       canonical: `https://dapperrdrift.com/products/${slug}`,
     },
     openGraph: {
       title: `${product.name} | Dapperr Drift`,
-      description: product.description ?? `Shop ${product.name} at Dapperr Drift, Kota's best clothing store.`,
+      description: product.description ?? `Shop ${product.name} at Dapperr Drift, India's premium streetwear brand.`,
       url: `https://dapperrdrift.com/products/${slug}`,
       type: 'website',
     },
