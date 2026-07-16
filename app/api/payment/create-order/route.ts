@@ -38,14 +38,16 @@ export async function POST(req: NextRequest) {
     const variantIds: string[] = items.map((item) => item.variant_id)
     const { data: variants, error: variantsError } = await adminDb
       .from("variants")
-      .select("id, price")
+      .select("id, price_override, products(base_price)")
       .in("id", variantIds)
 
     if (variantsError || !variants) {
       return NextResponse.json({ error: "Failed to fetch product prices" }, { status: 500 })
     }
 
-    const priceMap = new Map(variants.map((v: { id: string; price: number }) => [v.id, v.price]))
+    const priceMap = new Map(
+      variants.map((v: any) => [v.id, v.price_override ?? v.products?.base_price ?? 0])
+    )
 
     let subtotal = 0
     for (const item of items) {

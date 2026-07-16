@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { ShoppingBag, Minus, Plus, Check } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { ShoppingBag, Minus, Plus, Check, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { useCart } from "@/contexts/cart-context"
@@ -23,10 +24,11 @@ interface AddToCartButtonProps {
 }
 
 export function AddToCartButton({ disabled, productName, variants = [], selectedVariantId }: AddToCartButtonProps) {
+  const router = useRouter()
   const [quantity, setQuantity] = useState(1)
   const [isAdding, setIsAdding] = useState(false)
   const [isAdded, setIsAdded] = useState(false)
-  const { addItem } = useCart()
+  const { addItem, items } = useCart()
 
   // Use explicitly selected variant when available; otherwise fall back to first in-stock variant.
   const defaultVariant = variants.find((v) => v.stock_quantity > 0) ?? variants[0]
@@ -35,9 +37,15 @@ export function AddToCartButton({ disabled, productName, variants = [], selected
     : defaultVariant
   const maxStock = currentVariant?.stock_quantity ?? 0
   const isOutOfStock = !currentVariant || maxStock === 0
+  const isInCart = !!currentVariant && items.some((item) => item.variant_id === currentVariant.id)
 
   const handleAddToCart = async () => {
     if (disabled || isOutOfStock || !currentVariant) return
+
+    if (isInCart) {
+      router.push("/cart")
+      return
+    }
 
     setIsAdding(true)
     try {
@@ -107,6 +115,11 @@ export function AddToCartButton({ disabled, productName, variants = [], selected
           </span>
         ) : isOutOfStock ? (
           "Out of Stock"
+        ) : isInCart ? (
+          <span className="flex items-center justify-center gap-2 min-w-0 whitespace-nowrap">
+            <span className="truncate">Go to Cart</span>
+            <ArrowRight className="h-5 w-5 shrink-0" />
+          </span>
         ) : (
           <span className="flex items-center justify-center gap-2 min-w-0 whitespace-nowrap">
             <ShoppingBag className="h-5 w-5 shrink-0" />

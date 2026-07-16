@@ -6,18 +6,16 @@ import Link from "next/link"
 import { Search, X, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { createClient } from "@/lib/supabase/client"
 
-// Mock products for search
-const allProducts = [
-  { id: "1", name: "Cashmere Knit Sweater", slug: "cashmere-knit-sweater", price: 12500, image: "/images/product-1.jpg", category: "Knitwear" },
-  { id: "2", name: "Tailored Wool Blazer", slug: "tailored-wool-blazer", price: 24500, image: "/images/product-2.jpg", category: "Outerwear" },
-  { id: "3", name: "Silk Wide-Leg Trousers", slug: "silk-wide-leg-trousers", price: 8900, image: "/images/product-3.jpg", category: "Bottoms" },
-  { id: "4", name: "Leather Belt with Gold Buckle", slug: "leather-belt-gold-buckle", price: 4500, image: "/images/product-4.jpg", category: "Accessories" },
-  { id: "5", name: "Premium Cotton Shirt", slug: "premium-cotton-shirt", price: 6800, image: "/images/product-5.jpg", category: "Tops" },
-  { id: "6", name: "Camel Wool Overcoat", slug: "camel-wool-overcoat", price: 35000, image: "/images/product-6.jpg", category: "Outerwear" },
-  { id: "7", name: "Designer Denim Jeans", slug: "designer-denim-jeans", price: 9800, image: "/images/product-7.jpg", category: "Bottoms" },
-  { id: "8", name: "Silk Patterned Scarf", slug: "silk-patterned-scarf", price: 3200, image: "/images/product-8.jpg", category: "Accessories" },
-]
+interface SearchResult {
+  id: string
+  name: string
+  slug: string
+  price: number
+  image: string | null
+  category: string
+}
 
 interface SearchModalProps {
   isOpen: boolean
@@ -26,9 +24,11 @@ interface SearchModalProps {
 
 export function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState("")
-  const [results, setResults] = useState<typeof allProducts>([])
+  const [results, setResults] = useState<SearchResult[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const requestIdRef = useRef(0)
 
   // Focus input when modal opens
   useEffect(() => {
@@ -52,28 +52,72 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
     }
   }, [isOpen, onClose])
 
-  // Search logic
+  // Search logic — debounced live query against Supabase
   const handleSearch = (searchQuery: string) => {
     setQuery(searchQuery)
-    
+
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+
     if (searchQuery.trim().length < 2) {
       setResults([])
+      setIsSearching(false)
       return
     }
 
     setIsSearching(true)
-    
-    // Simulate API delay
-    setTimeout(() => {
-      const filtered = allProducts.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.category.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-      setResults(filtered)
+
+    debounceRef.current = setTimeout(async () => {
+      const currentRequestId = ++requestIdRef.current
+      const supabase = createClient()
+      const term = searchQuery.trim()
+
+      const { data, error } = await supabase
+        .from("products")
+        .select(`
+          id,
+          name,
+          slug,
+          base_price,
+          images,
+          categories(name),
+          variants(price_override, stock_quantity)
+        `)
+        .eq("is_active", true)
+        .or(`name.ilike.%${term}%,description.ilike.%${term}%`)
+        .limit(20)
+
+      // Ignore stale responses from superseded requests
+      if (currentRequestId !== requestIdRef.current) return
+
+      if (error) {
+        console.error("Product search failed:", error)
+        setResults([])
+        setIsSearching(false)
+        return
+      }
+
+      const mapped: SearchResult[] = (data ?? [])
+        .filter((p: any) => (p.variants ?? []).some((v: any) => v.stock_quantity > 0))
+        .map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          slug: p.slug || p.id,
+          price: p.variants?.[0]?.price_override ?? p.base_price,
+          image: p.images?.[0] ?? null,
+          category: p.categories?.name ?? "Uncategorized",
+        }))
+
+      setResults(mapped)
       setIsSearching(false)
     }, 300)
   }
+
+  // Clean up any pending debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+    }
+  }, [])
 
   const handleResultClick = () => {
     setQuery("")
@@ -133,13 +177,19 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                       className="flex items-center gap-4 rounded-md p-3 transition-colors hover:bg-secondary"
                     >
                       <div className="relative h-16 w-16 flex-shrink-0 overflow-hidden rounded bg-surface-container-low">
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          fill
-                          className="object-cover"
-                          sizes="64px"
-                        />
+                        {product.image ? (
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            fill
+                            className="object-cover"
+                            sizes="64px"
+                          />
+                        ) : (
+                          <div className="flex h-full items-center justify-center">
+                            <span className="body-sm text-muted-foreground">No image</span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="title-md text-foreground truncate">{product.name}</p>

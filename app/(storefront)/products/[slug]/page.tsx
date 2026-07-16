@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ChevronRight, Truck, RotateCcw, Shield } from "lucide-react"
+import ReactMarkdown from "react-markdown"
 import { ProductGallery } from "@/components/products/product-gallery"
 import { ProductGrid } from "@/components/products/product-grid"
 import { ProductAccordion } from "@/components/products/product-accordion"
@@ -10,6 +11,16 @@ import { createClient } from "@/lib/supabase/server"
 
 interface PageProps {
   params: Promise<{ slug: string }>
+}
+
+// Strip markdown syntax for contexts that require plain text (meta tags, JSON-LD).
+function toPlainText(markdown: string | null | undefined, maxLength?: number): string | undefined {
+  if (!markdown) return undefined
+  const plain = markdown
+    .replace(/[#*_`>[\]()~-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return maxLength ? plain.slice(0, maxLength) : plain
 }
 
 interface ProductVariantDB {
@@ -55,10 +66,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     return { title: "Product Not Found" }
   }
 
+  const plainDescription = toPlainText(product.description, 160)
+
   return {
     title: `${product.name} | Dapperr Drift Premium Streetwear`,
-    description: product.description
-      ? `${product.description} Shop ${product.name} at Dapperr Drift, India's premium streetwear brand. High quality, bold fits, and fast shipping nationwide.`
+    description: plainDescription
+      ? `${plainDescription} Shop ${product.name} at Dapperr Drift, India's premium streetwear brand.`
       : `Shop ${product.name} at Dapperr Drift — premium streetwear designed in India. High-quality materials, bold oversized cuts, and fast PAN-India shipping.`,
     keywords: [
       product.name,
@@ -72,7 +85,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     },
     openGraph: {
       title: `${product.name} | Dapperr Drift`,
-      description: product.description ?? `Shop ${product.name} at Dapperr Drift, India's premium streetwear brand.`,
+      description: plainDescription ?? `Shop ${product.name} at Dapperr Drift, India's premium streetwear brand.`,
       url: `https://dapperrdrift.com/products/${slug}`,
       type: 'website',
     },
@@ -142,7 +155,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
-    description: product.description ?? undefined,
+    description: toPlainText(product.description),
     image: images.map((img) => img),
     brand: { '@type': 'Brand', name: 'Dapperr Drift' },
     offers: {
@@ -228,7 +241,9 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </div>
 
             {product.description && (
-              <p className="body-lg text-muted-foreground">{product.description}</p>
+              <div className="body-lg text-muted-foreground [&_p]:my-2 [&_strong]:text-foreground [&_strong]:font-semibold [&_h3]:mt-4 [&_h3]:mb-1 [&_h3]:title-md [&_h3]:text-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline">
+                <ReactMarkdown>{product.description}</ReactMarkdown>
+              </div>
             )}
 
             <ProductInfo productName={product.name} variants={variants} />

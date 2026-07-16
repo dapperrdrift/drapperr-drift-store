@@ -289,9 +289,14 @@ export type Database = {
           coupon_id: string | null
           created_at: string
           discount_amount: number
+          hidden_by_user: boolean
           id: string
+          invoice_sent_at: string | null
+          order_number: string | null
           shipping_address: Json | null
           shipping_fee: number
+          shiprocket_order_id: string | null
+          shiprocket_shipment_id: string | null
           status: Database["public"]["Enums"]["order_status"]
           total_amount: number
           tracking_id: string | null
@@ -303,9 +308,14 @@ export type Database = {
           coupon_id?: string | null
           created_at?: string
           discount_amount?: number
+          hidden_by_user?: boolean
           id?: string
+          invoice_sent_at?: string | null
+          order_number?: string | null
           shipping_address?: Json | null
           shipping_fee?: number
+          shiprocket_order_id?: string | null
+          shiprocket_shipment_id?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           total_amount?: number
           tracking_id?: string | null
@@ -317,9 +327,14 @@ export type Database = {
           coupon_id?: string | null
           created_at?: string
           discount_amount?: number
+          hidden_by_user?: boolean
           id?: string
+          invoice_sent_at?: string | null
+          order_number?: string | null
           shipping_address?: Json | null
           shipping_fee?: number
+          shiprocket_order_id?: string | null
+          shiprocket_shipment_id?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           total_amount?: number
           tracking_id?: string | null
@@ -383,6 +398,7 @@ export type Database = {
       products: {
         Row: {
           base_price: number
+          brand: string | null
           category_id: string | null
           created_at: string
           description: string | null
@@ -390,10 +406,14 @@ export type Database = {
           images: string[] | null
           is_active: boolean
           name: string
+          slug: string | null
+          status: string | null
+          tags: string[] | null
           updated_at: string
         }
         Insert: {
           base_price?: number
+          brand?: string | null
           category_id?: string | null
           created_at?: string
           description?: string | null
@@ -401,10 +421,14 @@ export type Database = {
           images?: string[] | null
           is_active?: boolean
           name: string
+          slug?: string | null
+          status?: string | null
+          tags?: string[] | null
           updated_at?: string
         }
         Update: {
           base_price?: number
+          brand?: string | null
           category_id?: string | null
           created_at?: string
           description?: string | null
@@ -412,6 +436,9 @@ export type Database = {
           images?: string[] | null
           is_active?: boolean
           name?: string
+          slug?: string | null
+          status?: string | null
+          tags?: string[] | null
           updated_at?: string
         }
         Relationships: [
@@ -554,7 +581,9 @@ export type Database = {
       }
       variants: {
         Row: {
+          barcode: string | null
           color: string
+          compare_at_price: number | null
           created_at: string
           id: string
           low_stock_threshold: number
@@ -563,9 +592,13 @@ export type Database = {
           size: string
           sku: string
           stock_quantity: number
+          track_inventory: boolean | null
+          weight: number | null
         }
         Insert: {
+          barcode?: string | null
           color: string
+          compare_at_price?: number | null
           created_at?: string
           id?: string
           low_stock_threshold?: number
@@ -574,9 +607,13 @@ export type Database = {
           size: string
           sku: string
           stock_quantity?: number
+          track_inventory?: boolean | null
+          weight?: number | null
         }
         Update: {
+          barcode?: string | null
           color?: string
+          compare_at_price?: number | null
           created_at?: string
           id?: string
           low_stock_threshold?: number
@@ -585,6 +622,8 @@ export type Database = {
           size?: string
           sku?: string
           stock_quantity?: number
+          track_inventory?: boolean | null
+          weight?: number | null
         }
         Relationships: [
           {
@@ -635,6 +674,7 @@ export type Database = {
         Returns: boolean
       }
       deduct_stock_for_order: { Args: { p_order_id: string }; Returns: boolean }
+      generate_order_number: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

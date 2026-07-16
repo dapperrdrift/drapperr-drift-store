@@ -80,7 +80,12 @@ export function ProductCard({ product }: ProductCardProps) {
   }
   return (
     <>
-      <Link href={`/products/${product.slug}`} className="group block">
+      <div className="group block relative">
+        <Link
+          href={`/products/${product.slug}`}
+          className="absolute inset-0 z-10"
+          aria-label={product.name}
+        />
         <div className="relative aspect-3/4 overflow-hidden bg-surface-container-low rounded-md">
         {product.image ? (
           <Image
@@ -102,7 +107,7 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
         
         {/* Action buttons overlay */}
-        <div className="pointer-events-auto absolute inset-x-0 bottom-0 p-2 sm:p-3 bg-linear-to-t from-foreground/40 to-transparent opacity-100 transition-opacity duration-300 md:pointer-events-none md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:group-hover:pointer-events-auto md:group-focus-within:pointer-events-auto">
+        <div className="pointer-events-auto absolute inset-x-0 bottom-0 z-20 p-2 sm:p-3 bg-linear-to-t from-foreground/40 to-transparent opacity-100 transition-opacity duration-300 md:pointer-events-none md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:group-hover:pointer-events-auto md:group-focus-within:pointer-events-auto">
           <div className="flex items-center justify-center gap-1.5 sm:gap-2">
             {/* Favorite button - Left */}
             <button
@@ -179,7 +184,7 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         </div>
       </div>
-      <div className="mt-3 sm:mt-4">
+      <div className="relative z-20 mt-3 sm:mt-4">
         {product.category && (
           <button
             onClick={handleCategoryClick}
@@ -195,8 +200,8 @@ export function ProductCard({ product }: ProductCardProps) {
           Rs. {product.price.toLocaleString("en-IN")}
         </p>
       </div>
-      </Link>
-      <QuickViewModal 
+      </div>
+      <QuickViewModal
         isOpen={isQuickViewOpen}
         onClose={() => setQuickViewOpen(false)}
         productSlug={product.slug}

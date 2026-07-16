@@ -174,10 +174,12 @@ async function ProductsContent({ searchParams }: PageProps) {
       <div className="flex gap-8 lg:gap-12">
         {/* Sidebar filters */}
         <div className="hidden md:block md:w-65 lg:w-70 shrink-0">
-          <ProductFilters
-            initialCategory={category || 'all'}
-            categories={categoriesWithCount}
-          />
+          <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto custom-scrollbar pb-8">
+            <ProductFilters
+              initialCategory={category || 'all'}
+              categories={categoriesWithCount}
+            />
+          </div>
         </div>
 
         {/* Mobile filter toggle */}
