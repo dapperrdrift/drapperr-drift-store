@@ -12,25 +12,25 @@ const slides = [
   {
     id: 1,
     image: "/images/hero-funky.jpg",
-    alt: "Dapperr Drift oversized streetwear tee — original Indian streetwear from Kota, Rajasthan",
+    alt: "Dapperr Drift oversized streetwear tee — original Indian streetwear",
   },
   {
     id: 2,
     image: "/images/hero-2.jpg",
-    alt: "Dapperr Drift hoodie collection — bold streetwear designed in Kota and shipped across India",
+    alt: "Dapperr Drift hoodie collection — bold streetwear shipped across India",
   },
   {
     id: 3,
     image: "/images/hero-3.jpg",
-    alt: "Dapperr Drift streetwear lookbook — Kota, Rajasthan's home-grown fashion brand",
+    alt: "Dapperr Drift streetwear lookbook — India's home-grown fashion brand",
   },
 ]
 
 const staticContent = {
   badge: "New Season Drop · Ships Across India",
   headline1: "Bold Streetwear.",
-  headline2: "Born in Kota.",
-  body: "Original Indian streetwear — oversized tees, hoodies, denim & co-ords designed in Kota, shipped pan-India in 48 hours. No fast fashion. No compromises.",
+  headline2: "Made for India.",
+  body: "Original Indian streetwear — oversized tees, hoodies, denim & co-ords designed in-house, shipped pan-India in 48 hours. No fast fashion. No compromises.",
   ctaPrimary: { label: "Explore Collection", href: "/products" },
   ctaSecondary: { label: "New Arrivals", href: "/products?filter=new" },
 }
@@ -162,7 +162,7 @@ export function HeroSection() {
             </div>
             <div>
               <p className="title-md text-white">Growing community across India</p>
-              <p className="body-sm text-white/60">Join the Kota streetwear movement</p>
+              <p className="body-sm text-white/60">Join the Dapperr Drift streetwear movement</p>
             </div>
           </div>
 

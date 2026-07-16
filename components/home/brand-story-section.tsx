@@ -6,7 +6,7 @@ const pillars = [
   {
     stat: "2021",
     label: "Founded",
-    detail: "Born on the streets of Kota",
+    detail: "Born from India's streetwear culture",
   },
   {
     stat: "10K+",
@@ -53,7 +53,7 @@ export function BrandStorySection() {
               {/* Floating tag */}
               <div className="absolute bottom-8 left-8 bg-primary px-5 py-3 rounded-md shadow-lg">
                 <p className="label-md text-white uppercase tracking-widest">Est. 2021</p>
-                <p className="body-sm text-white/70 mt-0.5">Kota, Rajasthan</p>
+                <p className="body-sm text-white/70 mt-0.5">Made in India</p>
               </div>
             </div>
 

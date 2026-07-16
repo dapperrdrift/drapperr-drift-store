@@ -75,7 +75,7 @@ export default function AboutPage() {
               <p className="body-lg text-muted-foreground mb-8 leading-relaxed">
                 Dapperr Drift is a premium streetwear brand built for the bold, the stylish, and the young at heart.
                 We make high-quality graphic tees, oversized hoodies, denim, and street-first essentials delivered straight to your door across India.
-                Visit our flagship retail experience in Kota, Rajasthan, or explore our collection online from anywhere in the country.
+                Explore our collection online from anywhere in the country, or visit our flagship retail store in Kota, Rajasthan.
               </p>
               <Link
                 href="/products"
@@ -87,7 +87,7 @@ export default function AboutPage() {
             <div className="relative aspect-4/3 rounded-lg overflow-hidden bg-secondary">
               <Image
                 src="/images/about-hero.jpg"
-                alt="Dapperr Drift store interior in Kota, Rajasthan"
+                alt="Dapperr Drift store interior"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"

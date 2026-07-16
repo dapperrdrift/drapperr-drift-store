@@ -2,10 +2,10 @@ import { Instagram } from "lucide-react"
 
 const mentions = [
   { label: "@dapperr.drift", sub: "Instagram" },
-  { label: "FEATURED IN KOTA YOUTH", sub: "Local Press" },
   { label: "10,000+ CUSTOMERS", sub: "Pan India" },
   { label: "4.8★ GOOGLE", sub: "Customer Rating" },
-  { label: "RAJASTHAN STREETWEAR", sub: "Origin" },
+  { label: "INDIAN STREETWEAR", sub: "Origin" },
+  { label: "48HR SHIPPING", sub: "Across India" },
 ]
 
 export function PressStrip() {

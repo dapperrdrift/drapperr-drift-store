@@ -98,7 +98,7 @@ function CollectionsSectionUI({
           <p className="mt-4 md:mt-6 body-lg text-muted-foreground max-w-3xl md:mx-auto text-pretty">
             Explore the full Dapperr Drift collection — oversized T-shirts, streetwear hoodies,
             premium denim, matching co-ord sets, and outerwear for men across India. Every piece
-            is designed in Kota, Rajasthan with original in-house artwork — no fast-fashion
+            is designed in-house with original artwork — no fast-fashion
             templates, no mass-produced prints. Shop the category that fits your vibe, ship
             pan-India in 48 hours, and wear the streets with Dapperr Drift.
           </p>

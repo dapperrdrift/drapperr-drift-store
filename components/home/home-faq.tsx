@@ -24,7 +24,7 @@ export function HomeFaq() {
             Questions About Dapperr Drift?
           </h2>
           <p className="mt-4 body-lg text-muted-foreground max-w-2xl mx-auto">
-            Quick answers about our Kota streetwear brand, shipping across India, and more.
+            Quick answers about our streetwear brand, shipping across India, and more.
           </p>
         </div>
 

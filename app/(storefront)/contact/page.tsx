@@ -3,26 +3,23 @@ import { Mail, Phone, MapPin, Clock } from "lucide-react"
 import { ContactForm } from "./contact-form"
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Dapperr Drift – Clothing Store in Kota',
+  title: 'Contact Us | Dapperr Drift',
   description:
-    'Visit Dapperr Drift at Shop No. F6, Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan 324010 (next to DMART). Call us or send a message. Open Mon–Sat, 9am–6pm.',
+    'Get in touch with Dapperr Drift for orders, sizing, or support — shipping across India. Our retail store is at Shop No. F6, Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan 324010 (next to DMART). Open Mon–Sat, 9am–6pm.',
   keywords: [
     'Dapperr Drift contact',
-    'clothing store Kota address',
-    'fashion store Swami Vivekananda Nagar Kota',
-    'Shubh Affinity Kota clothing',
-    'clothing store near DMART Kota',
     'Dapperr Drift phone number',
-    'Dapperr Drift location Kota',
-    'fashion store Kota Rajasthan contact',
+    'Dapperr Drift customer support',
+    'Dapperr Drift store location',
+    'streetwear brand contact India',
   ],
   alternates: {
     canonical: 'https://dapperrdrift.com/contact',
   },
   openGraph: {
-    title: 'Contact Dapperr Drift | Kota\'s Best Clothing Store',
+    title: 'Contact Dapperr Drift',
     description:
-      'Find us at Shop F6, Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan. Mon–Sat 9am–6pm. Call, email, or drop by.',
+      'Shipping across India, with a retail store at Shop F6, Shubh Affinity, Swami Vivekananda Nagar, Kota, Rajasthan. Mon–Sat 9am–6pm. Call, email, or drop by.',
     url: 'https://dapperrdrift.com/contact',
     type: 'website',
   },
@@ -62,7 +59,7 @@ export default function ContactPage() {
       <div className="text-center mb-12">
         <h1 className="display-md text-foreground mb-4">Contact Us</h1>
         <p className="body-lg text-muted-foreground max-w-2xl mx-auto">
-          Visit us at our store in Kota, or reach out online. We&apos;re here to help with orders, sizing, or anything else.
+          Shop with us online across India, or visit our store in Kota. We&apos;re here to help with orders, sizing, or anything else.
         </p>
       </div>
 

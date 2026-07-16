@@ -8,7 +8,7 @@ export function LookbookSection() {
       <div className="absolute inset-0">
         <Image
           src="/images/hero-2.jpg"
-          alt="Dapperr Drift Lookbook — streetwear editorial shot in Kota, Rajasthan"
+          alt="Dapperr Drift Lookbook — streetwear editorial shoot"
           fill
           className="object-cover opacity-80"
           sizes="100vw"
@@ -30,7 +30,7 @@ export function LookbookSection() {
               data-aos-delay="100"
               className="mt-5 text-3xl md:display-md font-black uppercase leading-[0.9] tracking-[-0.02em] text-background"
             >
-              Streets of Kota,
+              Streets of India,
               <br />
               Dressed Different.
             </h2>

@@ -7,27 +7,27 @@ import { BreadcrumbSchema } from "@/components/seo/breadcrumb-schema"
 import { createClient } from "@/lib/supabase/server"
 
 export const metadata: Metadata = {
-  title: 'Shop All Clothing | Dapperr Drift – Kota, Rajasthan',
+  title: 'Shop All Clothing | Dapperr Drift India',
   description:
-    'Browse Dapperr Drift\'s full collection of T-shirts, hoodies, denim, and streetwear. Kota\'s best fashion store — shop in-store at Swami Vivekananda Nagar or order online across India.',
+    'Browse Dapperr Drift\'s full collection of T-shirts, hoodies, denim, and streetwear. Premium fashion, shipped online across India.',
   keywords: [
-    'buy clothes online Kota',
-    'men T-shirts Kota',
-    'hoodies Kota',
-    'denim jeans Kota Rajasthan',
-    'streetwear Kota',
-    'fashion online Rajasthan',
+    'buy clothes online India',
+    'men T-shirts online India',
+    'hoodies online India',
+    'denim jeans online India',
+    'streetwear India',
+    'fashion online India',
     'affordable clothing India',
-    'shop clothing Kota',
+    'shop clothing online India',
     'Dapperr Drift collection',
   ],
   alternates: {
     canonical: 'https://dapperrdrift.com/products',
   },
   openGraph: {
-    title: 'Shop All Clothing | Dapperr Drift – Kota, Rajasthan',
+    title: 'Shop All Clothing | Dapperr Drift India',
     description:
-      'T-shirts, hoodies, denim & streetwear from Kota\'s trendiest clothing store. Shop online or visit us in Swami Vivekananda Nagar, Kota.',
+      'T-shirts, hoodies, denim & streetwear from Dapperr Drift. Shop online with fast shipping across India.',
     url: 'https://dapperrdrift.com/products',
     type: 'website',
   },

@@ -109,7 +109,7 @@ const localBusinessSchema = {
   name: 'Dapperr Drift',
   alternateName: ['Dapperr Drift'],
   description:
-    'Dapperr Drift is a premium streetwear brand offering trendy oversized T-shirts, hoodies, denim, and casual wear for men. High-quality designs with PAN-India delivery and a retail flagship store in Kota, Rajasthan.',
+    'Dapperr Drift is a premium streetwear brand offering trendy oversized T-shirts, hoodies, denim, and casual wear for men. High-quality designs with PAN-India delivery and a retail store in Rajasthan.',
   url: SITE_URL,
   telephone: '',
   email: 'support@dapperr.com',
@@ -145,8 +145,6 @@ const localBusinessSchema = {
   ],
   hasMap: 'https://maps.google.com/?q=Dapperr+Drift+Kota+Rajasthan',
   areaServed: [
-    { '@type': 'City', name: 'Kota', containedInPlace: { '@type': 'State', name: 'Rajasthan' } },
-    { '@type': 'State', name: 'Rajasthan' },
     { '@type': 'Country', name: 'India' },
   ],
   knowsAbout: ['Men\'s Fashion', 'Streetwear', 'Casual Wear', 'T-Shirts', 'Hoodies', 'Denim'],
