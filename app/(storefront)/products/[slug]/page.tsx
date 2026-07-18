@@ -2,7 +2,6 @@ import { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ChevronRight, Truck, RotateCcw, Shield } from "lucide-react"
-import ReactMarkdown from "react-markdown"
 import { ProductGallery } from "@/components/products/product-gallery"
 import { ProductGrid } from "@/components/products/product-grid"
 import { ProductAccordion } from "@/components/products/product-accordion"
@@ -251,12 +250,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
               <p className="mt-1 body-md text-muted-foreground">Inclusive of all taxes</p>
             </div>
 
-            {product.description && (
-              <div className="body-lg text-muted-foreground [&_p]:my-2 [&_strong]:text-foreground [&_strong]:font-semibold [&_h3]:mt-4 [&_h3]:mb-1 [&_h3]:title-md [&_h3]:text-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline">
-                <ReactMarkdown>{product.description}</ReactMarkdown>
-              </div>
-            )}
-
             <ProductInfo productName={product.name} variants={variants} />
 
             {/* Trust badges */}
@@ -276,7 +269,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </div>
 
             <ProductAccordion
-              details={['See product description above']}
+              description={product.description}
               care={['Handle with care', 'Follow label instructions']}
             />
           </div>

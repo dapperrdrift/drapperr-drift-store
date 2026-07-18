@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { createClient } from "@/lib/supabase/server"
 import { HeroSection } from "@/components/home/hero-section"
 import { CollectionsSection } from "@/components/home/collections-section"
 import { FeaturedProducts } from "@/components/home/featured-products"
@@ -40,10 +41,17 @@ export const metadata: Metadata = {
   },
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient()
+  const { data: heroSlides } = await supabase
+    .from("hero_slides")
+    .select("id, image_url, overlay_text, link_url")
+    .eq("is_active", true)
+    .order("display_order")
+
   return (
     <>
-      <HeroSection />
+      <HeroSection slides={heroSlides ?? []} />
       <MarqueeStrip />
       <FeaturedProducts />
       <CategoryCarousels />

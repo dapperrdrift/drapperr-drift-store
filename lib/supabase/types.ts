@@ -405,6 +405,7 @@ export type Database = {
           id: string
           images: string[] | null
           is_active: boolean
+          is_featured: boolean
           name: string
           slug: string | null
           status: string | null
@@ -420,6 +421,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_active?: boolean
+          is_featured?: boolean
           name: string
           slug?: string | null
           status?: string | null
@@ -435,6 +437,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           is_active?: boolean
+          is_featured?: boolean
           name?: string
           slug?: string | null
           status?: string | null
@@ -687,6 +690,10 @@ export type Database = {
         Returns: undefined
       }
       is_admin: { Args: never; Returns: boolean }
+      replace_product_variants: {
+        Args: { p_product_id: string; p_variants: Json }
+        Returns: undefined
+      }
       restore_stock: {
         Args: { p_qty: number; p_variant_id: string }
         Returns: undefined

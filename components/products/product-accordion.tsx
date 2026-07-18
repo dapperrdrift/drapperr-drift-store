@@ -2,10 +2,11 @@
 
 import { useState } from "react"
 import { ChevronDown } from "lucide-react"
+import ReactMarkdown from "react-markdown"
 import { cn } from "@/lib/utils"
 
 interface ProductAccordionProps {
-  details: string[]
+  description: string | null
   care: string[]
 }
 
@@ -46,7 +47,7 @@ function AccordionItem({ title, isOpen, onToggle, children }: AccordionItemProps
   )
 }
 
-export function ProductAccordion({ details, care }: ProductAccordionProps) {
+export function ProductAccordion({ description, care }: ProductAccordionProps) {
   const [openSection, setOpenSection] = useState<string | null>("details")
 
   const toggleSection = (section: string) => {
@@ -60,14 +61,13 @@ export function ProductAccordion({ details, care }: ProductAccordionProps) {
         isOpen={openSection === "details"}
         onToggle={() => toggleSection("details")}
       >
-        <ul className="space-y-2">
-          {details.map((detail, index) => (
-            <li key={index} className="body-md text-muted-foreground flex items-start gap-2">
-              <span className="text-primary mt-1.5">•</span>
-              {detail}
-            </li>
-          ))}
-        </ul>
+        {description ? (
+          <div className="body-md text-muted-foreground [&_p]:my-2 [&_strong]:text-foreground [&_strong]:font-semibold [&_h3]:mt-4 [&_h3]:mb-1 [&_h3]:title-md [&_h3]:text-foreground [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:space-y-1 [&_a]:text-primary [&_a]:underline">
+            <ReactMarkdown>{description}</ReactMarkdown>
+          </div>
+        ) : (
+          <p className="body-md text-muted-foreground">No additional details available.</p>
+        )}
       </AccordionItem>
 
       <AccordionItem

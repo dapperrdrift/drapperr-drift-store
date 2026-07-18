@@ -25,8 +25,8 @@ import { useAuth } from "@/contexts/auth-context"
 const navigation = [
   { name: "New Arrivals", href: "/products?filter=new" },
   { name: "Collections", href: "/products" },
-  { name: "Men", href: "/products?category=men" },
-  { name: "Women", href: "/products?category=women" },
+  // { name: "Men", href: "/products?category=men" },
+  // { name: "Women", href: "/products?category=women" },
 ]
 
 /* ────────────────────────────────────────────────

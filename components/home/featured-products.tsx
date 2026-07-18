@@ -18,6 +18,7 @@ export async function FeaturedProducts() {
       variants(id, price_override, compare_at_price, stock_quantity)
     `)
     .eq('is_active', true)
+    .eq('is_featured', true)
     .order('created_at', { ascending: false })
     .limit(12)
 

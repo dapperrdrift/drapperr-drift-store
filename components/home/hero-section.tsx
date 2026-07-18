@@ -8,23 +8,37 @@ import { useState, useEffect, useCallback } from "react"
 import AOS from "aos"
 import "aos/dist/aos.css"
 
-const slides = [
+const fallbackSlides = [
   {
-    id: 1,
+    id: "1",
     image: "/images/hero-funky.jpg",
     alt: "Dapperr Drift oversized streetwear tee — original Indian streetwear",
+    link: null as string | null,
   },
   {
-    id: 2,
+    id: "2",
     image: "/images/hero-2.jpg",
     alt: "Dapperr Drift hoodie collection — bold streetwear shipped across India",
+    link: null as string | null,
   },
   {
-    id: 3,
+    id: "3",
     image: "/images/hero-3.jpg",
     alt: "Dapperr Drift streetwear lookbook — India's home-grown fashion brand",
+    link: null as string | null,
   },
 ]
+
+interface HeroSlide {
+  id: string
+  image_url: string
+  overlay_text: string | null
+  link_url: string | null
+}
+
+interface HeroSectionProps {
+  slides?: HeroSlide[]
+}
 
 const staticContent = {
   badge: "New Season Drop · Ships Across India",
@@ -35,12 +49,21 @@ const staticContent = {
   ctaSecondary: { label: "New Arrivals", href: "/products?filter=new" },
 }
 
-export function HeroSection() {
+export function HeroSection({ slides: dbSlides }: HeroSectionProps) {
+  const slides = dbSlides && dbSlides.length > 0
+    ? dbSlides.map((s) => ({
+        id: s.id,
+        image: s.image_url,
+        alt: s.overlay_text || "Dapperr Drift streetwear",
+        link: s.link_url,
+      }))
+    : fallbackSlides
+
   const [current, setCurrent] = useState(0)
 
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % slides.length)
-  }, [])
+  }, [slides.length])
 
   // Auto-play every 5 seconds
   useEffect(() => {
@@ -143,29 +166,6 @@ export function HeroSection() {
               {staticContent.ctaSecondary.label}
             </Link>
           </div>
-
-          {/* Social proof */}
-          <div 
-            data-aos="fade-up" 
-            data-aos-delay="800"
-            className="hidden md:flex mt-16 items-center gap-6"
-          >
-            <div className="flex -space-x-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div
-                  key={i}
-                  className="w-10 h-10 rounded-full border-2 border-white/20 bg-primary/60 backdrop-blur-sm overflow-hidden flex items-center justify-center"
-                >
-                  <span className="text-white text-xs font-bold">DD</span>
-                </div>
-              ))}
-            </div>
-            <div>
-              <p className="title-md text-white">Growing community across India</p>
-              <p className="body-sm text-white/60">Join the Dapperr Drift streetwear movement</p>
-            </div>
-          </div>
-
         </div>
       </div>
 
