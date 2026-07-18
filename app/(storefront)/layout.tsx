@@ -17,7 +17,7 @@ export default function StorefrontLayout({
       <WishlistProvider>
         <CartProvider>
           <AOSInit />
-          <div className="flex min-h-screen flex-col overflow-x-hidden">
+          <div className="flex min-h-screen flex-col overflow-x-clip">
             <Header />
             <main className="flex-1 pb-[calc(5rem+env(safe-area-inset-bottom))] pt-header md:pb-0">{children}</main>
             <MobileBottomNav />
