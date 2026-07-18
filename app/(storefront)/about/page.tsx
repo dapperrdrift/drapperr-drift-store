@@ -86,7 +86,7 @@ export default function AboutPage() {
             </div>
             <div className="relative aspect-4/3 rounded-lg overflow-hidden bg-secondary">
               <Image
-                src="/images/about-hero.jpg"
+                src="/images/brand-story.jpg"
                 alt="Dapperr Drift store interior"
                 fill
                 className="object-cover"

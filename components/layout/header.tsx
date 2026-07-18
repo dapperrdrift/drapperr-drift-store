@@ -255,10 +255,9 @@ export function Header() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out",
-          isSolid
-            ? "bg-transparent md:bg-surface-container-lowest md:shadow-sm"
-            : "bg-transparent"
+          "relative z-50 bg-surface-container-lowest shadow-sm transition-all duration-500 ease-in-out",
+          "md:fixed md:top-0 md:left-0 md:right-0",
+          isSolid ? "md:bg-surface-container-lowest md:shadow-sm" : "md:bg-transparent md:shadow-none"
         )}
       >
         {/* Rotating announcement bar — shown until dismissed, collapses on scroll on desktop */}
@@ -287,10 +286,11 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 aria-label="Toggle menu"
                 className={cn(
-                  "transition-colors duration-300",
+                  "transition-colors duration-300 text-foreground hover:text-primary",
+                  "md:text-inherit",
                   !isSolid && !mobileMenuOpen
-                    ? "text-white hover:text-white hover:bg-white/20"
-                    : "text-foreground hover:text-primary"
+                    ? "md:text-white md:hover:text-white md:hover:bg-white/20"
+                    : "md:text-foreground md:hover:text-primary"
                 )}
               >
                 {mobileMenuOpen ? (
@@ -325,8 +325,8 @@ export function Header() {
                 src={"/images/logo-black.svg"}
                 alt="Dapperr Drift"
                 className={cn(
-                  "h-10 md:h-12 w-auto transition-all duration-300",
-                  !isSolid ? "brightness-0 invert drop-shadow-md" : "brightness-100"
+                  "h-10 md:h-12 w-auto transition-all duration-300 brightness-100",
+                  !isSolid ? "md:brightness-0 md:invert md:drop-shadow-md" : "md:brightness-100"
                 )}
               />
             </Link>
@@ -354,10 +354,10 @@ export function Header() {
                 variant="ghost"
                 size="icon"
                 className={cn(
-                  "relative transition-all duration-300",
+                  "relative transition-all duration-300 text-foreground hover:bg-primary hover:text-white",
                   !isSolid
-                    ? "text-white hover:text-white hover:bg-white/20"
-                    : "text-foreground hover:bg-primary hover:text-white"
+                    ? "md:text-white md:hover:text-white md:hover:bg-white/20"
+                    : "md:text-foreground md:hover:bg-primary md:hover:text-white"
                 )}
                 asChild
               >
@@ -365,8 +365,8 @@ export function Header() {
                   <ShoppingBag className="h-5 w-5" />
                   {count > 0 && (
                     <span className={cn(
-                      "absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold shadow-sm",
-                      !isSolid ? "bg-white text-primary" : "bg-primary text-white"
+                      "absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full text-[10px] font-bold shadow-sm bg-primary text-white",
+                      !isSolid ? "md:bg-white md:text-primary" : "md:bg-primary md:text-white"
                     )}>
                       {count}
                     </span>

@@ -10,7 +10,7 @@ interface RawProduct {
   base_price: number
   images: string[] | null
   categories: { name: string; slug: string } | null
-  variants: { id: string; price_override: number | null; stock_quantity: number }[]
+  variants: { id: string; price_override: number | null; compare_at_price: number | null; stock_quantity: number }[]
 }
 
 interface CategoryGroup {
@@ -21,6 +21,7 @@ interface CategoryGroup {
     name: string
     slug: string
     price: number
+    compareAtPrice?: number | null
     image: string
     category: string
     variants?: { id: string }[]
@@ -40,7 +41,7 @@ export async function CategoryCarousels() {
       base_price,
       images,
       categories(name, slug),
-      variants(id, price_override, stock_quantity)
+      variants(id, price_override, compare_at_price, stock_quantity)
     `
     )
     .eq("is_active", true)
@@ -71,6 +72,7 @@ export async function CategoryCarousels() {
       name: p.name,
       slug: p.slug || p.id,
       price: p.variants?.[0]?.price_override ?? p.base_price,
+      compareAtPrice: p.variants?.[0]?.compare_at_price ?? null,
       image: p.images?.[0] ?? "",
       category: p.categories.name,
       variants: p.variants?.map((v) => ({ id: v.id })),

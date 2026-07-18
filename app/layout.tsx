@@ -114,7 +114,7 @@ const localBusinessSchema = {
   description:
     'Dapperr Drift is a premium streetwear brand offering trendy oversized T-shirts, hoodies, denim, and casual wear for men. High-quality designs with PAN-India delivery and a retail store in Rajasthan.',
   url: SITE_URL,
-  telephone: '',
+  telephone: '+91-8769931031',
   email: 'support@dapperr.com',
   priceRange: '₹₹',
   currenciesAccepted: 'INR',
@@ -167,6 +167,7 @@ const organizationSchema = {
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'customer service',
+    telephone: '+91-8769931031',
     email: 'support@dapperr.com',
     areaServed: 'IN',
     availableLanguage: ['English', 'Hindi'],

@@ -82,7 +82,7 @@ async function ProductsContent({ searchParams }: PageProps) {
       images,
       created_at,
       categories!inner(name, slug),
-      variants(id, color, size, price_override, stock_quantity)
+      variants(id, color, size, price_override, compare_at_price, stock_quantity)
     `)
     .eq('is_active', true)
 
@@ -114,6 +114,7 @@ async function ProductsContent({ searchParams }: PageProps) {
     name: p.name,
     slug: p.slug || p.id,
     price: p.variants?.[0]?.price_override ?? p.base_price,
+    compareAtPrice: p.variants?.[0]?.compare_at_price ?? null,
     image: p.images?.[0] ?? null,
     category: p.categories?.name ?? 'Uncategorized',
     isNew: false,

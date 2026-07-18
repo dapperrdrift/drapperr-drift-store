@@ -16,6 +16,7 @@ interface ProductCardProps {
     name: string
     slug: string
     price: number
+    compareAtPrice?: number | null
     image: string | null
     category?: string
     isNew?: boolean
@@ -31,6 +32,10 @@ export function ProductCard({ product }: ProductCardProps) {
   const isFavorite = isInWishlist(product.id)
   const [isQuickViewOpen, setQuickViewOpen] = useState(false)
   const [isAdding, setIsAdding] = useState(false)
+  const hasDiscount = !!product.compareAtPrice && product.compareAtPrice > product.price
+  const discountPercent = hasDiscount
+    ? Math.round(((product.compareAtPrice! - product.price) / product.compareAtPrice!) * 100)
+    : 0
   const hasSingleVariant = (product.variants?.length ?? 0) === 1
   const firstVariantId = product.variants?.[0]?.id
   const singleVariantCartItem = firstVariantId
@@ -103,6 +108,11 @@ export function ProductCard({ product }: ProductCardProps) {
         {product.isNew && (
           <span className="absolute left-3 top-3 bg-primary px-3 py-1 rounded label-md text-primary-foreground">
             New
+          </span>
+        )}
+        {hasDiscount && (
+          <span className="absolute right-3 top-3 bg-foreground px-3 py-1 rounded label-md text-background">
+            {discountPercent}% OFF
           </span>
         )}
         
@@ -196,8 +206,15 @@ export function ProductCard({ product }: ProductCardProps) {
         <h3 className="mt-1 line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-primary sm:title-md">
           {product.name}
         </h3>
-        <p className="mt-1.5 text-sm font-semibold text-primary sm:mt-2 sm:title-md">
-          Rs. {product.price.toLocaleString("en-IN")}
+        <p className="mt-1.5 flex items-baseline gap-1.5 sm:mt-2">
+          <span className="text-sm font-semibold text-primary sm:title-md">
+            Rs. {product.price.toLocaleString("en-IN")}
+          </span>
+          {hasDiscount && (
+            <span className="text-xs text-muted-foreground line-through sm:text-sm">
+              Rs. {product.compareAtPrice!.toLocaleString("en-IN")}
+            </span>
+          )}
         </p>
       </div>
       </div>

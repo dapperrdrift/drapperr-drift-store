@@ -240,10 +240,10 @@ export default function CookiePolicyPage() {
           <div className="rounded-lg border border-border p-6 bg-surface-container-low">
             <p className="body-md text-foreground font-medium mb-2">Dapperr Drift Private Limited</p>
             <p className="body-md text-muted-foreground">
-              123 Fashion Street, Mumbai<br />
-              Maharashtra, India 400001<br />
+              Shop No. F6, First Floor, Shubh Affinity, Next to DMART, Swami Vivekananda Nagar<br />
+              Kota, Rajasthan, India 324010<br />
               Email: privacy@dapperr.com<br />
-              Phone: +91 1800-123-4567
+              Phone: +91 8769931031
             </p>
           </div>
         </section>

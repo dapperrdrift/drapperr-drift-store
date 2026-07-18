@@ -180,7 +180,7 @@ export default function TermsOfServicePage() {
         <section>
           <h2 className="headline-sm text-foreground mb-4">12. Governing Law</h2>
           <p className="body-md text-muted-foreground leading-relaxed">
-            These Terms of Service shall be governed by and construed in accordance with the laws of India. Any disputes arising from these terms or your use of the website shall be subject to the exclusive jurisdiction of the courts in Mumbai, Maharashtra.
+            These Terms of Service shall be governed by and construed in accordance with the laws of India. Any disputes arising from these terms or your use of the website shall be subject to the exclusive jurisdiction of the courts in Kota, Rajasthan.
           </p>
         </section>
 
@@ -199,10 +199,10 @@ export default function TermsOfServicePage() {
           <div className="rounded-lg border border-border p-6 bg-surface-container-low">
             <p className="body-md text-foreground font-medium mb-2">Dapperr Drift Private Limited</p>
             <p className="body-md text-muted-foreground">
-              123 Fashion Street, Mumbai<br />
-              Maharashtra, India 400001<br />
+              Shop No. F6, First Floor, Shubh Affinity, Next to DMART, Swami Vivekananda Nagar<br />
+              Kota, Rajasthan, India 324010<br />
               Email: legal@dapperr.com<br />
-              Phone: +91 1800-123-4567
+              Phone: +91 8769931031
             </p>
           </div>
         </section>

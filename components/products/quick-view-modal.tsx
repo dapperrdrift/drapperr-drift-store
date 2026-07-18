@@ -51,7 +51,7 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
             base_price,
             images,
             categories(name, slug),
-            variants(id, size, color, sku, price_override, stock_quantity)
+            variants(id, size, color, sku, price_override, compare_at_price, stock_quantity)
           `)
           .eq('slug' as any, productSlug)
           .eq('is_active', true)
@@ -77,6 +77,14 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
     stock_quantity: v.stock_quantity,
     sku: v.sku,
   })) || []
+
+  // Look up full price info (incl. compare_at_price) for the currently selected variant
+  const activeVariantData = selectedVariant
+    ? product?.variants?.find((v: any) => v.id === selectedVariant.id)
+    : product?.variants?.[0]
+  const activePrice = activeVariantData?.price_override ?? product?.base_price ?? 0
+  const activeCompareAtPrice = activeVariantData?.compare_at_price ?? null
+  const hasDiscount = !!activeCompareAtPrice && activeCompareAtPrice > activePrice
 
   // Ensure accessible title for screen readers
   return (
@@ -129,8 +137,15 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
                   <Link href={`/products/${productSlug}`} onClick={onClose} className="hover:text-primary transition-colors">
                     <h2 className="mt-2 display-sm text-foreground">{product.name}</h2>
                   </Link>
-                  <p className="mt-2 text-xl font-medium text-foreground">
-                    ₹{(product.variants?.[0]?.price_override ?? product.base_price).toLocaleString('en-IN')}
+                  <p className="mt-2 flex items-baseline gap-2">
+                    <span className="text-xl font-medium text-foreground">
+                      ₹{activePrice.toLocaleString('en-IN')}
+                    </span>
+                    {hasDiscount && (
+                      <span className="text-sm text-muted-foreground line-through">
+                        ₹{activeCompareAtPrice!.toLocaleString('en-IN')}
+                      </span>
+                    )}
                   </p>
                 </div>
 

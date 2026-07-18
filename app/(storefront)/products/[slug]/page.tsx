@@ -29,6 +29,7 @@ interface ProductVariantDB {
   color: string
   sku: string
   price_override: number | null
+  compare_at_price: number | null
   stock_quantity: number
 }
 
@@ -107,7 +108,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       images,
       category_id,
       categories(name, slug),
-      variants(id, size, color, sku, price_override, stock_quantity)
+      variants(id, size, color, sku, price_override, compare_at_price, stock_quantity)
     `)
     .filter('slug', 'eq', slug)
     .eq('is_active', true)
@@ -122,7 +123,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   // Fetch related products from the same category
   const { data: relatedRaw } = await supabase
     .from('products')
-    .select('id, name, slug, base_price, images, categories(name, slug), variants(price_override)')
+    .select('id, name, slug, base_price, images, categories(name, slug), variants(price_override, compare_at_price)')
     .eq('is_active', true)
     .eq('category_id', product.category_id || '')
     .neq('id', product.id)
@@ -133,11 +134,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
     name: p.name,
     slug: p.slug || p.id,
     price: p.variants?.[0]?.price_override ?? p.base_price,
+    compareAtPrice: p.variants?.[0]?.compare_at_price ?? null,
     image: p.images?.[0] ?? null,
     category: p.categories?.name ?? '',
   }))
 
   const price = product.variants?.[0]?.price_override ?? product.base_price
+  const compareAtPrice = product.variants?.[0]?.compare_at_price ?? null
+  const hasDiscount = !!compareAtPrice && compareAtPrice > price
   const images: string[] = product.images ?? []
   const category = product.categories?.name ?? 'Apparel'
   const categorySlug = product.categories?.slug ?? 'apparel'
@@ -234,8 +238,15 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 {category}
               </Link>
               <h1 className="mt-2 text-3xl font-bold leading-tight text-foreground sm:display-md">{product.name}</h1>
-              <p className="mt-3 sm:mt-4 headline-md text-foreground">
-                ₹{price.toLocaleString('en-IN')}
+              <p className="mt-3 flex items-baseline gap-2 sm:mt-4">
+                <span className="headline-md text-foreground">
+                  ₹{price.toLocaleString('en-IN')}
+                </span>
+                {hasDiscount && (
+                  <span className="body-lg text-muted-foreground line-through">
+                    ₹{compareAtPrice!.toLocaleString('en-IN')}
+                  </span>
+                )}
               </p>
               <p className="mt-1 body-md text-muted-foreground">Inclusive of all taxes</p>
             </div>

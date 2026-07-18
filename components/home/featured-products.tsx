@@ -15,7 +15,7 @@ export async function FeaturedProducts() {
       base_price,
       images,
       categories(name, slug),
-      variants(id, price_override, stock_quantity)
+      variants(id, price_override, compare_at_price, stock_quantity)
     `)
     .eq('is_active', true)
     .order('created_at', { ascending: false })
@@ -29,6 +29,7 @@ export async function FeaturedProducts() {
       name: p.name,
       slug: p.slug || p.id,
       price: p.variants?.[0]?.price_override ?? p.base_price,
+      compareAtPrice: p.variants?.[0]?.compare_at_price ?? null,
       image: p.images?.[0] ?? '',
       category: p.categories?.name ?? 'Uncategorized',
       isNew: true,

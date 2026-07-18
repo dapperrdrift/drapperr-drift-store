@@ -35,8 +35,8 @@ const contactInfo = [
   {
     icon: Phone,
     title: "Call Us",
-    details: "+91 1800-123-4567",
-    subtext: "Toll-free, Mon-Sat 9am-6pm",
+    details: "+91 8769931031",
+    subtext: "Mon-Sat 9am-6pm",
   },
   {
     icon: MapPin,
