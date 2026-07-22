@@ -44,10 +44,10 @@ interface HeroSectionProps {
 
 const staticContent = {
   badge: "New Season Drop · Ships Across India",
-  headline1: "Bold Streetwear.",
-  headline2: "Made for India.",
+  headline1: "DAPPERR DRIFT.",
+  headline2: "Modern Street Essentials.",
   body: "Original Indian streetwear — oversized tees, hoodies, denim & co-ords designed in-house, shipped pan-India in 48 hours. No fast fashion. No compromises.",
-  ctaPrimary: { label: "Explore Collection", href: "/products" },
+  ctaPrimary: { label: "Shop Now", href: "/products" },
   ctaSecondary: { label: "New Arrivals", href: "/products?filter=new" },
 }
 
@@ -150,10 +150,10 @@ export function HeroSection({ slides: dbSlides }: HeroSectionProps) {
           <h1 
             data-aos="fade-up" 
             data-aos-delay="200"
-            className="text-[3.5rem] font-black uppercase leading-[0.85] tracking-[-0.04em] text-white sm:display-lg sm:normal-case sm:tracking-normal sm:leading-tight"
+            className="font-black uppercase leading-[0.85] tracking-[-0.04em] text-white sm:display-lg sm:normal-case sm:tracking-normal sm:leading-tight"
           >
-            <span className="block">{staticContent.headline1}</span>
-            <span className="block text-white">{staticContent.headline2}</span>
+            <span className="text-[3.5rem] block">{staticContent.headline1}</span>
+            <span className="text-[2.5rem] font-medium block text-white">{staticContent.headline2}</span>
           </h1>
 
           <p 
