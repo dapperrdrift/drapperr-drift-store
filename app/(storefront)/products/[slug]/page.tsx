@@ -225,7 +225,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
           {/* Gallery */}
           <div data-aos="fade-right" className="lg:sticky lg:top-32">
             <ProductGallery
-              images={images.length > 0 ? images : ['/images/product-placeholder.jpg']}
+              images={images.length > 0 ? images : ['/placeholder.jpg']}
               productName={product.name}
             />
           </div>

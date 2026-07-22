@@ -575,7 +575,7 @@ export default function CheckoutPage() {
           <OrderSummary
             items={cartItems.map(item => ({
               ...item,
-              image: item.image || "/images/placeholder.jpg"
+              image: item.image || "/placeholder.jpg"
             }))}
             subtotal={subtotal}
             discount={discount}

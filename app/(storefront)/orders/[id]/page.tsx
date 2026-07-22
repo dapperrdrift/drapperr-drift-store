@@ -168,7 +168,7 @@ export default function OrderDetailPage() {
                 <div key={item.id} className="flex gap-3 sm:gap-4">
                   <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded border border-border bg-surface-container-lowest sm:h-24 sm:w-20">
                     <Image
-                      src={item.variants?.products?.images?.[0] || "/images/placeholder.jpg"}
+                      src={item.variants?.products?.images?.[0] || "/placeholder.jpg"}
                       alt={item.variants?.products?.name || "Product"}
                       fill
                       className="object-cover"

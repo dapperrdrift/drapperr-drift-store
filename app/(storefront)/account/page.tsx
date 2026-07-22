@@ -31,6 +31,13 @@ function AccountContent() {
   const [notifications, setNotifications] = useState<any[]>([])
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false)
   const [editingAddress, setEditingAddress] = useState<any>(null)
+  const [savingAddress, setSavingAddress] = useState(false)
+  const [deletingAddressId, setDeletingAddressId] = useState<string | null>(null)
+  const [signingOut, setSigningOut] = useState(false)
+  const [pwdDialogOpen, setPwdDialogOpen] = useState(false)
+  const [pwdNew, setPwdNew] = useState("")
+  const [pwdConfirm, setPwdConfirm] = useState("")
+  const [updatingPassword, setUpdatingPassword] = useState(false)
   const [addressForm, setAddressForm] = useState({
     type: "home",
     first_name: "",
@@ -127,13 +134,43 @@ function AccountContent() {
   }, [supabase, router])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/")
+    setSigningOut(true)
+    try {
+      await supabase.auth.signOut()
+      router.push("/")
+    } catch {
+      setSigningOut(false)
+      toast.error("Failed to sign out")
+    }
+  }
+
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (updatingPassword) return
+    if (pwdNew !== pwdConfirm) {
+      toast.error("Passwords don't match")
+      return
+    }
+    setUpdatingPassword(true)
+    try {
+      const { error } = await supabase.auth.updateUser({ password: pwdNew })
+      if (error) {
+        toast.error(error.message)
+        return
+      }
+      toast.success("Password updated successfully!")
+      setPwdNew("")
+      setPwdConfirm("")
+      setPwdDialogOpen(false)
+    } finally {
+      setUpdatingPassword(false)
+    }
   }
 
   const handleSaveAddress = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    if (savingAddress) return
+    setSavingAddress(true)
 
     const payload = {
       ...addressForm,
@@ -169,10 +206,12 @@ function AccountContent() {
         .order("is_default", { ascending: false })
       if (data) setAddresses(data)
     }
-    setLoading(false)
+    setSavingAddress(false)
   }
 
   const handleDeleteAddress = async (id: string) => {
+    if (deletingAddressId) return
+    setDeletingAddressId(id)
     const { error } = await supabase.from("addresses").delete().eq("id", id)
     if (error) {
       toast.error("Failed to delete address")
@@ -180,6 +219,7 @@ function AccountContent() {
       setAddresses(addresses.filter(a => a.id !== id))
       toast.success("Address deleted")
     }
+    setDeletingAddressId(null)
   }
 
   const handleRemoveFromWishlist = async (productId: string) => {
@@ -282,9 +322,9 @@ function AccountContent() {
             <p className="body-md text-muted-foreground">Member since {new Date(user?.created_at).toLocaleDateString()}</p>
           </div>
         </div>
-        <Button onClick={handleSignOut} variant="outline" className="gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-          <LogOut className="h-4 w-4" />
-          Sign Out
+        <Button onClick={handleSignOut} disabled={signingOut} variant="outline" className="gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground">
+          {signingOut ? <Loader2 className="h-4 w-4 animate-spin" /> : <LogOut className="h-4 w-4" />}
+          {signingOut ? "Signing out…" : "Sign Out"}
         </Button>
       </div>
 
@@ -371,7 +411,7 @@ function AccountContent() {
                           <div key={index} className="flex items-center gap-3">
                             <div className="relative h-16 w-16 rounded overflow-hidden bg-surface-container-low">
                               <Image
-                                src={item.variants?.products?.images?.[0] || "/images/placeholder.jpg"}
+                                src={item.variants?.products?.images?.[0] || "/placeholder.jpg"}
                                 alt={item.variants?.products?.name || "Product"}
                                 fill
                                 className="object-cover"
@@ -425,7 +465,7 @@ function AccountContent() {
                     <div key={item.id} className="group rounded-lg border border-border overflow-hidden bg-background">
                       <div className="relative aspect-square overflow-hidden bg-surface-container-low">
                         <Image
-                          src={item.products?.images?.[0] || "/images/placeholder.jpg"}
+                          src={item.products?.images?.[0] || "/placeholder.jpg"}
                           alt={item.products?.name}
                           fill
                           className="object-cover transition-transform group-hover:scale-105"
@@ -578,8 +618,11 @@ function AccountContent() {
                         </Label>
                       </div>
                       <DialogFooter>
-                        <Button type="submit" className="w-full">
-                          {editingAddress ? "Update Address" : "Save Address"}
+                        <Button type="submit" disabled={savingAddress} className="w-full gap-2">
+                          {savingAddress && <Loader2 className="h-4 w-4 animate-spin" />}
+                          {savingAddress
+                            ? (editingAddress ? "Updating…" : "Saving…")
+                            : (editingAddress ? "Update Address" : "Save Address")}
                         </Button>
                       </DialogFooter>
                     </form>
@@ -624,14 +667,15 @@ function AccountContent() {
                           <Edit2 className="h-4 w-4" />
                           Edit
                         </Button>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          disabled={deletingAddressId === addr.id}
                           className="gap-2 text-muted-foreground hover:text-destructive"
                           onClick={() => handleDeleteAddress(addr.id)}
                         >
-                          <Trash2 className="h-4 w-4" />
-                          Remove
+                          {deletingAddressId === addr.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+                          {deletingAddressId === addr.id ? "Removing…" : "Remove"}
                         </Button>
                       </div>
                     </div>
@@ -749,7 +793,13 @@ function AccountContent() {
                   <p className="body-md text-muted-foreground mb-4">
                     Change your password to keep your account secure.
                   </p>
-                  <Dialog>
+                  <Dialog open={pwdDialogOpen} onOpenChange={(open) => {
+                    setPwdDialogOpen(open)
+                    if (!open) {
+                      setPwdNew("")
+                      setPwdConfirm("")
+                    }
+                  }}>
                     <DialogTrigger asChild>
                       <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
                         Change Password
@@ -762,29 +812,36 @@ function AccountContent() {
                           Ensure your new password is at least 6 characters.
                         </DialogDescription>
                       </DialogHeader>
-                      <form onSubmit={async (e) => {
-                        e.preventDefault()
-                        const target = e.target as any
-                        const pass = target.newPassword.value
-                        const confirm = target.confirmPassword.value
-                        if (pass !== confirm) return toast.error("Passwords don't match")
-                        const { error } = await supabase.auth.updateUser({ password: pass })
-                        if (error) toast.error(error.message)
-                        else {
-                          toast.success("Password updated successfully!")
-                          target.reset()
-                        }
-                      }} className="space-y-4 py-4">
+                      <form onSubmit={handleUpdatePassword} className="space-y-4 py-4">
                         <div className="space-y-2">
                           <Label htmlFor="newPassword">New Password</Label>
-                          <Input id="newPassword" type="password" required minLength={6} />
+                          <Input
+                            id="newPassword"
+                            type="password"
+                            required
+                            minLength={6}
+                            value={pwdNew}
+                            onChange={(e) => setPwdNew(e.target.value)}
+                            disabled={updatingPassword}
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="confirmPassword">Confirm New Password</Label>
-                          <Input id="confirmPassword" type="password" required minLength={6} />
+                          <Input
+                            id="confirmPassword"
+                            type="password"
+                            required
+                            minLength={6}
+                            value={pwdConfirm}
+                            onChange={(e) => setPwdConfirm(e.target.value)}
+                            disabled={updatingPassword}
+                          />
                         </div>
                         <DialogFooter>
-                          <Button type="submit" className="w-full">Update Password</Button>
+                          <Button type="submit" disabled={updatingPassword} className="w-full gap-2">
+                            {updatingPassword && <Loader2 className="h-4 w-4 animate-spin" />}
+                            {updatingPassword ? "Updating…" : "Update Password"}
+                          </Button>
                         </DialogFooter>
                       </form>
                     </DialogContent>

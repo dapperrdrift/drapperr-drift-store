@@ -6,6 +6,7 @@ import { CartProvider } from "@/contexts/cart-context"
 import { AuthProvider } from "@/contexts/auth-context"
 import { WishlistProvider } from "@/contexts/wishlist-context"
 import { Toaster } from "@/components/ui/toaster"
+import { Toaster as SonnerToaster } from "@/components/ui/sonner"
 
 export default function StorefrontLayout({
   children,
@@ -23,6 +24,7 @@ export default function StorefrontLayout({
             <MobileBottomNav />
             <Footer />
             <Toaster />
+            <SonnerToaster position="top-center" richColors closeButton />
           </div>
         </CartProvider>
       </WishlistProvider>
