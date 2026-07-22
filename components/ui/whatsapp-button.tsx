@@ -3,7 +3,7 @@
 import React from 'react';
 
 export function WhatsAppButton() {
-  const phoneNumber = '8769931031';
+  const phoneNumber = '918769931031'; // country code required for wa.me links
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
 
   return (
