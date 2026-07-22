@@ -40,13 +40,12 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // 2. Update Supabase using admin client to bypass RLS
+    // 2. Look up the pending payment/checkout payload created before the Razorpay modal opened
     const adminDb = createAdminClient()
 
-    // Find the payment record associated with this Razorpay order
     const { data: payment, error: paymentFetchError } = await adminDb
       .from("payments")
-      .select("order_id, id")
+      .select("id, order_id, status, checkout_payload")
       .eq("razorpay_order_id", razorpay_order_id)
       .single()
 
@@ -55,10 +54,102 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Order record not found" }, { status: 404 })
     }
 
-    // Update payment record
+    // Idempotency: if this payment was already verified (e.g. handler fired twice), just return the existing order.
+    if (payment.status === "completed" && payment.order_id) {
+      return NextResponse.json({
+        verified: true,
+        orderId: razorpay_order_id,
+        paymentId: razorpay_payment_id,
+        dbOrderId: payment.order_id,
+      })
+    }
+
+    // Claim this payment for processing so a concurrent webhook call can't also create an order for it.
+    const { data: claimed } = await adminDb
+      .from("payments")
+      .update({ status: "processing" })
+      .eq("id", payment.id)
+      .eq("status", "pending")
+      .select("id")
+      .maybeSingle()
+
+    if (!claimed) {
+      // Someone else (the webhook) is already handling this payment — poll briefly for the resulting order.
+      for (let i = 0; i < 5; i++) {
+        await new Promise((r) => setTimeout(r, 1000))
+        const { data: recheck } = await adminDb
+          .from("payments")
+          .select("order_id, status")
+          .eq("id", payment.id)
+          .single()
+        if (recheck?.status === "completed" && recheck.order_id) {
+          return NextResponse.json({
+            verified: true,
+            orderId: razorpay_order_id,
+            paymentId: razorpay_payment_id,
+            dbOrderId: recheck.order_id,
+          })
+        }
+      }
+      return NextResponse.json({ error: "Payment is still being processed, please check your orders shortly" }, { status: 409 })
+    }
+
+    const payload = payment.checkout_payload as {
+      user_id: string
+      items: { variant_id: string; quantity: number; unit_price: number }[]
+      shipping_address: Record<string, string>
+      coupon_id: string | null
+      discount_amount: number
+      shipping_fee: number
+      total_amount: number
+    } | null
+
+    if (!payload) {
+      console.error("Missing checkout payload for payment:", payment.id)
+      return NextResponse.json({ error: "Order data missing, please contact support" }, { status: 500 })
+    }
+
+    // 3. Only now do we create the real order — payment is verified, so it's safe to materialize.
+    const { data: order, error: orderError } = await adminDb
+      .from("orders")
+      .insert({
+        user_id: payload.user_id,
+        status: "placed",
+        total_amount: payload.total_amount,
+        discount_amount: payload.discount_amount,
+        shipping_fee: payload.shipping_fee,
+        shipping_address: payload.shipping_address,
+        coupon_id: payload.coupon_id,
+      })
+      .select()
+      .single()
+
+    if (orderError || !order) {
+      console.error("Failed to create order after payment verification:", orderError)
+      return NextResponse.json({ error: "Payment verified but order creation failed. Please contact support." }, { status: 500 })
+    }
+
+    const orderItems = payload.items.map((item) => ({
+      order_id: order.id,
+      variant_id: item.variant_id,
+      quantity: item.quantity,
+      unit_price: item.unit_price,
+      line_total: item.unit_price * item.quantity,
+    }))
+
+    const { error: itemsError } = await adminDb
+      .from("order_items")
+      .insert(orderItems)
+
+    if (itemsError) {
+      console.error("Failed to create order items after payment verification:", itemsError)
+    }
+
+    // Link the payment to the newly created order and mark it completed
     const { error: paymentUpdateError } = await adminDb
       .from("payments")
       .update({
+        order_id: order.id,
         status: "completed",
         razorpay_payment_id: razorpay_payment_id,
         method: "razorpay"
@@ -69,37 +160,21 @@ export async function POST(req: NextRequest) {
       console.error("Failed to update payment status:", paymentUpdateError)
     }
 
-    // Update order status to 'placed'
-    const { error: orderUpdateError } = await adminDb
-      .from("orders")
-      .update({ status: "placed" })
-      .eq("id", payment.order_id)
-
-    if (orderUpdateError) {
-      console.error("Failed to update order status:", orderUpdateError)
-    }
-
-    // 3. Deduct stock via RPC
+    // 4. Deduct stock via RPC
     const { error: rpcError } = await adminDb.rpc("deduct_stock_for_order", {
-      p_order_id: payment.order_id
+      p_order_id: order.id
     })
 
     if (rpcError) {
       console.error("Failed to deduct stock:", rpcError)
     }
 
-    // 4. Update coupon usage if applicable
-    const { data: order } = await adminDb
-      .from("orders")
-      .select("coupon_id")
-      .eq("id", payment.order_id)
-      .single()
-
-    if (order?.coupon_id) {
-      await adminDb.rpc('increment_coupon_usage', { p_coupon_id: order.coupon_id })
+    // 5. Update coupon usage if applicable
+    if (payload.coupon_id) {
+      await adminDb.rpc('increment_coupon_usage', { p_coupon_id: payload.coupon_id })
     }
 
-    // 5. Push order to Shiprocket (non-fatal — payment is already confirmed)
+    // 6. Push order to Shiprocket (non-fatal — payment is already confirmed)
     try {
       const { data: fullOrder } = await adminDb
         .from("orders")
@@ -110,7 +185,7 @@ export async function POST(req: NextRequest) {
             variants ( sku, products ( name ) )
           )
         `)
-        .eq("id", payment.order_id)
+        .eq("id", order.id)
         .single()
 
       if (fullOrder) {
@@ -166,8 +241,7 @@ export async function POST(req: NextRequest) {
           .update({
             shiprocket_order_id: String(srResult.order_id),
             shiprocket_shipment_id: String(srResult.shipment_id),
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          } as any) // shiprocket columns not in generated types yet
+          })
           .eq("id", fullOrder.id)
       }
     } catch (srError) {
@@ -178,6 +252,7 @@ export async function POST(req: NextRequest) {
       verified: true,
       orderId: razorpay_order_id,
       paymentId: razorpay_payment_id,
+      dbOrderId: order.id,
     })
   } catch (error) {
     console.error("Error verifying Razorpay payment:", error)
@@ -187,4 +262,3 @@ export async function POST(req: NextRequest) {
     )
   }
 }
-

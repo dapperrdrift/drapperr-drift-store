@@ -360,33 +360,36 @@ export type Database = {
       payments: {
         Row: {
           amount: number
+          checkout_payload: Json | null
           created_at: string
           gateway_reference: string | null
           id: string
           method: string | null
-          order_id: string
+          order_id: string | null
           razorpay_order_id: string | null
           razorpay_payment_id: string | null
           status: string
         }
         Insert: {
           amount?: number
+          checkout_payload?: Json | null
           created_at?: string
           gateway_reference?: string | null
           id?: string
           method?: string | null
-          order_id: string
+          order_id?: string | null
           razorpay_order_id?: string | null
           razorpay_payment_id?: string | null
           status?: string
         }
         Update: {
           amount?: number
+          checkout_payload?: Json | null
           created_at?: string
           gateway_reference?: string | null
           id?: string
           method?: string | null
-          order_id?: string
+          order_id?: string | null
           razorpay_order_id?: string | null
           razorpay_payment_id?: string | null
           status?: string

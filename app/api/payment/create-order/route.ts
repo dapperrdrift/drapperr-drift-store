@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import crypto from "crypto"
 
 interface CartItem {
   variant_id: string
@@ -66,7 +65,7 @@ export async function POST(req: NextRequest) {
         .eq("id", couponId)
         .eq("is_active", true)
         .single()
-      
+
       if (coupon) {
         if (coupon.discount_type === "flat") {
           discountAmount = coupon.discount_value
@@ -79,49 +78,7 @@ export async function POST(req: NextRequest) {
     const shippingFee = subtotal >= 5000 ? 0 : 299
     const totalAmount = subtotal - discountAmount + shippingFee
 
-    // 2. Create order in Supabase (admin client bypasses RLS)
-    const { data: order, error: orderError } = await adminDb
-      .from("orders")
-      .insert({
-        user_id: user.id,
-        status: "payment_pending",
-        total_amount: totalAmount,
-        discount_amount: discountAmount,
-        shipping_fee: shippingFee,
-        shipping_address: shippingAddress,
-        coupon_id: couponId || null
-      })
-      .select()
-      .single()
-
-    if (orderError || !order) {
-      console.error("Supabase order error:", orderError)
-      return NextResponse.json({ error: "Failed to create order record" }, { status: 500 })
-    }
-
-    // 3. Create order items using server-side prices
-    const orderItems = items.map((item) => {
-      const serverPrice = priceMap.get(item.variant_id) as number
-      return {
-        order_id: order.id,
-        variant_id: item.variant_id,
-        quantity: item.quantity,
-        unit_price: serverPrice,
-        line_total: serverPrice * item.quantity,
-      }
-    })
-
-    const { error: itemsError } = await adminDb
-      .from("order_items")
-      .insert(orderItems)
-
-    if (itemsError) {
-      console.error("Supabase order items error:", itemsError)
-      // Note: We could delete the order here, but keeping it for audit is OK
-      return NextResponse.json({ error: "Failed to create order items" }, { status: 500 })
-    }
-
-    // 4. Create Razorpay order
+    // 2. Create Razorpay order first (no DB order yet — only created once payment is verified)
     const authHeader = Buffer.from(`${keyId}:${keySecret}`).toString("base64")
     const razorpayRes = await fetch("https://api.razorpay.com/v1/orders", {
       method: "POST",
@@ -132,7 +89,7 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         amount: Math.round(totalAmount * 100), // paise
         currency: "INR",
-        receipt: order.id.slice(0, 40),
+        receipt: `checkout_${Date.now()}`.slice(0, 40),
       }),
     })
 
@@ -147,18 +104,36 @@ export async function POST(req: NextRequest) {
 
     const razorpayOrder = await razorpayRes.json()
 
-    // 5. Create payment record
+    // 3. Stash everything needed to build the real order once payment succeeds.
+    // Order/order_items are intentionally NOT created here — if the user abandons
+    // or fails payment, nothing is left behind in the orders table.
+    const checkoutPayload = {
+      user_id: user.id,
+      items: items.map((item) => ({
+        variant_id: item.variant_id,
+        quantity: item.quantity,
+        unit_price: priceMap.get(item.variant_id) as number,
+      })),
+      shipping_address: shippingAddress,
+      coupon_id: couponId || null,
+      discount_amount: discountAmount,
+      shipping_fee: shippingFee,
+      total_amount: totalAmount,
+    }
+
     const { error: paymentError } = await adminDb
       .from("payments")
       .insert({
-        order_id: order.id,
+        order_id: null,
         razorpay_order_id: razorpayOrder.id,
         amount: totalAmount,
-        status: "pending"
+        status: "pending",
+        checkout_payload: checkoutPayload,
       })
 
     if (paymentError) {
       console.error("Supabase payment creation error:", paymentError)
+      return NextResponse.json({ error: "Failed to initiate payment" }, { status: 500 })
     }
 
     return NextResponse.json({
@@ -166,7 +141,6 @@ export async function POST(req: NextRequest) {
       amount: razorpayOrder.amount,
       currency: razorpayOrder.currency,
       keyId,
-      dbOrderId: order.id
     })
 
   } catch (error) {

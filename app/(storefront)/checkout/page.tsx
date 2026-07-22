@@ -257,8 +257,7 @@ export default function CheckoutPage() {
         return
       }
 
-      const { orderId, amount: orderAmount, currency, keyId, dbOrderId } = await orderRes.json()
-      setConfirmedOrderId(dbOrderId)
+      const { orderId, amount: orderAmount, currency, keyId } = await orderRes.json()
 
       // 3. Open the Razorpay checkout modal
       const options = {
@@ -296,6 +295,8 @@ export default function CheckoutPage() {
           })
 
           if (verifyRes.ok) {
+            const verifyData = await verifyRes.json()
+            setConfirmedOrderId(verifyData.dbOrderId)
             setCurrentStep("confirmation")
           } else {
             const errData = await verifyRes.json()
