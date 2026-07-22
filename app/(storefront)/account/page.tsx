@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Package, Heart, MapPin, LogOut, ChevronRight, Edit2, Loader2, User as UserIcon, Plus, Trash2, Check, X, ShieldCheck, Bell } from "lucide-react"
+import { Package, Heart, MapPin, LogOut, ChevronRight, Edit2, Loader2, User as UserIcon, Plus, Trash2, Check, X, ShieldCheck, Bell, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { createClient } from "@/lib/supabase/client"
@@ -309,6 +309,20 @@ function AccountContent() {
 
   return (
     <div className="mx-auto max-w-7xl overflow-x-hidden px-4 py-8 lg:px-8">
+      {/* Dashboard top bar — replaces the site navbar on the customer dashboard */}
+      <div className="mb-8 flex items-center justify-between">
+        <Link href="/" className="shrink-0 transition-opacity hover:opacity-80">
+          <Image src="/images/logo-black.svg" alt="Dapperr Drift" width={140} height={34} priority className="h-8 w-auto" />
+        </Link>
+        <Button asChild variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+          <Link href="/">
+            <ArrowLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">Back to Store</span>
+            <span className="sm:hidden">Store</span>
+          </Link>
+        </Button>
+      </div>
+
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-8 border-b border-border">
         <div className="flex items-center gap-4">
@@ -331,7 +345,7 @@ function AccountContent() {
       {/* Tabs and Content */}
       <div className="mt-8 grid gap-8 lg:grid-cols-[240px_1fr]">
         {/* Sidebar Navigation */}
-        <nav className="no-scrollbar sticky top-header z-20 flex w-full gap-2 overflow-x-auto border-b border-border bg-background/95 px-1 pb-3 pt-1 backdrop-blur-sm md:top-header-offset lg:static lg:block lg:w-auto lg:space-y-1 lg:overflow-visible lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0 lg:backdrop-blur-none">
+        <nav className="no-scrollbar sticky top-0 z-20 flex w-full gap-2 overflow-x-auto border-b border-border bg-background/95 px-1 pb-3 pt-1 backdrop-blur-sm lg:static lg:block lg:w-auto lg:space-y-1 lg:overflow-visible lg:border-0 lg:bg-transparent lg:px-0 lg:pb-0 lg:pt-0 lg:backdrop-blur-none">
           {tabs.map((tab) => {
             const Icon = tab.icon
             return (
