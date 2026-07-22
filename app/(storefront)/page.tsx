@@ -45,7 +45,7 @@ export default async function HomePage() {
   const supabase = await createClient()
   const { data: heroSlides } = await supabase
     .from("hero_slides")
-    .select("id, image_url, overlay_text, link_url")
+    .select("id, image_url, video_url, media_type, overlay_text, link_url")
     .eq("is_active", true)
     .order("display_order")
 

@@ -32,6 +32,8 @@ const fallbackSlides = [
 interface HeroSlide {
   id: string
   image_url: string
+  video_url: string | null
+  media_type: string | null
   overlay_text: string | null
   link_url: string | null
 }
@@ -54,10 +56,11 @@ export function HeroSection({ slides: dbSlides }: HeroSectionProps) {
     ? dbSlides.map((s) => ({
         id: s.id,
         image: s.image_url,
+        video: s.media_type === "video" ? s.video_url : null,
         alt: s.overlay_text || "Dapperr Drift streetwear",
         link: s.link_url,
       }))
-    : fallbackSlides
+    : fallbackSlides.map((s) => ({ ...s, video: null as string | null }))
 
   const [current, setCurrent] = useState(0)
 
@@ -106,14 +109,28 @@ export function HeroSection({ slides: dbSlides }: HeroSectionProps) {
           exit="exit"
           className="absolute inset-0"
         >
-          <Image
-            src={slides[current].image}
-            alt={slides[current].alt}
-            fill
-            className="object-cover"
-            priority={current === 0}
-            sizes="100vw"
-          />
+          {slides[current].video ? (
+            <video
+              src={slides[current].video as string}
+              poster={slides[current].image || undefined}
+              className="absolute inset-0 h-full w-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label={slides[current].alt}
+            />
+          ) : (
+            <Image
+              src={slides[current].image}
+              alt={slides[current].alt}
+              fill
+              className="object-cover"
+              priority={current === 0}
+              sizes="100vw"
+            />
+          )}
           <div className="absolute inset-0 bg-linear-to-r from-black/70 via-black/45 to-transparent" />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-black/20" />
         </motion.div>
