@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
-import { ArrowLeft, Check, CreditCard, MapPin, Shield } from "lucide-react"
+import { ArrowLeft, Check, CreditCard, Loader2, MapPin, Shield } from "lucide-react"
 import { ShippingForm } from "@/components/checkout/shipping-form"
 import { OrderSummary } from "@/components/checkout/order-summary"
 import { useCart } from "@/contexts/cart-context"
@@ -44,6 +44,20 @@ interface SavedAddress {
   is_default: boolean | null
 }
 
+/** Maps a saved DB address row to the checkout shipping-address shape. */
+function toShippingAddress(a: SavedAddress, email: string): ShippingAddress {
+  return {
+    firstName: a.first_name,
+    lastName: a.last_name,
+    email,
+    phone: a.phone,
+    address: a.address,
+    city: a.city,
+    state: a.state,
+    pincode: a.pincode,
+  }
+}
+
 /** Dynamically loads the Razorpay checkout SDK script */
 function loadRazorpayScript(): Promise<boolean> {
   return new Promise((resolve) => {
@@ -73,6 +87,7 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
   const [showNewAddressForm, setShowNewAddressForm] = useState(true)
   const [userEmail, setUserEmail] = useState("")
+  const [isProceeding, setIsProceeding] = useState(false)
 
   useEffect(() => {
     let isCancelled = false
@@ -95,6 +110,8 @@ export default function CheckoutPage() {
         if (data.length > 0) {
           const defaultAddress = (data as SavedAddress[]).find((address) => address.is_default) ?? data[0]
           setSelectedAddressId(defaultAddress.id)
+          // Pre-fill the shipping address for the default so "Deliver Here" works on the first click.
+          setShippingAddress(toShippingAddress(defaultAddress, user.email ?? ""))
         }
         setShowNewAddressForm(data.length === 0)
       }
@@ -195,21 +212,17 @@ export default function CheckoutPage() {
   }
 
   const handleSelectSavedAddress = (address: SavedAddress) => {
-    setShippingAddress({
-      firstName: address.first_name,
-      lastName: address.last_name,
-      email: userEmail,
-      phone: address.phone,
-      address: address.address,
-      city: address.city,
-      state: address.state,
-      pincode: address.pincode,
-    })
+    setShippingAddress(toShippingAddress(address, userEmail))
     setSelectedAddressId(address.id)
   }
 
-  const handleDeliverToSelectedAddress = () => {
-    if (!shippingAddress) return
+  const handleDeliverToSelectedAddress = (address: SavedAddress) => {
+    if (isProceeding) return
+    setIsProceeding(true)
+    // Resolve the address here so the click always works, even for the pre-selected default.
+    const resolved = toShippingAddress(address, userEmail)
+    setShippingAddress(resolved)
+    setSelectedAddressId(address.id)
     setCurrentStep("payment")
   }
 
@@ -324,9 +337,6 @@ export default function CheckoutPage() {
     <div className="mx-auto max-w-7xl overflow-x-hidden px-4 py-8 lg:px-8 lg:py-12">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold tracking-wide text-foreground sm:display-md">
-          DAPPERR DRIFT
-        </Link>
         <Link
           href="/cart"
           className="inline-flex items-center gap-1.5 body-md text-muted-foreground transition-colors hover:text-foreground sm:gap-2"
@@ -421,31 +431,48 @@ export default function CheckoutPage() {
                             <p className="body-md text-muted-foreground">{address.city}, {address.state} {address.pincode}</p>
                             <p className="body-md text-muted-foreground">{address.phone}</p>
                           </div>
-                          {address.is_default && (
-                            <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-                              Default
-                            </span>
-                          )}
+                          <div className="flex shrink-0 flex-col items-end gap-1.5">
+                            {address.is_default && (
+                              <span className="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
+                                Default
+                              </span>
+                            )}
+                            {selectedAddressId === address.id && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                                <Check className="h-3 w-3" />
+                                Selected
+                              </span>
+                            )}
+                          </div>
                         </div>
 
-                        <div className="mt-3 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
-                          <Button
-                            type="button"
-                            variant={selectedAddressId === address.id ? "default" : "outline"}
-                            size="sm"
-                            className="label-md w-full sm:w-auto"
-                            onClick={() => handleSelectSavedAddress(address)}
-                          >
-                            {selectedAddressId === address.id ? "Selected" : "Select"}
-                          </Button>
-                          {selectedAddressId === address.id && (
+                        <div className="mt-4">
+                          {selectedAddressId === address.id ? (
                             <Button
                               type="button"
-                              size="sm"
-                              className="label-md w-full bg-primary text-primary-foreground hover:bg-primary-hover sm:w-auto"
-                              onClick={handleDeliverToSelectedAddress}
+                              size="lg"
+                              disabled={isProceeding}
+                              className="label-md w-full bg-primary py-6 text-primary-foreground hover:bg-primary-hover"
+                              onClick={() => handleDeliverToSelectedAddress(address)}
                             >
-                              Deliver Here
+                              {isProceeding ? (
+                                <span className="flex items-center gap-2">
+                                  <Loader2 className="h-4 w-4 animate-spin" />
+                                  Proceeding to payment…
+                                </span>
+                              ) : (
+                                "Deliver Here"
+                              )}
+                            </Button>
+                          ) : (
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="label-md w-full sm:w-auto"
+                              onClick={() => handleSelectSavedAddress(address)}
+                            >
+                              Select this address
                             </Button>
                           )}
                         </div>
@@ -473,7 +500,10 @@ export default function CheckoutPage() {
                 <div className="flex items-center justify-between">
                   <span className="label-md text-foreground">Shipping Address</span>
                   <button
-                    onClick={() => setCurrentStep("shipping")}
+                    onClick={() => {
+                      setIsProceeding(false)
+                      setCurrentStep("shipping")
+                    }}
                     className="body-md text-primary hover:underline"
                   >
                     Edit
