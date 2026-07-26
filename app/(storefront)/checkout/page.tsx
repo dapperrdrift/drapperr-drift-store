@@ -134,7 +134,14 @@ export default function CheckoutPage() {
 
   const subtotal = cartTotal
   const discount = appliedCoupon?.discountAmount || 0
-  const shipping = subtotal >= 5000 ? 0 : 299
+  let shipping = 99
+  if (subtotal >= 5000) {
+    shipping = 0
+  } else if (subtotal <= 800) {
+    shipping = 169
+  } else if (subtotal <= 1300) {
+    shipping = 129
+  }
   const total = subtotal - discount + shipping
 
   const handleApplyCoupon = async (code: string) => {

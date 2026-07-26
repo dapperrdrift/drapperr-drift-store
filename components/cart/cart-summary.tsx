@@ -10,7 +10,14 @@ interface CartSummaryProps {
 
 export function CartSummary({ subtotal, itemCount }: CartSummaryProps) {
   const shippingThreshold = 5000
-  const shipping = subtotal >= shippingThreshold ? 0 : 299
+  let shipping = 99
+  if (subtotal >= shippingThreshold) {
+    shipping = 0
+  } else if (subtotal <= 800) {
+    shipping = 169
+  } else if (subtotal <= 1300) {
+    shipping = 129
+  }
   const discount = 0
   const total = subtotal - discount + shipping
 

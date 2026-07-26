@@ -75,7 +75,14 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    const shippingFee = subtotal >= 5000 ? 0 : 299
+    let shippingFee = 99
+    if (subtotal >= 5000) {
+      shippingFee = 0
+    } else if (subtotal <= 800) {
+      shippingFee = 169
+    } else if (subtotal <= 1300) {
+      shippingFee = 129
+    }
     const totalAmount = subtotal - discountAmount + shippingFee
 
     // 2. Create Razorpay order first (no DB order yet — only created once payment is verified)

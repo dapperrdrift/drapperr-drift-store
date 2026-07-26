@@ -49,9 +49,15 @@ export default function ShippingReturnsPage() {
             </thead>
             <tbody className="divide-y divide-border">
               <tr>
-                <td className="px-6 py-4 body-md text-foreground">Standard Shipping</td>
-                <td className="px-6 py-4 body-md text-muted-foreground">5-7 Business Days</td>
-                <td className="px-6 py-4 body-md text-muted-foreground">Rs. 99 (Free over Rs. 5,000)</td>
+                <td className="px-6 py-4 body-md text-foreground" rowSpan={3}>Standard Shipping</td>
+                <td className="px-6 py-4 body-md text-muted-foreground" rowSpan={3}>5-7 Business Days</td>
+                <td className="px-6 py-4 body-md text-muted-foreground">Rs. 169 (Orders &le; Rs. 800)</td>
+              </tr>
+              <tr>
+                <td className="px-6 py-4 body-md text-muted-foreground">Rs. 129 (Orders Rs. 801 - Rs. 1,300)</td>
+              </tr>
+              <tr>
+                <td className="px-6 py-4 body-md text-muted-foreground">Rs. 99 (Orders &gt; Rs. 1,300, Free over Rs. 5,000)</td>
               </tr>
               <tr>
                 <td className="px-6 py-4 body-md text-foreground">Express Shipping</td>

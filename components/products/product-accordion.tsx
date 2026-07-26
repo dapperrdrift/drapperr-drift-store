@@ -92,7 +92,7 @@ export function ProductAccordion({ description, care }: ProductAccordionProps) {
       >
         <div className="space-y-3 body-md text-muted-foreground">
           <p>
-            <span className="text-foreground font-medium">Free Standard Shipping</span> on orders over Rs. 5,000. 
+            <span className="text-foreground font-medium">Standard Shipping</span> starts from Rs. 99 (Free on orders over Rs. 5,000). 
             Delivery within 5-7 business days.
           </p>
           <p>
