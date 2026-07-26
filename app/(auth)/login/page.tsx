@@ -2,13 +2,18 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Eye, EyeOff, ArrowLeft } from "lucide-react"
+import { Suspense, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Eye, EyeOff, ArrowLeft, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 
-export default function LoginPage() {
+/** Only allow same-site relative paths, to avoid an open redirect via the redirectTo param. */
+function isSafeRedirect(path: string): boolean {
+  return path.startsWith("/") && !path.startsWith("//")
+}
+
+function LoginForm() {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
@@ -16,6 +21,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get("redirectTo") || "/"
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,7 +38,7 @@ export default function LoginPage() {
       return
     }
 
-    router.push("/")
+    router.push(isSafeRedirect(redirectTo) ? redirectTo : "/")
     router.refresh()
   }
 
@@ -43,7 +50,7 @@ export default function LoginPage() {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${window.location.origin}${isSafeRedirect(redirectTo) ? redirectTo : "/"}`,
       },
     })
 
@@ -181,10 +188,18 @@ export default function LoginPage() {
 
       <p className="mt-8 text-center body-md text-muted-foreground">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="text-primary font-medium hover:underline">
+        <Link href={`/signup?redirectTo=${encodeURIComponent(redirectTo)}`} className="text-primary font-medium hover:underline">
           Create one
         </Link>
       </p>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center"><Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" /></div>}>
+      <LoginForm />
+    </Suspense>
   )
 }
