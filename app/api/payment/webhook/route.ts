@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { ensureRazorpayCaptured } from "@/lib/razorpay"
 import crypto from "crypto"
 
 // Webhooks have no user session — must use the admin client to bypass RLS
 // This is a server-side fallback for the same flow as /api/payment/verify
 // (in case the client never gets to call verify, e.g. tab closed right after paying).
-// The DB order is only created here once payment is confirmed paid.
+// The DB order is only created here once payment is confirmed captured.
+type CheckoutPayload = {
+  user_id: string
+  items: { variant_id: string; quantity: number; unit_price: number }[]
+  shipping_address: Record<string, string>
+  coupon_id: string | null
+  discount_amount: number
+  shipping_fee: number
+  total_amount: number
+}
+
 async function handleOrderPaid(razorpay_order_id: string, payment_id: string) {
   const supabase = createAdminClient()
 
@@ -32,22 +43,23 @@ async function handleOrderPaid(razorpay_order_id: string, payment_id: string) {
 
   if (!claimed) return // already being handled by /api/payment/verify
 
-  const payload = payment.checkout_payload as {
-    user_id: string
-    items: { variant_id: string; quantity: number; unit_price: number }[]
-    shipping_address: Record<string, string>
-    coupon_id: string | null
-    discount_amount: number
-    shipping_fee: number
-    total_amount: number
-  } | null
+  const payload = payment.checkout_payload as CheckoutPayload | null
 
   if (!payload) {
     console.error("Webhook: missing checkout payload for payment", payment.id)
+    await supabase.from("payments").update({ status: "pending" }).eq("id", payment.id)
     return
   }
 
-  // 2. Create the real order now that payment is confirmed
+  try {
+    await ensureRazorpayCaptured(payment_id, payload.total_amount)
+  } catch (captureError) {
+    console.error("Webhook: Razorpay capture check failed:", captureError)
+    await supabase.from("payments").update({ status: "pending" }).eq("id", payment.id)
+    return
+  }
+
+  // 2. Create the real order now that payment is confirmed captured
   const { data: order, error: orderError } = await supabase
     .from("orders")
     .insert({
@@ -83,7 +95,8 @@ async function handleOrderPaid(razorpay_order_id: string, payment_id: string) {
     .update({
       order_id: order.id,
       status: "completed",
-      razorpay_payment_id: payment_id
+      razorpay_payment_id: payment_id,
+      method: "razorpay",
     })
     .eq("id", payment.id)
 
@@ -122,11 +135,17 @@ export async function POST(req: NextRequest) {
 
     console.log(`Razorpay Webhook event: ${event}`)
 
-    if (event === "order.paid") {
-      const order_id = eventData.payload.order.entity.id
-      const payment_id = eventData.payload.payment.entity.id
-      await handleOrderPaid(order_id, payment_id)
-      console.log(`Order ${order_id} marked as paid via webhook`)
+    if (event === "order.paid" || event === "payment.captured") {
+      const order_id =
+        eventData.payload?.order?.entity?.id ??
+        eventData.payload?.payment?.entity?.order_id
+      const payment_id = eventData.payload?.payment?.entity?.id
+      if (order_id && payment_id) {
+        await handleOrderPaid(order_id, payment_id)
+        console.log(`Order ${order_id} marked as paid via webhook (${event})`)
+      } else {
+        console.error("Webhook missing order_id or payment_id:", event)
+      }
     }
 
     return NextResponse.json({ received: true })

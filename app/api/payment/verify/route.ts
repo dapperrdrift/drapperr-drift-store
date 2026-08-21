@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createAdminClient } from "@/lib/supabase/admin"
-import { createShiprocketOrder } from "@/lib/shiprocket"
+import { ensureRazorpayCaptured } from "@/lib/razorpay"
 import crypto from "crypto"
+
+type CheckoutPayload = {
+  user_id: string
+  items: { variant_id: string; quantity: number; unit_price: number }[]
+  shipping_address: Record<string, string>
+  coupon_id: string | null
+  discount_amount: number
+  shipping_fee: number
+  total_amount: number
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -94,22 +104,31 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Payment is still being processed, please check your orders shortly" }, { status: 409 })
     }
 
-    const payload = payment.checkout_payload as {
-      user_id: string
-      items: { variant_id: string; quantity: number; unit_price: number }[]
-      shipping_address: Record<string, string>
-      coupon_id: string | null
-      discount_amount: number
-      shipping_fee: number
-      total_amount: number
-    } | null
+    const payload = payment.checkout_payload as CheckoutPayload | null
 
     if (!payload) {
       console.error("Missing checkout payload for payment:", payment.id)
+      await adminDb.from("payments").update({ status: "pending" }).eq("id", payment.id)
       return NextResponse.json({ error: "Order data missing, please contact support" }, { status: 500 })
     }
 
-    // 3. Only now do we create the real order — payment is verified, so it's safe to materialize.
+    try {
+      await ensureRazorpayCaptured(razorpay_payment_id, payload.total_amount)
+    } catch (captureError) {
+      console.error("Razorpay capture check failed:", captureError)
+      await adminDb.from("payments").update({ status: "pending" }).eq("id", payment.id)
+      return NextResponse.json(
+        {
+          error:
+            captureError instanceof Error
+              ? captureError.message
+              : "Payment was not captured. Please contact support.",
+        },
+        { status: 402 }
+      )
+    }
+
+    // 3. Only now do we create the real order — payment is captured, so it's safe to materialize.
     const { data: order, error: orderError } = await adminDb
       .from("orders")
       .insert({
@@ -174,79 +193,7 @@ export async function POST(req: NextRequest) {
       await adminDb.rpc('increment_coupon_usage', { p_coupon_id: payload.coupon_id })
     }
 
-    // 6. Push order to Shiprocket (non-fatal — payment is already confirmed)
-    try {
-      const { data: fullOrder } = await adminDb
-        .from("orders")
-        .select(`
-          id, created_at, total_amount, shipping_fee, shipping_address, user_id,
-          order_items (
-            quantity, unit_price,
-            variants ( sku, products ( name ) )
-          )
-        `)
-        .eq("id", order.id)
-        .single()
-
-      if (fullOrder) {
-        const addr = fullOrder.shipping_address as {
-          firstName: string
-          lastName: string
-          email: string
-          phone: string
-          address: string
-          city: string
-          state: string
-          pincode: string
-        }
-
-        const orderDate = new Date(fullOrder.created_at)
-          .toISOString()
-          .replace("T", " ")
-          .slice(0, 16) // "YYYY-MM-DD HH:MM"
-
-        type OrderItemRow = { quantity: number; unit_price: number; variants: { sku: string; products: { name: string } } }
-        const srItems = (fullOrder.order_items as OrderItemRow[]).map((item) => ({
-          name: item.variants.products.name,
-          sku: item.variants.sku,
-          units: item.quantity,
-          selling_price: item.unit_price,
-        }))
-
-        const srResult = await createShiprocketOrder({
-          order_id: fullOrder.id,
-          order_date: orderDate,
-          pickup_location: process.env.SHIPROCKET_PICKUP_LOCATION ?? "Primary",
-          billing_customer_name: addr.firstName,
-          billing_last_name: addr.lastName,
-          billing_address: addr.address,
-          billing_city: addr.city,
-          billing_pincode: addr.pincode,
-          billing_state: addr.state,
-          billing_country: "India",
-          billing_email: addr.email,
-          billing_phone: addr.phone,
-          shipping_is_billing: true,
-          order_items: srItems,
-          payment_method: "Prepaid",
-          sub_total: fullOrder.total_amount - fullOrder.shipping_fee,
-          length: 30,
-          breadth: 25,
-          height: 5,
-          weight: 0.5,
-        })
-
-        await adminDb
-          .from("orders")
-          .update({
-            shiprocket_order_id: String(srResult.order_id),
-            shiprocket_shipment_id: String(srResult.shipment_id),
-          })
-          .eq("id", fullOrder.id)
-      }
-    } catch (srError) {
-      console.error("Shiprocket order push failed (non-fatal):", srError)
-    }
+    // Shiprocket is created later from the admin "Ready to Ship" action.
 
     return NextResponse.json({
       verified: true,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { createAdminClient } from "@/lib/supabase/admin"
+import { getRazorpayMode } from "@/lib/razorpay"
 
 interface CartItem {
   variant_id: string
@@ -29,6 +30,14 @@ export async function POST(req: NextRequest) {
     if (!keyId || !keySecret) {
       console.error("Razorpay keys are not configured")
       return NextResponse.json({ error: "Payment gateway not configured" }, { status: 500 })
+    }
+
+    const razorpayMode = getRazorpayMode()
+    console.info(`Razorpay checkout using ${razorpayMode} keys`)
+    if (razorpayMode === "test") {
+      console.warn(
+        "Razorpay is in TEST mode — charges will not appear on the live merchant dashboard or settle to the bank."
+      )
     }
 
     const adminDb = createAdminClient()
