@@ -7,10 +7,8 @@ let tokenExpiresAt = 0
 
 function requiredPickupLocation(): string {
   const pickup = process.env.SHIPROCKET_PICKUP_LOCATION?.trim()
-  if (!pickup) {
-    throw new Error("SHIPROCKET_PICKUP_LOCATION is not configured")
-  }
-  return pickup
+  // Shiprocket nickname for the Kota shop (Shop F6, Shubh Affinity, 324010).
+  return pickup || "Dapperr Drift Store"
 }
 
 async function getToken(): Promise<string> {

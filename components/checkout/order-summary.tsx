@@ -152,7 +152,7 @@ export function OrderSummary({
             <div className="flex flex-1 flex-col">
               <span className="body-md line-clamp-2 text-foreground">{item.name}</span>
               <span className="body-md text-muted-foreground">
-                {item.color} / {item.size}
+                Size: {item.size}
               </span>
               <span className="mt-auto body-md text-foreground">
                 Rs. {(item.price * item.quantity).toLocaleString("en-IN")}

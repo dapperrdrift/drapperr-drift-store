@@ -73,7 +73,7 @@ export function ProductCard({ product }: ProductCardProps) {
         setIsAdding(false)
       }
     } else {
-      // Multiple variants require size/color selection.
+      // Multiple variants require size selection.
       setQuickViewOpen(true)
     }
   }

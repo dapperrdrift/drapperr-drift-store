@@ -37,13 +37,12 @@ interface PageProps {
   searchParams: Promise<{
     category?: string
     sort?: string
-    colors?: string
     sizes?: string
   }>
 }
 
 async function ProductsContent({ searchParams }: PageProps) {
-  const { category, sort, colors, sizes } = await searchParams
+  const { category, sort, sizes } = await searchParams
   const supabase = await createClient()
 
   /* ─── Fetch categories with product counts ─── */
@@ -82,7 +81,7 @@ async function ProductsContent({ searchParams }: PageProps) {
       images,
       created_at,
       categories!inner(name, slug),
-      variants(id, color, size, price_override, compare_at_price, stock_quantity)
+      variants(id, size, price_override, compare_at_price, stock_quantity)
     `)
     .eq('is_active', true)
 
@@ -105,8 +104,7 @@ async function ProductsContent({ searchParams }: PageProps) {
   const { data: products, error } = await query
   if (error) console.error('SUPABASE DB ERROR:', error)
 
-  /* ─── Map + client-side filter by color / size (variant-level) ─── */
-  const activeColors = colors ? colors.split(',') : []
+  /* ─── Map + client-side filter by size (variant-level) ─── */
   const activeSizes = sizes ? sizes.split(',') : []
 
   let mappedProducts = (products ?? []).map((p: any) => ({
@@ -120,19 +118,11 @@ async function ProductsContent({ searchParams }: PageProps) {
     isNew: false,
     variants: p.variants?.map((v: any) => ({ id: v.id })),
     // keep variant info for filtering and in-stock checks
-    _variants: (p.variants ?? []) as { id: string; color: string; size: string; stock_quantity: number }[],
+    _variants: (p.variants ?? []) as { id: string; size: string; stock_quantity: number }[],
   }))
 
   // Hide products with no variants or no in-stock variants
   mappedProducts = mappedProducts.filter((p) => p._variants.some((v) => v.stock_quantity > 0))
-
-  // Filter by color (match against variant colors, case-insensitive)
-  if (activeColors.length > 0) {
-    const lowerColors = activeColors.map((c) => c.toLowerCase())
-    mappedProducts = mappedProducts.filter((p) =>
-      p._variants.some((v) => lowerColors.includes(v.color?.toLowerCase()))
-    )
-  }
 
   // Filter by size
   if (activeSizes.length > 0) {

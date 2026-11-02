@@ -176,7 +176,7 @@ export default function OrderDetailPage() {
                   </div>
                   <div className="flex flex-1 flex-col justify-center">
                     <h3 className="title-md line-clamp-2 text-foreground">{item.variants?.products?.name || "Product"}</h3>
-                    <p className="body-md text-muted-foreground">Size: {item.variants?.size || "-"} | Color: {item.variants?.color || "-"}</p>
+                    <p className="body-md text-muted-foreground">Size: {item.variants?.size || "-"}</p>
                     <div className="mt-2 flex items-center justify-between">
                       <span className="body-md text-foreground">Qty: {item.quantity}</span>
                       <span className="title-md text-foreground">Rs. {Number(item.unit_price || 0).toLocaleString("en-IN")}</span>

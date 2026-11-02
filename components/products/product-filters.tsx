@@ -5,34 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { ChevronDown, X, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-/* ------------------------------------------------------------------ */
-/*  Color options — exact match with admin's ProductManagement modal   */
-/* ------------------------------------------------------------------ */
-const COLOR_OPTIONS = [
-  { id: "black",      name: "Black",      hex: "#1C1B1B" },
-  { id: "white",      name: "White",      hex: "#FFFFFF" },
-  { id: "navy",       name: "Navy",       hex: "#1B2838" },
-  { id: "blue",       name: "Blue",       hex: "#2563EB" },
-  { id: "indigo",     name: "Indigo",     hex: "#4338CA" },
-  { id: "grey",       name: "Grey",       hex: "#6B7280" },
-  { id: "brown",      name: "Brown",      hex: "#78350F" },
-  { id: "beige",      name: "Beige",      hex: "#D4C5A9" },
-  { id: "olive",      name: "Olive",      hex: "#556B2F" },
-  { id: "green",      name: "Green",      hex: "#16A34A" },
-  { id: "red",        name: "Red",        hex: "#DC2626" },
-  { id: "maroon",     name: "Maroon",     hex: "#7F1D1D" },
-  { id: "pink",       name: "Pink",       hex: "#EC4899" },
-  { id: "purple",     name: "Purple",     hex: "#9333EA" },
-  { id: "orange",     name: "Orange",     hex: "#EA580C" },
-  { id: "yellow",     name: "Yellow",     hex: "#EAB308" },
-  { id: "gold",       name: "Gold",       hex: "#B8860B" },
-  { id: "silver",     name: "Silver",     hex: "#C0C0C0" },
-  { id: "multicolor", name: "Multicolor", hex: "conic-gradient(red,orange,yellow,green,blue,violet,red)" },
-]
-
-/* ------------------------------------------------------------------ */
-/*  Size options — exact match with admin's ProductManagement modal     */
-/* ------------------------------------------------------------------ */
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL", "Free Size", "28", "30", "32", "34", "36"]
 
 const sortOptions = [
@@ -42,13 +14,9 @@ const sortOptions = [
   { id: "name", name: "Name: A to Z" },
 ]
 
-/* ------------------------------------------------------------------ */
-/*  Types                                                              */
-/* ------------------------------------------------------------------ */
 export interface FilterState {
   category: string
   sort: string
-  colors: string[]
   sizes: string[]
 }
 
@@ -64,9 +32,6 @@ interface ProductFiltersProps {
   categories: CategoryItem[]
 }
 
-/* ------------------------------------------------------------------ */
-/*  Collapsible sidebar section                                        */
-/* ------------------------------------------------------------------ */
 function FilterSection({
   title,
   defaultOpen = true,
@@ -104,9 +69,6 @@ function FilterSection({
   )
 }
 
-/* ------------------------------------------------------------------ */
-/*  Main Sidebar                                                       */
-/* ------------------------------------------------------------------ */
 export function ProductFilters({
   onFilterChange,
   initialCategory = "all",
@@ -118,33 +80,27 @@ export function ProductFilters({
   const [filters, setFilters] = useState<FilterState>({
     category: initialCategory,
     sort: "newest",
-    colors: [],
     sizes: [],
   })
   const [categorySearch, setCategorySearch] = useState("")
 
-  // Sync URL → state
   useEffect(() => {
     const catFromUrl = searchParams.get("category")
-    const colorsFromUrl = searchParams.get("colors")
     const sizesFromUrl = searchParams.get("sizes")
     const sortFromUrl = searchParams.get("sort")
 
     setFilters((prev) => ({
       ...prev,
       category: catFromUrl || "all",
-      colors: colorsFromUrl ? colorsFromUrl.split(",") : prev.colors,
       sizes: sizesFromUrl ? sizesFromUrl.split(",") : prev.sizes,
       sort: sortFromUrl || prev.sort,
     }))
   }, [searchParams])
 
-  /* ---- helpers ---- */
   const pushFilters = useCallback(
     (updated: FilterState) => {
       const params = new URLSearchParams()
       if (updated.category && updated.category !== "all") params.set("category", updated.category)
-      if (updated.colors.length > 0) params.set("colors", updated.colors.join(","))
       if (updated.sizes.length > 0) params.set("sizes", updated.sizes.join(","))
       if (updated.sort && updated.sort !== "newest") params.set("sort", updated.sort)
       const qs = params.toString()
@@ -163,13 +119,6 @@ export function ProductFilters({
     [filters, onFilterChange, pushFilters]
   )
 
-  const toggleColor = (colorId: string) => {
-    const newColors = filters.colors.includes(colorId)
-      ? filters.colors.filter((c) => c !== colorId)
-      : [...filters.colors, colorId]
-    updateFilters({ colors: newColors })
-  }
-
   const toggleSize = (size: string) => {
     const newSizes = filters.sizes.includes(size)
       ? filters.sizes.filter((s) => s !== size)
@@ -178,14 +127,13 @@ export function ProductFilters({
   }
 
   const clearFilters = () => {
-    updateFilters({ category: "all", colors: [], sizes: [], sort: "newest" })
+    updateFilters({ category: "all", sizes: [], sort: "newest" })
     setCategorySearch("")
   }
 
   const activeFiltersCount =
-    filters.colors.length + filters.sizes.length + (filters.category !== "all" ? 1 : 0)
+    filters.sizes.length + (filters.category !== "all" ? 1 : 0)
 
-  /* ---- filtered categories list ---- */
   const filteredCategories = useMemo(() => {
     if (!categorySearch.trim()) return categories
     const q = categorySearch.toLowerCase()
@@ -194,7 +142,6 @@ export function ProductFilters({
 
   return (
     <aside className="space-y-1">
-      {/* ── Active filter pills ── */}
       {activeFiltersCount > 0 && (
         <div className="flex flex-wrap items-center gap-2 pb-4 border-b border-border mb-4">
           {filters.category !== "all" && (
@@ -205,20 +152,6 @@ export function ProductFilters({
               </button>
             </span>
           )}
-          {filters.colors.map((colorId) => (
-            <span key={colorId} className="inline-flex items-center gap-1.5 bg-surface-container-low px-3 py-1 rounded-full body-md">
-              <span
-                className="inline-block w-3 h-3 rounded-full border border-border"
-                style={{
-                  background: COLOR_OPTIONS.find((c) => c.id === colorId)?.hex || "#ccc",
-                }}
-              />
-              {COLOR_OPTIONS.find((c) => c.id === colorId)?.name}
-              <button onClick={() => toggleColor(colorId)} aria-label={`Remove ${colorId} filter`}>
-                <X className="h-3 w-3" />
-              </button>
-            </span>
-          ))}
           {filters.sizes.map((size) => (
             <span key={size} className="inline-flex items-center gap-1.5 bg-surface-container-low px-3 py-1 rounded-full body-md">
               {size}
@@ -233,7 +166,6 @@ export function ProductFilters({
         </div>
       )}
 
-      {/* ── CATEGORIES ── */}
       <FilterSection title="Categories" defaultOpen>
         <div className="relative mb-3">
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
@@ -270,32 +202,6 @@ export function ProductFilters({
         </ul>
       </FilterSection>
 
-      {/* ── COLORS ── */}
-      <FilterSection title="Colors" defaultOpen>
-        <div className="space-y-1 max-h-[320px] overflow-y-auto pr-1 custom-scrollbar">
-          {COLOR_OPTIONS.map((color) => (
-            <label key={color.id} className="flex items-center gap-2.5 py-1.5 cursor-pointer group">
-              <input
-                type="checkbox"
-                checked={filters.colors.includes(color.id)}
-                onChange={() => toggleColor(color.id)}
-                className="h-4 w-4 rounded border-border text-primary accent-primary cursor-pointer"
-              />
-              <span
-                className="inline-block w-4 h-4 rounded-full border border-border/60 flex-shrink-0"
-                style={{
-                  background: color.hex,
-                }}
-              />
-              <span className="flex-1 body-md text-foreground group-hover:text-primary transition-colors">
-                {color.name}
-              </span>
-            </label>
-          ))}
-        </div>
-      </FilterSection>
-
-      {/* ── SIZES ── */}
       <FilterSection title="Sizes" defaultOpen>
         <div className="flex flex-wrap gap-2">
           {SIZE_OPTIONS.map((size) => (
@@ -315,7 +221,6 @@ export function ProductFilters({
         </div>
       </FilterSection>
 
-      {/* ── SORT ── */}
       <FilterSection title="Sort By" defaultOpen={false}>
         <ul className="space-y-0.5">
           {sortOptions.map((option) => (

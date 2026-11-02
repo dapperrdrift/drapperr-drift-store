@@ -48,7 +48,7 @@ export function CartItem({ item, onUpdateQuantity, onRemove }: CartItemProps) {
               {item.name}
             </Link>
             <p className="mt-1 body-md text-muted-foreground">
-              {item.color} / {item.size}
+              Size: {item.size}
             </p>
           </div>
           <button
