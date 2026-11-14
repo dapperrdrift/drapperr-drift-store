@@ -676,9 +676,74 @@ export type Database = {
           },
         ]
       }
+      reviews: {
+        Row: {
+          id: string
+          product_id: string
+          user_id: string | null
+          customer_name: string
+          customer_email: string | null
+          rating: number
+          title: string | null
+          comment: string
+          status: "approved" | "pending" | "hidden" | "rejected"
+          is_verified_purchase: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          product_id: string
+          user_id?: string | null
+          customer_name: string
+          customer_email?: string | null
+          rating: number
+          title?: string | null
+          comment: string
+          status?: "approved" | "pending" | "hidden" | "rejected"
+          is_verified_purchase?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          product_id?: string
+          user_id?: string | null
+          customer_name?: string
+          customer_email?: string | null
+          rating?: number
+          title?: string | null
+          comment?: string
+          status?: "approved" | "pending" | "hidden" | "rejected"
+          is_verified_purchase?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      product_review_stats: {
+        Row: {
+          product_id: string | null
+          average_rating: number | null
+          total_reviews: number | null
+          count_5: number | null
+          count_4: number | null
+          count_3: number | null
+          count_2: number | null
+          count_1: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       deduct_stock: {

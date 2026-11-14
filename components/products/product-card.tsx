@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { useWishlist } from "@/contexts/wishlist-context"
 import { useCart } from "@/contexts/cart-context"
 import { QuickViewModal } from "./quick-view-modal"
+import { ProductRating } from "@/components/reviews/product-rating"
 
 interface ProductCardProps {
   product: {
@@ -206,6 +207,7 @@ export function ProductCard({ product }: ProductCardProps) {
         <h3 className="mt-1 line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-primary sm:title-md">
           {product.name}
         </h3>
+        <ProductRating productId={product.id} className="mt-1" />
         <p className="mt-1.5 flex items-baseline gap-1.5 sm:mt-2">
           <span className="text-sm font-semibold text-primary sm:title-md">
             Rs. {product.price.toLocaleString("en-IN")}

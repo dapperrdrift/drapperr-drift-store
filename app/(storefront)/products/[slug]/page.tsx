@@ -6,6 +6,8 @@ import { ProductGallery } from "@/components/products/product-gallery"
 import { ProductGrid } from "@/components/products/product-grid"
 import { ProductAccordion } from "@/components/products/product-accordion"
 import { ProductInfo } from "@/components/products/product-info"
+import { ProductRating } from "@/components/reviews/product-rating"
+import { ReviewsSection } from "@/components/reviews/reviews-section"
 import { createClient } from "@/lib/supabase/server"
 
 interface PageProps {
@@ -25,7 +27,6 @@ function toPlainText(markdown: string | null | undefined, maxLength?: number): s
 interface ProductVariantDB {
   id: string
   size: string
-  color: string
   sku: string
   price_override: number | null
   compare_at_price: number | null
@@ -107,7 +108,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
       images,
       category_id,
       categories(name, slug),
-      variants(id, size, color, sku, price_override, compare_at_price, stock_quantity)
+      variants(id, size, sku, price_override, compare_at_price, stock_quantity)
     `)
     .filter('slug', 'eq', slug)
     .eq('is_active', true)
@@ -138,6 +139,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
     category: p.categories?.name ?? '',
   }))
 
+  const { data: ratingStats } = await supabase
+    .from('product_review_stats')
+    .select('average_rating, total_reviews')
+    .eq('product_id', product.id)
+    .maybeSingle()
+
   const price = product.variants?.[0]?.price_override ?? product.base_price
   const compareAtPrice = product.variants?.[0]?.compare_at_price ?? null
   const hasDiscount = !!compareAtPrice && compareAtPrice > price
@@ -149,7 +156,6 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const variants = product.variants.map((v) => ({
     id: v.id,
     size: v.size,
-    color: v.color,
     stock_quantity: v.stock_quantity,
     sku: v.sku,
   }))
@@ -175,6 +181,17 @@ export default async function ProductDetailPage({ params }: PageProps) {
       areaServed: { '@type': 'Country', name: 'India' },
     },
     category: category,
+    ...(ratingStats?.total_reviews && ratingStats.average_rating
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: Number(ratingStats.average_rating),
+            reviewCount: ratingStats.total_reviews,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
   }
 
   const breadcrumbSchema = {
@@ -237,6 +254,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 {category}
               </Link>
               <h1 className="mt-2 text-3xl font-bold leading-tight text-foreground sm:display-md">{product.name}</h1>
+              <a href="#reviews" className="mt-3 inline-block"><ProductRating productId={product.id} /></a>
               <p className="mt-3 flex items-baseline gap-2 sm:mt-4">
                 <span className="headline-md text-foreground">
                   ₹{price.toLocaleString('en-IN')}
@@ -275,6 +293,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
+
+      <ReviewsSection productId={product.id} />
 
       {/* Related products */}
       {relatedProducts.length > 0 && (

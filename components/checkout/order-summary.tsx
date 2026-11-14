@@ -7,7 +7,6 @@ interface OrderItem {
   image: string
   price: number
   size: string
-  color: string
   quantity: number
 }
 

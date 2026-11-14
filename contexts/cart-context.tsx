@@ -13,7 +13,6 @@ export interface CartItem {
   price: number
   image: string | null
   size: string
-  color: string
   sku: string
   stock_quantity: number
 }
@@ -48,7 +47,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         variant_id,
         quantity,
         variants(
-          id, size, color, sku, stock_quantity, price_override,
+          id, size, sku, stock_quantity, price_override,
           products(id, name, slug, images, base_price)
         )
       `)
@@ -67,7 +66,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         price: v?.price_override ?? p?.base_price ?? 0,
         image: p?.images?.[0] ?? null,
         size: v?.size ?? '',
-        color: v?.color ?? '',
         sku: v?.sku ?? '',
         stock_quantity: v?.stock_quantity ?? 0,
       } as CartItem
@@ -104,7 +102,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
       const { data: variantsData } = await supabase
         .from('variants')
-        .select('id, size, color, sku, stock_quantity, price_override, products(id, name, slug, images, base_price)')
+        .select('id, size, sku, stock_quantity, price_override, products(id, name, slug, images, base_price)')
         .in('id', variantIds)
 
       const enriched: CartItem[] = (variantsData ?? []).map((v: any) => {
@@ -120,7 +118,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
           price: v.price_override ?? p?.base_price ?? 0,
           image: p?.images?.[0] ?? null,
           size: v.size,
-          color: v.color,
           sku: v.sku,
           stock_quantity: v.stock_quantity,
         }

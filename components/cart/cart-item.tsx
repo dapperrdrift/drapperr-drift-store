@@ -13,7 +13,6 @@ interface CartItemProps {
     image: string | null
     price: number
     size: string
-    color: string
     quantity: number
   }
   onUpdateQuantity: (id: string, quantity: number) => void

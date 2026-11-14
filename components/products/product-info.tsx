@@ -7,7 +7,6 @@ import { AddToCartButton } from "@/components/products/add-to-cart-button"
 export interface ProductVariant {
   id: string
   size: string
-  color: string
   stock_quantity: number
   sku: string
 }

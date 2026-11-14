@@ -40,7 +40,6 @@ export default function OrderDetailPage() {
             *,
             variants (
               size,
-              color,
               products (
                 name,
                 images,

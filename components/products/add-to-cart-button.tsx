@@ -10,7 +10,6 @@ import { useCart } from "@/contexts/cart-context"
 interface Variant {
   id: string
   size: string
-  color: string
   stock_quantity: number
   sku: string
 }

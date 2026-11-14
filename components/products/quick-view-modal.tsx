@@ -8,11 +8,11 @@ import { createClient } from "@/lib/supabase/client"
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog"
 import { VariantSelector } from "./variant-selector"
 import { AddToCartButton } from "./add-to-cart-button"
+import { ProductRating } from "@/components/reviews/product-rating"
 
 interface Variant {
   id: string
   size: string
-  color: string
   stock_quantity: number
   sku: string
 }
@@ -51,7 +51,7 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
             base_price,
             images,
             categories(name, slug),
-            variants(id, size, color, sku, price_override, compare_at_price, stock_quantity)
+            variants(id, size, sku, price_override, compare_at_price, stock_quantity)
           `)
           .eq('slug' as any, productSlug)
           .eq('is_active', true)
@@ -73,7 +73,6 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
   const variants: Variant[] = product?.variants?.map((v: any) => ({
     id: v.id,
     size: v.size,
-    color: v.color,
     stock_quantity: v.stock_quantity,
     sku: v.sku,
   })) || []
@@ -137,6 +136,7 @@ export function QuickViewModal({ isOpen, onClose, productSlug, productBase }: Qu
                   <Link href={`/products/${productSlug}`} onClick={onClose} className="hover:text-primary transition-colors">
                     <h2 className="mt-2 display-sm text-foreground">{product.name}</h2>
                   </Link>
+                  <ProductRating productId={product.id} className="mt-2" />
                   <p className="mt-2 flex items-baseline gap-2">
                     <span className="text-xl font-medium text-foreground">
                       ₹{activePrice.toLocaleString('en-IN')}

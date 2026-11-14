@@ -7,7 +7,6 @@ import { SizeGuideModal } from "@/components/products/size-guide-modal"
 interface Variant {
   id: string
   size: string
-  color: string
   stock_quantity: number
   sku: string
 }
